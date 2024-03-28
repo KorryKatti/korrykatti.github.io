@@ -1,0 +1,47 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    /* Decrease height of header to 3/4 of its current size */
+    height: 225px;
+    /* Make background image cover entire header */
+    background-size: cover;
+    /* Position background image in the center */
+    background-position: center;
+    /* Add some spacing between background image and header text */
+    padding-top: 50px;
+    padding-bottom: 50px;
+    /* Make header position relative */
+    position: relative;
+  }
+  nav {
+    text-align: center;
+    padding: 20px 0;
+  }
+  nav a {
+    text-decoration: none;
+    color: #333;
+    margin: 50px 0 10px; /* Add vertical margin to separate links */
+    display: block; /* Display links as block elements */
+  }
+  .avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #ccc;
+    /* Position the avatar in the center of the header */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Add box-shadow to create blur effect */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  }
+  
