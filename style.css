@@ -4,23 +4,55 @@ body {
     margin: 0;
     padding: 0;
   }
+  
   header {
-    background-color: #333;
+    /* Use background properties instead of <img> tag */
+    background-image: url("https://i.pinimg.com/originals/02/5c/9a/025c9a52e667a004ddf62360860b6a69.jpg"); /* Replace with your header image path */
+    background-size: cover; /* Cover the entire header */
+    background-repeat: no-repeat; /* Prevent repeating */
+    background-position: center; /* Center the background image */
     color: #fff;
     padding: 20px;
     text-align: center;
-    /* Decrease height of header to 3/4 of its current size */
-    height: 225px;
-    /* Make background image cover entire header */
-    background-size: cover;
-    /* Position background image in the center */
-    background-position: center;
-    /* Add some spacing between background image and header text */
-    padding-top: 50px;
-    padding-bottom: 50px;
-    /* Make header position relative */
+    /* Set a fixed height for the header */
+    height: 300px; /* Adjust as needed */
+    /* Ensure the header has relative positioning */
     position: relative;
   }
+  
+  /* Other styles for navigation, avatar, etc. */
+  
+  
+  header img {
+    /* Make the avatar image a smaller circle */
+    width: 80px; /* Adjust as needed */
+    height: 80px; /* Adjust as needed */
+    border-radius: 50%;
+    /* Ensure the image covers the header */
+    object-fit: cover;
+    /* Position the avatar */
+    position: absolute;
+    bottom: -40px; /* Half of the avatar height */
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  header img::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%; /* Adjust as needed */
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    border-radius: 0 0 50% 50%; /* Semi-circle shape */
+    bottom: -20px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1; /* Ensure the pseudo-element is behind the avatar */
+    /* Apply box-shadow to create blur effect */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  }
+      
+  
   nav {
     text-align: center;
     padding: 20px 0;
@@ -31,17 +63,5 @@ body {
     margin: 50px 0 10px; /* Add vertical margin to separate links */
     display: block; /* Display links as block elements */
   }
-  .avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background-color: #ccc;
-    /* Position the avatar in the center of the header */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Add box-shadow to create blur effect */
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
-  }
+
   
