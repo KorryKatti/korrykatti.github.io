@@ -26,8 +26,8 @@ body {
   
   header img {
     /* Make the avatar image a smaller circle */
-    width: 80px; /* Adjust as needed */
-    height: 80px; /* Adjust as needed */
+    width: 150px; /* Adjust as needed */
+    height: 150px; /* Adjust as needed */
     border-radius: 50%;
     /* Ensure the image covers the header */
     object-fit: cover;
