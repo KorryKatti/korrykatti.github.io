@@ -1,72 +1,73 @@
 /* style.css */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    color: #000000;
-}
-  
-  header {
-    /* Use background properties instead of <img> tag */
-    background-image: url("https://i.pinimg.com/originals/02/5c/9a/025c9a52e667a004ddf62360860b6a69.jpg"); /* Replace with your header image path */
-    background-size: cover; /* Cover the entire header */
-    background-repeat: no-repeat; /* Prevent repeating */
-    background-position: center; /* Center the background image */
-    color: #fff;
-    padding: 20px;
-    text-align: center;
-    /* Set a fixed height for the header */
-    height: 300px; /* Adjust as needed */
-    /* Ensure the header has relative positioning */
-    position: relative;
-  }
-  
-  /* Other styles for navigation, avatar, etc. */
-  
-  
-  header img {
-    /* Make the avatar image a smaller circle */
-    width: 150px; /* Adjust as needed */
-    height: 150px; /* Adjust as needed */
-    border-radius: 50%;
-    /* Ensure the image covers the header */
-    object-fit: cover;
-    /* Position the avatar */
-    position: absolute;
-    bottom: -40px; /* Half of the avatar height */
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  header img::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 50%; /* Adjust as needed */
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-    border-radius: 0 0 50% 50%; /* Semi-circle shape */
-    bottom: -20px; /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: -1; /* Ensure the pseudo-element is behind the avatar */
-    /* Apply box-shadow to create blur effect */
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
-  }
-      
-  
-  nav {
-    text-align: center;
-    padding: 20px 0;
-  }
-  nav a {
-    text-decoration: none;
-    color: #333;
-    margin: 50px 0 10px; /* Add vertical margin to separate links */
-    display: block; /* Display links as block elements */
-  }
 
-  body.dark-mode {
-    background-color: #333333;
-    color: #ffffff; /* Text color for dark mode */
+/* Reset default styles */
+body {
+  margin: 0;
+  padding: 0;
+  color: #000000;
 }
-  
+
+/* Apply font and size to specific text */
+.specific-text {
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: 24px;
+}
+
+/* Styles for header */
+header {
+  background-image: url("https://i.ibb.co/1sGRZ8g/eren.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+  height: 300px;
+  position: relative;
+}
+
+/* Styles for avatar */
+#avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Pseudo-element to create shadow effect */
+#avatar::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0 0 50% 50%;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles for navigation */
+nav {
+  text-align: center;
+  padding: 20px 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  margin: 50px 0 10px;
+  display: block;
+}
+
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #333333;
+  color: #ffffff;
+}
