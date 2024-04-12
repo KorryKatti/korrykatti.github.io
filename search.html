@@ -87,6 +87,22 @@
       width: 200px; /* Set image width */
       height: 200px; /* Set image height */
     }
+
+    /* Custom styles for footer */
+    footer {
+      text-align: center;
+      margin-top: 20px; /* Add space above the footer */
+    }
+
+    footer a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 2px solid #fff; /* Add bottom border */
+    }
+
+    footer a:hover {
+      border-bottom: 2px solid transparent; /* Hide bottom border on hover */
+    }
   </style>
 </head>
 <body>
@@ -101,6 +117,11 @@
 
   <!-- Search results -->
   <div id="searchResults"></div>
+
+  <!-- Footer with link to home -->
+  <footer>
+    <a href="index.html">Return to Home</a>
+  </footer>
 
   <script src="pagefind/script.js"></script>
 </body>
