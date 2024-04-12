@@ -22,15 +22,42 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   
     // Function to display search results
-    function displayResults(results) {
+    async function displayResults(results) {
       searchResults.innerHTML = '';
-      results.forEach(result => {
-        const li = document.createElement('li');
-        li.textContent = result.title;
-        li.addEventListener('click', () => {
+      results.forEach(async result => {
+        const resultBox = document.createElement('div');
+        resultBox.classList.add('search-result-box');
+  
+        // Create image element
+        const resultImage = document.createElement('img');
+        resultImage.classList.add('search-result-image');
+        resultImage.src = result.image; // Replace 'image' with the actual property name where image URL is stored
+        resultBox.appendChild(resultImage);
+  
+        // Create article name element
+        const resultTitle = document.createElement('h3');
+        resultTitle.classList.add('search-result-title');
+        resultTitle.textContent = result.title;
+        resultBox.appendChild(resultTitle);
+  
+        // Fetch article content
+        const content = await fetchArticleContent(result.fileName);
+  
+        // Highlight search query in article content
+        const highlightedContent = content.replace(new RegExp(searchInput.value, 'gi'), match => `<mark>${match}</mark>`);
+  
+        const resultText = document.createElement('p');
+        resultText.classList.add('search-result-text');
+        resultText.innerHTML = highlightedContent;
+  
+        resultBox.appendChild(resultText);
+  
+        // Make the entire box clickable
+        resultBox.addEventListener('click', () => {
           window.location.href = `articles/${result.fileName}`;
         });
-        searchResults.appendChild(li);
+  
+        searchResults.appendChild(resultBox);
       });
     }
   
@@ -48,9 +75,9 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Dummy articles array (replace with actual article filenames)
   const articles = [
-    { title: 'Sample Article 1', fileName: 'article1.html' },
-    { title: 'Sample Article 2', fileName: 'article2.html' },
-    { title: 'Sample Article 3', fileName: 'article3.html' }
+    { title: 'Sample Article 1', fileName: 'article1.html', image: 'path/to/image1.jpg' },
+    { title: 'Sample Article 2', fileName: 'article2.html', image: 'path/to/image2.jpg' },
+    { title: 'Sample Article 3', fileName: 'article3.html', image: 'path/to/image3.jpg' }
     // Add more articles here...
   ];
   

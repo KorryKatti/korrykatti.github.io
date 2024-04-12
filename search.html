@@ -5,11 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Article Search</title>
   <link rel="stylesheet" href="pagefind/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Custom styles for black background */
+    body {
+      background-color: #000;
+      color: #fff;
+    }
+
+    /* Custom styles for search title */
+    h1#searchTitle {
+      margin-top: 30px; /* Adjust the margin-top to move the title down */
+      text-align: center;
+    }
+
+    /* Custom styles for search description */
+    p#searchDescription {
+      text-align: center;
+      font-size: 14px; /* Small font size */
+      margin-bottom: 20px; /* Add some space after the description */
+    }
+
+    /* Custom styles for search input container */
+    .search-input-container {
+      width: 60%; /* Adjust the width of the input container */
+      margin: 0 auto; /* Center the input container */
+      position: relative;
+    }
+
+    /* Custom styles for search input */
+    input[type="text"] {
+      width: calc(100% - 40px); /* Adjust width to accommodate the search icon */
+      padding: 10px 15px; /* Adjust padding */
+      font-size: 16px;
+      display: block;
+      border: 1px solid #fff;
+      background-color: #333;
+      color: #fff;
+      margin-left: 40px; /* Add margin to the left to move the text */
+    }
+
+    /* Custom styles for search icon */
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 10px; /* Adjust left position to align with input */
+      color: #fff;
+    }
+
+    /* Custom styles for search results container */
+    #searchResults {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Custom styles for search result box */
+    .search-result-box {
+      border: 1px solid #fff;
+      padding: 5px; /* Adjust padding */
+      margin: 10px; /* Adjust margin */
+      width: 300px; /* Adjust width */
+      text-align: center; /* Center text */
+    }
+
+    /* Custom styles for search result text */
+    .search-result-text {
+      color: #ccc; /* Set text color to light grey */
+      margin-bottom: 5px;
+    }
+
+    /* Custom styles for highlighted text */
+    .search-result-text mark {
+      background-color: yellow; /* Set background color for highlighted text */
+    }
+
+    /* Custom styles for search result image */
+    .search-result-image {
+      width: 200px; /* Set image width */
+      height: 200px; /* Set image height */
+    }
+  </style>
 </head>
 <body>
-  <h1>KorryKatti Search Index</h1>
-  <input type="text" id="searchInput" placeholder="Search for articles...">
-  <ul id="searchResults"></ul>
+  <h1 id="searchTitle">MoonLab Article Search</h1>
+  <p id="searchDescription">Search articles under this website</p>
+
+  <!-- Search input container with search icon -->
+  <div class="search-input-container">
+    <i class="fas fa-search search-icon"></i> <!-- Font Awesome search icon -->
+    <input type="text" id="searchInput" placeholder="Start typing to search...">
+  </div>
+
+  <!-- Search results -->
+  <div id="searchResults"></div>
 
   <script src="pagefind/script.js"></script>
 </body>
