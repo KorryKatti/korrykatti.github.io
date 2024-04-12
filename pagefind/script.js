@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
   // Dummy articles array (replace with actual article filenames)
   const articles = [
-    { title: 'Sample Article 1', fileName: 'article1.html', image: 'path/to/image1.jpg' },
+    { title: 'Thunder', fileName: 'Thunder.html', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBfcHmsQKdQ5PPx9ziLeuaG072VrtullSZEe2JMJQA6w&s' },
     { title: 'Sample Article 2', fileName: 'article2.html', image: 'path/to/image2.jpg' },
     { title: 'Sample Article 3', fileName: 'article3.html', image: 'path/to/image3.jpg' }
     // Add more articles here...
