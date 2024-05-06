@@ -1,9 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://arc.io/widget.min.js#ZFwF9gbJ"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Website with Disqus Comments</title>
+    <style>
+        /* Chatroom styling */
+        #disqus_thread {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            height: 400px; /* Adjust height as needed */
+        }
+        #disqus_thread .comment {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        #disqus_thread .comment p {
+            margin: 0;
+        }
+        #disqus_thread .comment-author {
+            font-weight: bold;
+            color: #333;
+        }
+        #disqus_thread .comment-time {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
 </head>
 <body>
 
