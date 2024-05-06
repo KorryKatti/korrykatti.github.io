@@ -1,49 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://arc.io/widget.min.js#ZFwF9gbJ"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Website with Disqus Comments</title>
+    <title>Thunder Halls Chatroom</title>
+    <script async src="https://arc.io/widget.min.js#ZFwF9gbJ"></script>
+    <!-- FuckAdBlock CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuckadblock/3.2.1/fuckadblock.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuckadblock@3.2.1/fuckadblock.min.js"></script>
     <style>
-        /* Chatroom styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Light grey background */
+            color: #333; /* Dark grey text color */
+        }
         #disqus_thread {
             max-width: 800px;
             margin: 20px auto;
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #f9f9f9;
+            background-color: #fff; /* White background for chatroom */
             overflow-y: auto;
             height: 400px; /* Adjust height as needed */
         }
-        #disqus_thread .comment {
+        .comment {
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 5px;
-            background-color: #fff;
+            background-color: #f9f9f9; /* Light grey background for comments */
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
-        #disqus_thread .comment p {
+        .comment p {
             margin: 0;
         }
-        #disqus_thread .comment-author {
+        .comment-author {
             font-weight: bold;
-            color: #333;
         }
-        #disqus_thread .comment-time {
+        .comment-time {
             font-size: 12px;
-            color: #999;
+            color: #999; /* Light grey color for timestamp */
+        }
+        .title {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .subtitle {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .dark-mode-btn {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .dark-mode-btn button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #333; /* Dark grey background for button */
+            color: #fff; /* White text color for button */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .guidelines {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-<h1>Welcome to My Website</h1>
-<p>This is a sample webpage with Disqus comments embedded.</p>
+<div class="title">Thunder</div>
+<div class="subtitle">Welcome to Thunder Halls Chatroom</div>
 
 <div id="disqus_thread"></div>
+
+<div class="dark-mode-btn">
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+</div>
+
+<div class="guidelines">
+    <h2>Chat Guidelines</h2>
+    <p>1. Be respectful and courteous to others.</p>
+    <p>2. Avoid spamming or flooding the chat with messages.</p>
+    <p>3. Refrain from posting offensive or inappropriate content.</p>
+    <p>4. Keep discussions relevant to the chat topic.</p>
+    <p>5. Report any violations of the chat guidelines to the moderators.</p>
+</div>
+
 <script>
+    // AdBlock detection
+    fuckAdBlock.onDetected(function() {
+        alert("Please disable your ad blocker to ensure proper functionality of our chatroom. We don't display ads, but our CDN may be interfered with by ad blockers.");
+    });
+    
     /**
     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables    */
@@ -59,6 +114,11 @@
     s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
     })();
+
+    function toggleDarkMode() {
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+    }
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 
