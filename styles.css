@@ -1,0 +1,182 @@
+@font-face {
+    font-family: "Berkeley Mono";
+    src: url("/BerkeleyMonoVariable-Regular.woff2") format("woff2-variations");
+    font-weight: 100 900;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Berkeley Mono";
+    src: url("/BerkeleyMonoVariable-Italic.woff2") format("woff2-variations");
+    font-weight: 100 900;
+    font-style: italic;
+  }
+
+  body {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    margin: auto;
+    text-align: justify;
+    text-justify: inter-word;
+    background-color: rgb(0, 0, 0);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.8);
+    color-scheme: dark;
+
+    min-width: 320px;
+    max-width: 700px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Berkeley Mono", monospace;
+    font-size: inherit;
+  }
+
+  header {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding: 1rem;
+  }
+
+  header h3 {
+    margin: 0;
+  }
+
+  a {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+
+  :not(nav) > a:hover {
+    color: rgb(116, 96, 224);
+  }
+
+  nav a {
+    margin-right: 10px;
+    color: rgb(116, 96, 224);
+    text-decoration: none;
+  }
+
+  main {
+    padding: 0 1rem;
+  }
+
+  hr {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 0px;
+    height: 1px;
+  }
+
+  textarea {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  content {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: "Berkeley Mono", sans-serif;
+    padding: 2px 5px;
+  }
+
+  pre code {
+    text-align: left;
+    display: block;
+    padding: 20px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    overflow-x: auto;
+  }
+
+  div.highlight pre {
+    background-color: initial;
+    color: initial;
+  }
+
+  div.highlight code {
+    background-color: unset;
+    color: unset;
+  }
+
+  blockquote {
+    font-style: italic;
+    padding-left: 1rem;
+    border-left: 2px solid rgb(116, 96, 224);
+  }
+
+  figure,
+  img {
+    text-align: center;
+    margin: auto;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  ul li::before {
+    content: "\2022";
+    color: rgb(116, 96, 224);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+
+  ol {
+    list-style: none;
+    counter-reset: ol-counter;
+  }
+
+  ol li::before {
+    content: counter(ol-counter) ".";
+    counter-increment: ol-counter;
+    color: rgb(116, 96, 224);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+  }
+
+  :not(header) > h1::before {
+    content: "# ";
+    color: rgb(116, 96, 224);
+  }
+
+  h2::before {
+    content: "## ";
+    color: rgb(116, 96, 224);
+  }
+
+  h3::before {
+    content: "### ";
+    color: rgb(116, 96, 224);
+  }
+
+  footer {
+    padding: 0 1rem;
+  }
