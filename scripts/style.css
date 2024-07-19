@@ -1,44 +1,56 @@
 body {
     margin: 0;
-    font-family: 'Courier New', Courier, monospace; /* Classic web font */
-    background-color: #1a1a1a; /* Dark background */
-    color: #ffffff; /* White text color */
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to bottom right, #ffccff, #ccffff);
+    color: #000000;
+    text-align: center; /* Center all text on the body */
 }
 
 .container {
     display: flex;
-    align-items: stretch;
-    height: 100vh; /* Full viewport height */
-    border: 2px solid #ff00ff; /* Neon pink border around the container */
-    background-color: #0d0d0d; /* Very dark background for the main container */
-}
-
-.left-section {
-    flex: 1; /* This will use flex-grow to fill available space */
-    min-width: 25%; /* Minimum width set to 25% */
-    padding: 10px;
-    background-color: #0a0a0a; /* Slightly lighter dark background */
-    border-right: 2px solid #00ffff; /* Neon cyan border on the right side */
-    color: #00ffff; /* Neon cyan text */
-    position: relative; /* Enable positioning of child elements */
-}
-
-.right-section {
-    flex: 3; /* This will use flex-grow to fill remaining space */
+    justify-content: center; /* Center columns and main container horizontally */
+    align-items: flex-start; /* Align items to the top */
     padding: 20px;
-    background-color: #0a0a0a; /* Slightly lighter dark background */
-    color: #ff00ff; /* Neon pink text */
 }
 
-.separator {
-    width: 2px; /* Width of the vertical line */
-    background-color: #00ff00; /* Neon green color for the separator */
-    height: 100%; /* Full height of the container */
+.left-column, .right-column {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.main-container {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 2px solid #ff69b4;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: left; /* Align text within the main container to the left */
+}
+
+.right-column p {
+    margin: 0;
+    padding: 10px 0;
+    line-height: 1.6;
+}
+
+a {
+    color: #0000ff;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #ff00ff;
 }
 
 .blink {
     animation: blink-animation 1s steps(5, start) infinite;
     -webkit-animation: blink-animation 1s steps(5, start) infinite;
+    color: #ff1493;
 }
 
 @keyframes blink-animation {
@@ -54,28 +66,50 @@ body {
 }
 
 marquee {
-    color: #ff00ff; /* Neon pink scrolling text */
+    color: #ff00ff;
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: disc;
+    text-align: left;
+    margin: 20px auto;
+    padding: 0;
+    max-width: 600px;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+.blogs p {
+    margin: 10px 0;
+}
+
+.content p {
+    text-align: left;
+    margin: 20px auto;
+    max-width: 600px;
 }
 
 .retro-button {
-    background-color: #000000; /* Black button background */
-    color: #00ff00; /* Neon green text */
-    border: 2px solid #ff00ff; /* Neon pink border */
-    padding: 10px 20px; /* Padding for the button */
-    font-size: 16px; /* Font size for the button */
-    cursor: pointer; /* Pointer cursor on hover */
-    text-transform: uppercase; /* Uppercase text */
-    margin-top: 20px; /* Space above the button */
+    background-color: #00ff00;
+    color: #000000;
+    border: 2px solid #ff0000;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 20px;
+    box-shadow: 0 0 5px #000000;
 }
 
 .retro-button:hover {
-    background-color: #ff00ff; /* Neon pink background on hover */
-    color: #000000; /* Black text on hover */
-    border: 2px solid #00ff00; /* Neon green border on hover */
+    background-color: #ff0000;
+    color: #ffffff;
+    border: 2px solid #00ff00;
 }
 
 .bottom-image {
-    position: absolute;
-    bottom: 10px; /* Adjust as needed */
-    left: 10px; /* Adjust as needed */
+    margin-top: 20px;
 }
