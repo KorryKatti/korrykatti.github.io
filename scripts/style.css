@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace; /* Classic web font */
+    background-color: #1a1a1a; /* Dark background */
+    color: #ffffff; /* White text color */
+}
+
+.container {
+    display: flex;
+    align-items: stretch;
+    height: 100vh; /* Full viewport height */
+    border: 2px solid #ff00ff; /* Neon pink border around the container */
+    background-color: #0d0d0d; /* Very dark background for the main container */
+}
+
+.left-section {
+    flex: 1; /* This will use flex-grow to fill available space */
+    min-width: 25%; /* Minimum width set to 25% */
+    padding: 10px;
+    background-color: #0a0a0a; /* Slightly lighter dark background */
+    border-right: 2px solid #00ffff; /* Neon cyan border on the right side */
+    color: #00ffff; /* Neon cyan text */
+    position: relative; /* Enable positioning of child elements */
+}
+
+.right-section {
+    flex: 3; /* This will use flex-grow to fill remaining space */
+    padding: 20px;
+    background-color: #0a0a0a; /* Slightly lighter dark background */
+    color: #ff00ff; /* Neon pink text */
+}
+
+.separator {
+    width: 2px; /* Width of the vertical line */
+    background-color: #00ff00; /* Neon green color for the separator */
+    height: 100%; /* Full height of the container */
+}
+
+.blink {
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+@-webkit-keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+marquee {
+    color: #ff00ff; /* Neon pink scrolling text */
+}
+
+.retro-button {
+    background-color: #000000; /* Black button background */
+    color: #00ff00; /* Neon green text */
+    border: 2px solid #ff00ff; /* Neon pink border */
+    padding: 10px 20px; /* Padding for the button */
+    font-size: 16px; /* Font size for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    text-transform: uppercase; /* Uppercase text */
+    margin-top: 20px; /* Space above the button */
+}
+
+.retro-button:hover {
+    background-color: #ff00ff; /* Neon pink background on hover */
+    color: #000000; /* Black text on hover */
+    border: 2px solid #00ff00; /* Neon green border on hover */
+}
+
+.bottom-image {
+    position: absolute;
+    bottom: 10px; /* Adjust as needed */
+    left: 10px; /* Adjust as needed */
+}
