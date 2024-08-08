@@ -1,24 +1,50 @@
 /* Minimal CSS for styling */
+
+/* Global Styles */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #156db0; /* Blue background */
 }
 
+/* Header Image Styles */
+.header-image-container {
+    text-align: center;
+    margin-bottom: -30px; /* Negative margin to overlap the header slightly */
+}
+
+.header-image {
+    width: 100%;
+    max-height: 200px; /* Adjust height as needed */
+    object-fit: cover;
+}
+
+/* Header Styles */
 .main-header {
     background-color: #0a0a0a; /* Dark header background */
     color: #b6207a; /* Pink text */
     padding: 10px 15px; /* Reduced height */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-bottom: 2px solid #b6207a; /* Pink border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Floating effect */
+    border-radius: 15px; /* Rounded edges */
+    margin: 20px auto; /* Center align */
+    max-width: 90%; /* Width control */
+    position: relative;
+    z-index: 1; /* Ensure it stays on top of other elements */
 }
 
+/* Header Content Styles */
 .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+.header-text {
+    flex-grow: 1;
+    text-align: left;
+}
+
+/* Navigation Menu Styles */
 .nav-menu ul {
     list-style: none;
     padding: 0;
@@ -69,12 +95,14 @@ body {
     display: block;
 }
 
+/* Container Styles */
 .container {
     display: flex;
     height: calc(100vh - 60px); /* Adjust height for main header */
     margin: 0;
 }
 
+/* Section Styles */
 .section {
     margin: 10px;
     border-radius: 8px;
@@ -109,6 +137,7 @@ body {
     flex: 1;
 }
 
+/* Header Styles within Sections */
 .header {
     padding: 5px 10px;
     background-color: #b30e97; /* Pink header background */
@@ -117,6 +146,7 @@ body {
     flex-shrink: 0;
 }
 
+/* Iframe Container Styles */
 .iframe-container {
     flex: 1;
     display: flex;
@@ -131,6 +161,7 @@ iframe {
     border: none;
 }
 
+/* Footer Styles in Left Section */
 .footer-left {
     flex-shrink: 0; /* Prevent shrinking */
     margin: 20px 0;
@@ -139,6 +170,7 @@ iframe {
     margin-top: auto; /* Pushes footer to the bottom */
 }
 
+/* Projects Intro Styles */
 .projects-intro {
     text-align: center; /* Center align the text */
     margin: 20px 0; /* Add vertical spacing */
