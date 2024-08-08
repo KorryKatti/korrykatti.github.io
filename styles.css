@@ -182,6 +182,13 @@ iframe {
     margin-top: auto; /* Pushes footer to the bottom */
 }
 
+.footer-middle{
+    flex-shrink: 0; /* Prevent shrinking */
+    text-align: center;
+    color: #ffffff; /* White text */
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
 /* Projects Intro Styles */
 .projects-intro {
     text-align: center; /* Center align the text */
