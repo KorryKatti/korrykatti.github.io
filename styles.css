@@ -10,12 +10,13 @@ body {
 /* Header Image Styles */
 .header-image-container {
     text-align: center;
-    margin-bottom: -30px; /* Negative margin to overlap the header slightly */
+    position: relative;
+    z-index: 0;
 }
 
 .header-image {
     width: 100%;
-    max-height: 200px; /* Adjust height as needed */
+    max-height: 300px; /* Increased height */
     object-fit: cover;
 }
 
@@ -26,10 +27,10 @@ body {
     padding: 10px 15px; /* Reduced height */
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Floating effect */
     border-radius: 15px; /* Rounded edges */
-    margin: 20px auto; /* Center align */
+    margin: -60px auto 20px; /* Center align and overlap image */
     max-width: 90%; /* Width control */
     position: relative;
-    z-index: 1; /* Ensure it stays on top of other elements */
+    z-index: 1; /* Ensure it stays on top of the header image */
 }
 
 /* Header Content Styles */
@@ -137,6 +138,17 @@ body {
     flex: 1;
 }
 
+.right a {
+    color: #f1c40f; /* Gold color for links in the left section */
+    text-decoration: none;
+}
+
+.right a:hover,
+.right a:active {
+    color: #b6207a; /* Pink color on hover and active */
+}
+
+
 /* Header Styles within Sections */
 .header {
     padding: 5px 10px;
@@ -151,13 +163,13 @@ body {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: top;
     overflow: hidden;
 }
 
 iframe {
     width: 100%;
-    height: 100%;
+    height: 50%;
     border: none;
 }
 
