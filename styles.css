@@ -1,0 +1,152 @@
+/* Minimal CSS for styling */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #156db0; /* Blue background */
+}
+
+.main-header {
+    background-color: #0a0a0a; /* Dark header background */
+    color: #b6207a; /* Pink text */
+    padding: 10px 15px; /* Reduced height */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #b6207a; /* Pink border */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.nav-menu li {
+    position: relative;
+    margin-left: 20px;
+}
+
+.nav-menu a {
+    color: #b6207a; /* Pink links */
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+
+.nav-menu a:hover {
+    background-color: #1e0dff; /* Blue background on hover */
+    color: #ffffff; /* White text on hover */
+    border-radius: 4px;
+}
+
+.nav-menu .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #2f00ff; /* Dark blue dropdown */
+    border: 1px solid #b6207a; /* Pink border */
+    border-radius: 4px;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-menu .dropdown li {
+    margin: 0;
+}
+
+.nav-menu .dropdown a {
+    padding: 10px;
+    color: #ffffff; /* White text in dropdown */
+}
+
+.nav-menu li:hover .dropdown {
+    display: block;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust height for main header */
+    margin: 0;
+}
+
+.section {
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #000; /* Black border to all sides */
+    height: 100%; /* Ensure the section takes full height */
+}
+
+.left {
+    flex: 1;
+    color: #ffffff; /* White text */
+}
+
+.left a {
+    color: #f1c40f; /* Gold color for links in the left section */
+    text-decoration: none;
+}
+
+.left a:hover,
+.left a:active {
+    color: #b6207a; /* Pink color on hover and active */
+}
+
+.middle {
+    flex: 2;
+}
+
+.right {
+    flex: 1;
+}
+
+.header {
+    padding: 5px 10px;
+    background-color: #b30e97; /* Pink header background */
+    border-bottom: 2px solid #000; /* Black border */
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.iframe-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.footer-left {
+    flex-shrink: 0; /* Prevent shrinking */
+    margin: 20px 0;
+    text-align: center;
+    color: #ffffff; /* White text */
+    margin-top: auto; /* Pushes footer to the bottom */
+}
+
+.projects-intro {
+    text-align: center; /* Center align the text */
+    margin: 20px 0; /* Add vertical spacing */
+}
+
+.projects-intro p {
+    font-size: 1.2em; /* Adjust font size */
+    font-weight: normal; /* Remove boldness */
+    color: #ffffff; /* Adjust text color if needed */
+    margin: 0; /* Remove default margin */
+}
