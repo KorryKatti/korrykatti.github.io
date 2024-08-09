@@ -9,6 +9,7 @@
 </head>
 <body>
 
+
     <!-- Header Image -->
     <div class="header-image-container">
         <img src="img/head.jpg" alt="Header Image" class="header-image">
@@ -82,15 +83,6 @@
             <h1>Welcome to my site!</h1>
             <p>Hello, my name is KorryKatti and this is my website.I have placed many links around this site. Feel free to explore around. I will keep updating it when i get time. Also this website is in forever WIP</p>
             <p>You may also notice that this website isn't styled properly, and that is because i do not know css and neither plan on learning it. This site is readable and usable so i don't see a reason.</p>
-            <h4>Leave a message</h4>
-            <div class="chatbox-container">
-                <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N"
-                        allowtransparency="yes" 
-                        allow="autoplay" 
-                        frameborder="0" 
-                        scrolling="auto">
-                </iframe>
-            </div>
             
             <div class="footer-middle">
                 Copyright © 2024 Korry Katti. Under MIT license.
@@ -109,6 +101,31 @@
                 <li><a href="#">Link 3</a></li>
                 <li><a href="#">Link 4</a></li>
             </ul>
+            <button id="openPopup">Chatbox</button>
+
+            <div id="popupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.7); justify-content:center; align-items:center;">
+                <div style="background:white; padding:20px; border-radius:5px; width:80%; max-width:800px; max-height:90%; display:flex; flex-direction:column;">
+                    <button id="closePopup" style="background:red; color:white; border:none; padding:10px 20px; cursor:pointer; border-radius:5px; align-self:flex-end;">Close</button>
+                    <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="500" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" style="flex:1; border:none;"></iframe>
+                </div>
+            </div>
+        
+            <script>
+                document.getElementById('openPopup').onclick = function() {
+                    document.getElementById('popupOverlay').style.display = 'flex';
+                };
+        
+                document.getElementById('closePopup').onclick = function() {
+                    document.getElementById('popupOverlay').style.display = 'none';
+                };
+        
+                window.onclick = function(event) {
+                    if (event.target == document.getElementById('popupOverlay')) {
+                        document.getElementById('popupOverlay').style.display = 'none';
+                    }
+                };
+            </script>
+
             <hr>
             <div class="iframe-container">
                 <iframe src="https://www.youtube.com/embed/hOHKltAiKXQ?list=RDhOHKltAiKXQ" title="Hanumankind – Big Dawgs | Ft. Kalmi (Official Music Video) | Def Jam India" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
