@@ -96,13 +96,6 @@ body {
     display: block;
 }
 
-/* Container Styles */
-.container {
-    display: flex;
-    height: calc(100vh - 60px); /* Adjust height for main header */
-    margin: 0;
-}
-
 /* Section Styles */
 .section {
     margin: 10px;
@@ -115,38 +108,38 @@ body {
     height: 100%; /* Ensure the section takes full height */
 }
 
-.left {
+.left, .right {
     flex: 1;
     color: #ffffff; /* White text */
+    max-height: calc(100vh - 100px); /* Adjust the height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
-.left a {
-    color: #f1c40f; /* Gold color for links in the left section */
+.left a, .right a, .middle a {
+    color: #f1c40f; /* Gold color for links in the left, middle, and right sections */
     text-decoration: none;
 }
 
-.left a:hover,
-.left a:active {
+.left a:hover, .left a:active, 
+.right a:hover, .right a:active,
+.middle a:hover, .middle a:active {
     color: #b6207a; /* Pink color on hover and active */
 }
 
+/* Adjust the main container height to accommodate the changes */
+.container {
+    display: flex;
+    height: calc(100vh - 60px); /* Adjust height for main header */
+    margin: 0;
+}
+
+/* I have no idea whats going on here , i just copy paste stack overlfow and i am not sure what it does */
 .middle {
     flex: 2;
+    max-height: calc(100vh - 100px); /* Adjust the height to allow scrolling */
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
-.right {
-    flex: 1;
-}
-
-.right a {
-    color: #f1c40f; /* Gold color for links in the left section */
-    text-decoration: none;
-}
-
-.right a:hover,
-.right a:active {
-    color: #b6207a; /* Pink color on hover and active */
-}
 
 
 /* Header Styles within Sections */
