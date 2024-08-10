@@ -1,142 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to my site</title>
-    <link rel="icon" href="https://i.pinimg.com/736x/02/b5/2f/02b52f80e63404a03945e0ff7d92940e.jpg">
-    <link rel="stylesheet" href="styles.css">
-</head>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+        <title>Welcome to my website</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+    </head>
 <body>
-
-
-    <!-- Header Image -->
-    <div class="header-image-container">
-        <img src="img/head.jpg" alt="Header Image" class="header-image">
-        <!--image credit https://i.pinimg.com/originals/a1/4c/1a/a14c1abc2ec7aeb89d304695af026c11.jpg-->
-    </div>
-
-    <!-- Main Header -->
-    <header class="main-header">
-        <div class="header-content">
-            <div class="header-text">
-                <p>Welcome to my site</p>
-            </div>
-            <nav class="nav-menu">
+    <div class="container">
+        <h1>Welcome to my website</h1>
+        
+        <header>
+            <nav>
                 <ul>
-                    <li><a href="#home">More Formal Site</a></li>
-                    <li><a href="#services">Socials</a>
-                        <ul class="dropdown">
-                            <li><a href="#web-design">Web Design</a></li>
-                            <li><a href="#seo">SEO</a></li>
-                            <li><a href="#consulting">Consulting</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="mailto::8nctvx7gi@mozmail.com">Contact</a></li>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Random Link</a></li>
                 </ul>
             </nav>
-        </div>
-    </header>
-
-    <!-- Container for Sections -->
-    <div class="container">
-        <!-- Left Section -->
-        <div class="section left">
-            <div class="header">
-                <h2>Projects</h2>
-            </div>
-            <div class="projects-intro">
-                <p>These are some of the projects I have been working on:</p>
-            </div>
-            <ul>
-                <li><a href="https://thunderenv.glitch.me">Thunder - Python App Manager</a></li>
-                <li><a href="https://github.com/korrykatti/Mirage">Mirage - very boring chat app</a></li>
-                <li><a href="#">Another Project</a></li>
-                <li><a href="#">Yet Another Project</a></li>
-                <li><a href="#">One More Project</a></li>
-                <li><a href="#">One More More Project</a></li>
-                <li><a href="#">One More More More Project</a></li>
-                <li><a href="#">One More More More More Project</a></li>
-                <li><a href="#">One More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More More More More More Project</a></li>
-                <li><a href="#">One More More More More More More More More More More More Project</a></li>
-
-            </ul>
-            <hr>
-            <div class="footer-left">
-                <p align="center">
-                    <img src="img/cssdif.gif" alt="CSS Animation">
-                    <a href="/404.html"><img src="img/discord2.gif" alt="Discord"></a>
-                </p>
-                <p>&copy; 2024 Korry Katti. All rights reserved.</p>
-            </div>
-        </div>
-
-        <!-- Middle Section -->
-        <div class="section middle">
-            
-            <h1>Welcome to my site!</h1>
-            <p>Hello, my name is KorryKatti and this is my website.I have placed many links around this site. Feel free to explore around. I will keep updating it when i get time. Also this website is in forever WIP</p>
-            <p>You may also notice that this website isn't styled properly, and that is because i do not know css and neither plan on learning it. This site is readable and usable so i don't see a reason.</p>
-            
-            <div class="footer-middle">
-                Copyright © 2024 Korry Katti. Under MIT license.
-            </div>
-        </div>
-
-
-        <!-- Right Section -->
-        <div class="section right">
-            <div class="header">
-                <h2>Links and other stuff</h2>
-            </div>
-            <ul>
-                <li><a href="#">Link 1</a></li>
-                <li><a href="#">Link 2</a></li>
-                <li><a href="#">Link 3</a></li>
-                <li><a href="#">Link 4</a></li>
-            </ul>
-            <button id="openPopup">Chatbox</button>
-
-            <div id="popupOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0, 0, 0, 0.7); justify-content:center; align-items:center;">
-                <div style="background:white; padding:20px; border-radius:5px; width:80%; max-width:800px; max-height:90%; display:flex; flex-direction:column;">
-                    <button id="closePopup" style="background:red; color:white; border:none; padding:10px 20px; cursor:pointer; border-radius:5px; align-self:flex-end;">Close</button>
-                    <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="500" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" style="flex:1; border:none;"></iframe>
-                </div>
-            </div>
+        </header>
         
-            <script>
-                document.getElementById('openPopup').onclick = function() {
-                    document.getElementById('popupOverlay').style.display = 'flex';
-                };
+        <p>Hey there! You've stumbled upon a website made by yours truly, Korrykatti. Now, if you're expecting slick designs and CSS wizardry, you're in the wrong place, buddy.</p>
+        See, CSS and I have an understanding: I don’t mess with it, and it doesn’t mess with me. So, I threw this site together without giving CSS a second thought. (Or even a first thought, really.)</p>
+        <p>What you see is what you get—no frills, no fuss, just pure, unfiltered HTML vibes. It’s like a sandwich with just the bread: not flashy, but it’ll fill you up... probably.</p>
+        <button>Learn More (or just click aimlessly)</button>
         
-                document.getElementById('closePopup').onclick = function() {
-                    document.getElementById('popupOverlay').style.display = 'none';
-                };
-        
-                window.onclick = function(event) {
-                    if (event.target == document.getElementById('popupOverlay')) {
-                        document.getElementById('popupOverlay').style.display = 'none';
-                    }
-                };
-            </script>
-
-            <hr>
-            <div class="iframe-container">
-                <iframe src="https://www.youtube.com/embed/hOHKltAiKXQ?list=RDhOHKltAiKXQ" title="Hanumankind – Big Dawgs | Ft. Kalmi (Official Music Video) | Def Jam India" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            
-            <div class="footer-right">
-                <h3 align="center">View Counter</h3>
-                <p align="center"><img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb"></p>
-            </div>
-
-        </div>
+        <p>If you're still here, congratulations! You've either got too much free time or you're really intrigued by my lack of CSS skills. Either way, thanks for sticking around!</p>
+        <p>Maybe someday I’ll learn CSS and transform this site into something truly magnificent. Or maybe I'll just keep it like this as a monument to laziness. Who knows?</p>
     </div>
+    
+    <footer>
+        &copy; 2024 Korrykatti. All rights reserved. CSS was intentionally neglected in the making of this site.
+    </footer>
 </body>
 </html>
