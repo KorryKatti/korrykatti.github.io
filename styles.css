@@ -52,3 +52,7 @@ footer {
     margin-top: 50px;
     color: #8A2BE2;
 }
+.inline-list li {
+    display: inline; /* or inline-block */
+    margin-right: 10px; /* optional: adds space between items */
+}
