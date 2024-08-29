@@ -3,43 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-    <style>
-        body {
-            background-color: black;
-            color: #001eff;
-            font-size: 12px;
-            font-family: 'Comic Sans MS', sans-serif;
-        }
-        h1 {
-            color: #ff69b4;
-            text-align: center;
-        }
-        p {
-            color: #00ff00;
-            text-align: center;
-        }
-    </style>
+    <title>Personal Page</title>
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <h1>Hello, welcome to my site</h1>
-    <p>This site may be looking dull, that was intentional</p>
-    <p>Also, this website is in forever WIP</p>
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 80%; margin: 0 auto;">
-        <div class="chatbox" style="flex: 1; margin-right: 10px;">
-            <h4>chatbox - be nice please</h4>
-            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
-        </div>
-        <div class="view-counter" style="flex: 1; margin-left: 10px; text-align: right;">
-            <h3>visit counter</h3>
-            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="If you see this text then the image has some problem loading">
-            <div style="margin-top: 20px;">
-                <h3>random video</h3>
-                <iframe width="170" height="175" src="https://www.youtube.com/embed/1IXqjGE_DOA?si=qEXCtEXYuY3Hjuy8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
+    <header>
+        <h1>welcome to my site</h1>
+        <h3>some links</h3>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
 
-    
+    <main>
+        <section id="about">
+            <h2> About Me</h2>
+            <p>yo welcome to my site , korrykatti here , thats all i am telling , also you can call me just korry</p>
+        </section>
+
+        <hr>
+
+        <section id="projects">
+            <h2>Projects</h2>
+            <ul>
+                <li>Project 1 - <a href="https://github.com/korrykatti/thunder">appstore (wip)</a></li>
+                <li>Project 2 - <a href="ttps://github.com/korrykatti/mirage">boring chat app</a></li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <section id="video">
+            <h2>Random video</h2>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/1IXqjGE_DOA?si=qEXCtEXYuY3Hjuy8" 
+                title="YouTube video player" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </section>
+
+        <hr>
+
+        <section id="chat">
+            <h2>## Chatbox</h2>
+            <p>be nice , thank you</p>
+            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+        </section>
+
+        <hr>
+
+        <section id="contact">
+            <h2>## Contact Me</h2>
+            <p>If you'd like to get in touch, feel free to reach out via email or connect with me on social media:</p>
+            <ul>
+                <li>Email: <a href="mailto:zou8hs4i7@mozmail.com">zou8hs4i7@mozmail.com</a></li>
+                <li>GitHub: <a href="https://github.com/korrykatti">GitHub Profile</a></li>
+            </ul>
+        </section>
+
+        <hr>
+
+
+        <section id="counter">
+            <h2>## Website Visitors</h2>
+            <p>Thank you for visiting my site! Here's how many people have visited:</p>
+            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="If you see this text then the image has some problem loading">
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 korrykatti <!--website inspiration taken from qtnx.ai--></p>
+    </footer>
 </body>
 </html>
