@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Page</title>
+    <title>Forever WIP || Welcome to my site</title>
     <link rel="stylesheet" href="style.css"> 
+    <link rel="icon" type="image/x-icon" href="https://i.pinimg.com/564x/68/89/be/6889be0fa76d0fe4d6044d3f0d0412d2.jpg">	
 </head>
 <body>
     <header>
-        <h1>welcome to my site</h1>
-        <h3>some links</h3>
+        <h1>welcome to my site </h1>
         <nav>
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#contact">Contact</a>
+            <a href="https://www.youtube.com/watch?v=kPkT0jMjEu8">click no no</a>
+            <a href="https://korrykatti.carrd.co">card</a>
+            <a href="https://korrykatti.tumblr.com">random things i think</a>
+            <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
         </nav>
     </header>
 
@@ -31,6 +32,7 @@
                 <li>Project 1 - <a href="https://github.com/korrykatti/thunder">appstore (wip)</a></li>
                 <li>Project 2 - <a href="ttps://github.com/korrykatti/mirage">boring chat app</a></li>
             </ul>
+            
         </section>
 
         <hr>
@@ -47,7 +49,7 @@
         <hr>
 
         <section id="chat">
-            <h2>## Chatbox</h2>
+            <h2>Chatbox</h2>
             <p>be nice , thank you</p>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
         </section>
@@ -55,11 +57,12 @@
         <hr>
 
         <section id="contact">
-            <h2>## Contact Me</h2>
+            <h2> Contact Me</h2>
             <p>If you'd like to get in touch, feel free to reach out via email or connect with me on social media:</p>
             <ul>
                 <li>Email: <a href="mailto:zou8hs4i7@mozmail.com">zou8hs4i7@mozmail.com</a></li>
                 <li>GitHub: <a href="https://github.com/korrykatti">GitHub Profile</a></li>
+
             </ul>
         </section>
 
@@ -67,14 +70,45 @@
 
 
         <section id="counter">
-            <h2>## Website Visitors</h2>
+            <h2> Website Visitors</h2>
             <p>Thank you for visiting my site! Here's how many people have visited:</p>
             <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="If you see this text then the image has some problem loading">
+            <hr>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 korrykatti <!--website inspiration taken from qtnx.ai--></p>
+        <p>things below this are probably useless for you and are unorganised too</p>
+        <!--website inspiration taken from qtnx dot ai , can say i copied it all even-->
+        <a href="https://wakatime.com/@575be6fb-dae0-4ee6-89bb-0c841fb08a85">
+            <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="Total time coded since May 6 2024" />
+        </a>
+    
+        <p id="last-updated">Website updated: Loading...</p>
+    
+        <script>
+            // Function to fetch the last commit from the GitHub API
+            async function getLastCommit() {
+                try {
+                    const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
+                    const commits = await response.json();
+                    const lastCommitDate = new Date(commits[0].commit.committer.date);
+                    
+                    const now = new Date();
+                    const diffTime = Math.abs(now - lastCommitDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    
+                    const lastUpdatedElement = document.getElementById('last-updated');
+                    lastUpdatedElement.textContent = `Last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+                } catch (error) {
+                    console.error("Error fetching the last commit:", error);
+                    document.getElementById('last-updated').textContent = "Error loading last updated date";
+                }
+            }
+    
+            getLastCommit();
+        </script>
     </footer>
+    
 </body>
 </html>
