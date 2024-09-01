@@ -1,183 +1,225 @@
+/* Font Definitions */
+@font-face {
+  font-family: "Berkeley Mono";
+  src: url("/BerkeleyMonoVariable-Regular.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+}
 
 @font-face {
-    font-family: "Berkeley Mono";
-    src: url("/BerkeleyMonoVariable-Regular.woff2") format("woff2-variations");
-    font-weight: 100 900;
-    font-style: normal;
-  }
+  font-family: "Berkeley Mono";
+  src: url("/BerkeleyMonoVariable-Italic.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: italic;
+}
 
-  @font-face {
-    font-family: "Berkeley Mono";
-    src: url("/BerkeleyMonoVariable-Italic.woff2") format("woff2-variations");
-    font-weight: 100 900;
-    font-style: italic;
-  }
+/* Base Styles */
+body {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: auto;
+  text-align: justify;
+  text-justify: inter-word;
+  background-color: rgb(0, 0, 0);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  color-scheme: dark;
+  min-width: 320px;
+  max-width: 700px;
+}
 
-  body {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    margin: auto;
-    text-align: justify;
-    text-justify: inter-word;
-    background-color: rgb(0, 0, 0);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.8);
-    color-scheme: dark;
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Berkeley Mono", monospace;
+  font-size: inherit;
+}
 
-    min-width: 320px;
-    max-width: 700px;
-  }
+header {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  padding: 1rem;
+}
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Berkeley Mono", monospace;
-    font-size: inherit;
-  }
+header h3 {
+  margin: 0;
+}
 
-  header {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-    padding: 1rem;
-  }
+a {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
 
-  header h3 {
-    margin: 0;
-  }
+:not(nav) > a:hover {
+  color: rgb(116, 96, 224);
+}
 
-  a {
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-  }
+nav a {
+  margin-right: 10px;
+  color: rgb(116, 96, 224);
+  text-decoration: none;
+}
 
-  :not(nav) > a:hover {
-    color: rgb(116, 96, 224);
-  }
+main {
+  padding: 0 1rem;
+}
 
-  nav a {
-    margin-right: 10px;
-    color: rgb(116, 96, 224);
-    text-decoration: none;
-  }
+hr {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-width: 0px;
+  height: 1px;
+}
 
-  main {
-    padding: 0 1rem;
-  }
+textarea, input {
+  font-size: 16px;
+}
 
-  hr {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-width: 0px;
-    height: 1px;
-  }
+content {
+  line-height: 1.6;
+}
 
-  textarea {
-    width: 100%;
-    font-size: 16px;
-  }
+table {
+  width: 100%;
+}
 
-  input {
-    font-size: 16px;
-  }
+img {
+  max-width: 100%;
+}
 
-  content {
-    line-height: 1.6;
-  }
+code {
+  font-family: "Berkeley Mono", sans-serif;
+  padding: 2px 5px;
+}
 
-  table {
-    width: 100%;
-  }
+pre code {
+  text-align: left;
+  display: block;
+  padding: 20px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  overflow-x: auto;
+}
 
-  img {
-    max-width: 100%;
-  }
+div.highlight pre {
+  background-color: initial;
+  color: initial;
+}
 
-  code {
-    font-family: "Berkeley Mono", sans-serif;
-    padding: 2px 5px;
-  }
+div.highlight code {
+  background-color: unset;
+  color: unset;
+}
 
-  pre code {
-    text-align: left;
-    display: block;
-    padding: 20px;
-    white-space: pre-wrap;
-    font-size: 14px;
-    overflow-x: auto;
-  }
+blockquote {
+  font-style: italic;
+  padding-left: 1rem;
+  border-left: 2px solid rgb(116, 96, 224);
+}
 
-  div.highlight pre {
-    background-color: initial;
-    color: initial;
-  }
+figure, img {
+  text-align: center;
+  margin: auto;
+}
 
-  div.highlight code {
-    background-color: unset;
-    color: unset;
-  }
+img {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+}
 
-  blockquote {
-    font-style: italic;
-    padding-left: 1rem;
-    border-left: 2px solid rgb(116, 96, 224);
-  }
+ul {
+  list-style: none; /* Remove default list dots */
+}
 
-  figure,
-  img {
-    text-align: center;
-    margin: auto;
-  }
+ol {
+  list-style: none;
+  counter-reset: ol-counter;
+}
 
-  img {
-    display: block;
-    max-width: 100%;
-    margin: 0 auto;
-  }
+ol li::before {
+  content: counter(ol-counter) ".";
+  counter-increment: ol-counter;
+  color: rgb(116, 96, 224);
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
 
-  ul {
-    list-style: none;
-  }
+:not(header) > h1::before {
+  content: "# ";
+  color: rgb(116, 96, 224);
+}
 
-  ul li::before {
-    content: "\2022";
-    color: rgb(116, 96, 224);
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-  }
+h2::before {
+  content: "## ";
+  color: rgb(116, 96, 224);
+}
 
-  ol {
-    list-style: none;
-    counter-reset: ol-counter;
-  }
+h3::before {
+  content: "### ";
+  color: rgb(116, 96, 224);
+}
 
-  ol li::before {
-    content: counter(ol-counter) ".";
-    counter-increment: ol-counter;
-    color: rgb(116, 96, 224);
-    display: inline-block;
-    width: 1em;
-    margin-left: -1em;
-  }
+footer {
+  padding: 0 1rem;
+}
 
-  :not(header) > h1::before {
-    content: "# ";
-    color: rgb(116, 96, 224);
-  }
+/* Color-changing hyperlink */
+a.color-changing-link {
+  color: #fff; /* White color */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold; /* Optional: Make the link bold */
+  animation: colorChange 3s infinite; /* Apply the color-changing animation */
+}
 
-  h2::before {
-    content: "## ";
-    color: rgb(116, 96, 224);
+@keyframes colorChange {
+  0% {
+      color: #ff0000; /* Red */
   }
+  33% {
+      color: #00ff00; /* Green */
+  }
+  66% {
+      color: #0000ff; /* Blue */
+  }
+  100% {
+      color: #ff0000; /* Back to Red */
+  }
+}
 
-  h3::before {
-    content: "### ";
-    color: rgb(116, 96, 224);
-  }
+/* Guestbook Styles */
+#guestbook-entries {
+  margin-top: 2rem;
+}
 
-  footer {
-    padding: 0 1rem;
-  }
+#entriesList {
+  list-style-type: none; /* Remove default list dots */
+  padding: 0;
+  margin: 0;
+}
+
+.entry {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-header {
+  margin-bottom: 0.5rem; /* Space between header and message */
+  display: flex;
+  align-items: center;
+}
+
+.entry-name {
+  font-weight: bold;
+  color: rgb(116, 96, 224);
+  margin-right: 0.5rem; /* Space between name and bullet */
+}
+
+.entry-message {
+  margin: 0; /* Remove default margin for a cleaner look */
+  font-size: 16px;
+}
