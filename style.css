@@ -223,3 +223,27 @@ a.color-changing-link {
   margin: 0; /* Remove default margin for a cleaner look */
   font-size: 16px;
 }
+
+
+footer {
+  padding: 0 1rem;
+}
+
+/* Container for GIFs */
+#gif-container {
+  display: flex; /* Align items horizontally */
+  overflow-x: auto; /* Enable horizontal scroll */
+  white-space: nowrap; /* Prevent GIFs from wrapping to the next line */
+  padding: 10px 0; /* Add some padding for visual spacing */
+  background-color: rgba(0, 0, 0, 0.8); /* Optional: background color for better visibility */
+}
+
+#gif-container img {
+  height: 100px; /* Adjust height as needed */
+  margin-right: 10px; /* Space between GIFs */
+}
+
+/* Optional: Hide scrollbar for a cleaner look (works in Webkit-based browsers) */
+#gif-container::-webkit-scrollbar {
+  display: none;
+}
