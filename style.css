@@ -1,30 +1,15 @@
-/* Font Definitions */
-@font-face {
-  font-family: "Berkeley Mono";
-  src: url("/BerkeleyMonoVariable-Regular.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Berkeley Mono";
-  src: url("/BerkeleyMonoVariable-Italic.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-style: italic;
-}
-
 /* Base Styles */
 body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   margin: auto;
   text-align: justify;
   text-justify: inter-word;
-  background-color: rgb(0, 0, 0);
+  background-color: #F7E7D2; /* Light creamy cappuccino base */
   word-wrap: break-word;
   overflow-wrap: break-word;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.8);
-  color-scheme: dark;
+  color: #4E342E; /* Dark brown text */
+  color-scheme: light;
   min-width: 320px;
   max-width: 700px;
 }
@@ -45,17 +30,17 @@ header h3 {
 }
 
 a {
-  color: rgba(255, 255, 255, 0.8);
+  color: #8D6E63; /* Soft brown for links */
   margin: 0;
 }
 
 :not(nav) > a:hover {
-  color: rgb(116, 96, 224);
+  color: #6D4C41; /* Darker brown accent */
 }
 
 nav a {
   margin-right: 10px;
-  color: rgb(116, 96, 224);
+  color: #6D4C41;
   text-decoration: none;
 }
 
@@ -64,13 +49,16 @@ main {
 }
 
 hr {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(78, 52, 46, 0.2); /* Light brown */
   border-width: 0px;
   height: 1px;
 }
 
 textarea, input {
   font-size: 16px;
+  background-color: #F7E7D2; /* Light background for input */
+  border: 1px solid #D7CCC8; /* Soft border */
+  color: #4E342E; /* Dark brown text */
 }
 
 content {
@@ -79,6 +67,7 @@ content {
 
 table {
   width: 100%;
+  border: 1px solid #D7CCC8; /* Soft border for table */
 }
 
 img {
@@ -88,6 +77,8 @@ img {
 code {
   font-family: "Berkeley Mono", sans-serif;
   padding: 2px 5px;
+  background-color: #EFEBE9; /* Light cappuccino for code background */
+  color: #4E342E; /* Dark brown for code text */
 }
 
 pre code {
@@ -100,30 +91,19 @@ pre code {
 }
 
 div.highlight pre {
-  background-color: initial;
-  color: initial;
-}
-
-div.highlight code {
-  background-color: unset;
-  color: unset;
+  background-color: #D7CCC8; /* Soft brown highlight background */
+  color: #4E342E; /* Dark brown highlight text */
 }
 
 blockquote {
   font-style: italic;
   padding-left: 1rem;
-  border-left: 2px solid rgb(116, 96, 224);
+  border-left: 2px solid #8D6E63; /* Soft brown border */
 }
 
 figure, img {
   text-align: center;
   margin: auto;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-  margin: 0 auto;
 }
 
 ul {
@@ -138,7 +118,7 @@ ol {
 ol li::before {
   content: counter(ol-counter) ".";
   counter-increment: ol-counter;
-  color: rgb(116, 96, 224);
+  color: #8D6E63;
   display: inline-block;
   width: 1em;
   margin-left: -1em;
@@ -146,26 +126,27 @@ ol li::before {
 
 :not(header) > h1::before {
   content: "# ";
-  color: rgb(116, 96, 224);
+  color: #8D6E63;
 }
 
 h2::before {
   content: "## ";
-  color: rgb(116, 96, 224);
+  color: #8D6E63;
 }
 
 h3::before {
   content: "### ";
-  color: rgb(116, 96, 224);
+  color: #8D6E63;
 }
 
 footer {
   padding: 0 1rem;
+  background-color: #D7CCC8; /* Soft cappuccino footer */
 }
 
 /* Color-changing hyperlink */
 a.color-changing-link {
-  color: #fff; /* White color */
+  color: #4E342E; /* Dark brown */
   text-decoration: none; /* Remove underline */
   font-weight: bold; /* Optional: Make the link bold */
   animation: colorChange 3s infinite; /* Apply the color-changing animation */
@@ -173,16 +154,16 @@ a.color-changing-link {
 
 @keyframes colorChange {
   0% {
-      color: #ff0000; /* Red */
+      color: #FFB74D; /* Soft orange */
   }
   33% {
-      color: #00ff00; /* Green */
+      color: #8D6E63; /* Soft brown */
   }
   66% {
-      color: #0000ff; /* Blue */
+      color: #A1887F; /* Light brown */
   }
   100% {
-      color: #ff0000; /* Back to Red */
+      color: #FFB74D; /* Back to soft orange */
   }
 }
 
@@ -198,8 +179,8 @@ a.color-changing-link {
 }
 
 .entry {
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.9); /* Soft cream overlay */
+  border: 1px solid rgba(200, 180, 170, 0.5);
   border-radius: 5px;
   margin-bottom: 1rem;
   padding: 1rem;
@@ -215,7 +196,7 @@ a.color-changing-link {
 
 .entry-name {
   font-weight: bold;
-  color: rgb(116, 96, 224);
+  color: #6D4C41; /* Darker brown name color */
   margin-right: 0.5rem; /* Space between name and bullet */
 }
 
@@ -224,18 +205,13 @@ a.color-changing-link {
   font-size: 16px;
 }
 
-
-footer {
-  padding: 0 1rem;
-}
-
 /* Container for GIFs */
 #gif-container {
   display: flex; /* Align items horizontally */
   overflow-x: auto; /* Enable horizontal scroll */
   white-space: nowrap; /* Prevent GIFs from wrapping to the next line */
   padding: 10px 0; /* Add some padding for visual spacing */
-  background-color: rgba(0, 0, 0, 0.8); /* Optional: background color for better visibility */
+  background-color: rgba(247, 231, 210, 0.8); /* Light cappuccino background */
 }
 
 #gif-container img {
