@@ -1,133 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <!-- tracking hehe -->
-      <script defer src="https://cloud.umami.is/script.js" data-website-id="625ee17a-199a-4802-a9b9-28f4ab553152"></script>
-      <!-- sorry-->
-      <style>
-         body {
-         cursor: url('img/pointer.png'), auto;
-         }
-      </style>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Forever WIP || Welcome to my site</title>
-      <link rel="stylesheet" href="style.css">
-      <link rel="icon" type="image/x-icon" href="https://i.pinimg.com/564x/68/89/be/6889be0fa76d0fe4d6044d3f0d0412d2.jpg">
-   </head>
-   <body>
-      <header>
-         <h1>welcome to my site </h1>
-         <nav>
-            <a href="https://www.youtube.com/watch?v=kPkT0jMjEu8">click no no</a>
-            <a href="https://korrykatti.carrd.co">card</a>
-            <a href="https://korrykatti.tumblr.com">random things i think</a>
-            <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
-            <a href="guestbook.html" class="color-changing-link">please sign the guestbook</a>
-         </nav>
-      </header>
-      <main>
-         <section id="about">
-            <h2> About Me</h2>
-            <p>yo welcome to my site , korrykatti here , thats all i am telling , also you can call me just korry</p>
-         </section>
-         <hr>
-         <section id="projects">
-            <h2>Projects</h2>
-            <ul>
-               <li>Project 1 - <a href="https://github.com/korrykatti/thunder">appstore (wip)</a></li>
-               <li>Project 2 - <a href="https://github.com/korrykatti/mirage">boring chat app</a></li>
-            </ul>
-         </section>
-         <hr>
-         <section id="video">
-            <h2>Random video</h2>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/rptLcA0E4ps" 
-               title="YouTube video player" frameborder="0" 
-               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-               allowfullscreen>
-            </iframe>
-         </section>
-         <hr>
-         <section id="chat">
-            <h2>Chatbox</h2>
-            <p>be nice , thank you</p>
-            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
-         </section>
-         <hr>
-         <section id="contact">
-            <h2> Contact Me</h2>
-            <p>If you'd like to get in touch, feel free to reach out via email or connect with me on social media:</p>
-            <ul>
-               <li>Email: <a href="mailto:zou8hs4i7@mozmail.com">zou8hs4i7@mozmail.com</a></li>
-               <li>GitHub: <a href="https://github.com/korrykatti">GitHub Profile</a></li>
-            </ul>
-         </section>
-         <hr>
-         <section id="counter">
-            <h2> Website Visitors</h2>
-            <p>Thank you for visiting my site! Here's how many people have visited:</p>
-            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="If you see this text then the image has some problem loading">
-            <hr>
-         </section>
-      </main>
-      <footer>
-         <p>things below are probably useless for you and are unorganised too. even contains lot of bs</p>
-         <h3>Nothing useful beyond here</h3>
-         <!--website inspiration taken from qtnx dot ai , can say i copied it all even-->
-         <a href="https://wakatime.com/@575be6fb-dae0-4ee6-89bb-0c841fb08a85">
-         <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="Total time coded since May 6 2024" />
-         </a>
-         <p id="last-updated">Website updated: Loading...</p>
-         <script>
-            // Function to fetch the last commit from the GitHub API
-            async function getLastCommit() {
-                try {
-                    const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
-                    const commits = await response.json();
-                    const lastCommitDate = new Date(commits[0].commit.committer.date);
-                    
-                    const now = new Date();
-                    const diffTime = Math.abs(now - lastCommitDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-            
-                    const lastUpdatedElement = document.getElementById('last-updated');
-                    lastUpdatedElement.textContent = `Last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
-                } catch (error) {
-                    console.error("Error fetching the last commit:", error);
-                    document.getElementById('last-updated').textContent = "Error loading last updated date";
-                }
-            }
-            
-            getLastCommit();
-         </script>
-         
-         <p><h3>Random websites i like</h3></p>
-             <!-- GIFs Container -->
-    <div id="gif-container">
-      <!--<img src="path/to/your/first.gif" alt="Animated GIF 1">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">
-      <img src="path/to/your/second.gif" alt="Animated GIF 2">-->
-  </div>
-
-         <section id="testimonials">
-            <h2>What People Say</h2>
-            <div class="testimonial-gallery">
-                <img src="img/wow1.png" alt="Steam review screenshot 1">
-                <hr>
-                <img src="img/wow2.png" alt="Steam review screenshot 2">
-                <hr>
-                <img src="img/wow3.png" alt="discord screenshot 3">
-                <hr>
-                <img src="img/wow4.png" alt="discord screenshot 4">
-            </div>
-        </section>
-        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4qHdhSUkmDh6r7Ea4NzAvM?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<head>
+    <meta charset="UTF-8">
+    <!-- tracking hehe -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="625ee17a-199a-4802-a9b9-28f4ab553152"></script>
+    <!-- sorry-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>korrykatti</title>
+    <link rel="icon" type="image/x-icon" href="https://i.pinimg.com/564x/68/89/be/6889be0fa76d0fe4d6044d3f0d0412d2.jpg">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+            margin: auto;
+            text-align: justify;
+            text-justify: inter-word;
+            background-color: #191724; /* Dark muted purple (Rose Pine base) */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            color: #e0def4; /* Soft cream text */
+            color-scheme: light;
+            min-width: 320px;
+            max-width: 700px;
+        }
         
-      </footer>
-   </body>
+        /* Center the ul and remove the default list styling */
+        .centered-list {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+        .centered-list li::before {
+            content: "• ";
+            color: rgb(201, 18, 176);
+        }
+        
+        /* General Text Styling */
+        .center-text, .testimonial-container, #last-updated {
+            color: #e0def4;
+            text-align: center;
+            margin: auto;
+            width: 80%;
+        }
+
+        /* Testimonials Gallery Styling */
+        .testimonial-gallery {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .testimonial-gallery img {
+            max-width: 90%;
+            margin: 10px auto;
+            display: block;
+        }
+
+        /* Last Updated Date */
+        #last-updated {
+            color: rgb(31, 174, 180);
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <p align="center" style="color: rgb(255, 255, 255);">
+        <a href="/guestbook.html">guestbook</a> |
+        <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a> |
+        <a href="https://github.com/korrykatti">github</a> |
+        <a href="https://x.com/dunkelkron">x dot com</a> |
+        <a href="mailto:v53pqteon@mozmail.com">email</a>
+    </p>
+
+    <p align="center">
+        <img src="https://i.pinimg.com/564x/3c/e7/9e/3ce79e0c2d616f71dd95c2777d17dc6d.jpg" alt="image">
+    </p>
+
+    <p align="center">
+        welcome to my site. below are some projects and info about me. site is always a work in progress.
+    </p>
+
+    <p align="center" style="color: rgb(31, 174, 180);">
+        projects:
+    </p>
+
+    <ul class="centered-list" style="color: rgb(201, 18, 176);">
+        <li><a href="https://github.com/korrykatti/ziggle">ziggle</a> - command-based drawing tool (wip)</li>
+        <li><a href="https://github.com/korrykatti/mirage">mirage</a> - basic chat application (wip)</li>
+        <li><a href="https://github.com/korrykatti/thunder">thunder</a> - one-click code compiler & launcher (wip)</li>
+    </ul>
+
+    <div class="center-text">
+        i am a computer science and systems engineering undergrad (still studying). i play some games and surf the web in my free time (trying to change that). if you're from college, hi <span>👋</span>! and no, i’m not an expert in coding—anyone can make a site like this.
+    </div>
+    
+    <p align="center" style="color: rgb(61, 200, 200);">
+        chatbox
+    </p>
+
+    <p align="center">
+        <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+    </p>
+
+    <p align="center" style="color: rgb(91, 226, 226);">
+        visitor stats 
+    </p>
+    <p align="center" style="color: rgb(91, 226, 226);">
+        <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
+    </p>
+
+    <p align="center" style="color: rgb(91, 226, 226);">
+        <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" />
+    </p>
+
+    <p id="last-updated">website updated: loading...</p>
+    <script>
+        async function getLastCommit() {
+            try {
+                const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
+                const commits = await response.json();
+                const lastCommitDate = new Date(commits[0].commit.committer.date);
+                
+                const now = new Date();
+                const diffTime = Math.abs(now - lastCommitDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        
+                const lastUpdatedElement = document.getElementById('last-updated');
+                lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+            } catch (error) {
+                console.error("error fetching the last commit:", error);
+                document.getElementById('last-updated').textContent = "error loading last updated date";
+            }
+        }
+        getLastCommit();
+    </script>
+
+    <div class="testimonial-gallery">
+        <h4 style="color: rgb(121, 252, 252);">what people say</h2>
+        <img src="img/wow1.png" alt="steam review screenshot 1">
+        
+        <img src="img/wow2.png" alt="steam review screenshot 2">
+        
+        <img src="img/wow3.png" alt="discord screenshot 3">
+        
+        <img src="img/wow4.png" alt="discord screenshot 4">
+    </div>
+
+    <p align="center" style="color: rgb(151, 255, 255);">
+        thanks for visiting my site 
+    </p>
+
+</body>
 </html>

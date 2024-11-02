@@ -4,57 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+            margin: auto;
+            text-align: justify;
+            text-justify: inter-word;
+            background-color: #191724; /* Dark muted purple (Rose Pine base) */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+            color: #e0def4; /* Soft cream text */
+            color-scheme: light;
+            min-width: 320px;
+            max-width: 700px;
+        }
+
+        /* Center and style the header and navigation */
+        header {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            color: #91d7e3; /* Light blue color for links */
+            margin: 0 10px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: #f6c177; /* Hover color */
+        }
+
+        /* Form and input styles */
+        #guestbook-form {
+            background-color: #1f1d2e;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        label, input[type="text"], textarea, input[type="submit"] {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input[type="text"], textarea {
+            background-color: #26233a; /* Slightly lighter background for inputs */
+            color: #e0def4;
+        }
+
+        input[type="submit"] {
+            background-color: #c4a7e7;
+            color: #191724;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #91d7e3;
+        }
+
+        /* Entries section */
+        #guestbook-entries {
+            margin-top: 20px;
+        }
+
+        .entry {
+            background-color: #26233a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .entry-header {
+            color: #f6c177; /* Accent color */
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin: 20px 0;
+            color: #6e6a86;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Guestbook</h1>
         <nav>
-           <a href="index.html">home</a>
-           <a href="https://korrykatti.carrd.co">card</a>
-           <a href="https://korrykatti.tumblr.com">random things i think</a>
-           <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
-           <a href="guestbook.html" class="color-changing-link">please sign the guestbook</a>
+            <a href="index.html">home</a>
+            <a href="https://korrykatti.carrd.co">card</a>
+            <a href="https://korrykatti.tumblr.com">random things i think</a>
+            <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
+            <a href="guestbook.html" class="color-changing-link">please sign the guestbook</a>
         </nav>
-        <p>Leave your message below! . Thank you for signing the guestbook</p>
-     </header>        
-        
-
+        <p>leave your message below! thank you for signing the guestbook</p>
+    </header>
 
     <main>
         <section id="guestbook-form">
             <h2>Add a Message</h2>
             <form id="guestbookForm">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" placeholder="Your name" required>
+                <label for="name">name:</label>
+                <input type="text" id="name" name="name" placeholder="your name" required>
 
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" placeholder="Your message ! NEVER INCLUDE SENSITIVE INFORMATION" rows="1" required></textarea>
+                <label for="message">message:</label>
+                <textarea id="message" name="message" placeholder="your message! never include sensitive information" rows="3" required></textarea>
 
-                <input type="submit" value="Submit">
+                <input type="submit" value="submit">
             </form>
         </section>
 
         <hr>
 
         <section id="guestbook-entries">
-            <h2>Guestbook Entries</h2>
+            <h2>guestbook entries</h2>
             <ul id="entriesList">
                 <li class="entry">
                     <div class="entry-header">
-                        <span class="entry-name">Name</span>
+                        <span class="entry-name">name</span>
                     </div>
-                    <p class="entry-message">Message content goes here...</p>
+                    <p class="entry-message">message content goes here...</p>
                 </li>
                 <!-- Repeat for each entry -->
             </ul>
-            
-            
         </section>
     </main>
 
     <footer>
-        <p>Thank you and enjoy the site</p>
+        <p>thank you and enjoy the site</p>
     </footer>
 
     <script>
@@ -66,13 +151,15 @@
                 const entriesList = document.getElementById('entriesList');
                 entriesList.innerHTML = entries.reverse().map(entry => `
                     <li class="entry">
-                        <div class="entry-name">${entry.name}</div>
-                        <div class="entry-message">${entry.message}</div>
+                        <div class="entry-header">
+                            <span class="entry-name">${entry.name}</span>
+                        </div>
+                        <p class="entry-message">${entry.message}</p>
                     </li>
                 `).join('');
             } catch (error) {
                 console.error('Error loading entries:', error);
-                document.getElementById('entriesList').innerHTML = 'Error loading entries';
+                document.getElementById('entriesList').innerHTML = 'error loading entries';
             }
         }
 
