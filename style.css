@@ -1,225 +1,260 @@
-/* Base Styles */
+/* Base styles */
 body {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  margin: auto;
-  text-align: justify;
-  text-justify: inter-word;
-  background-color: #191724; /* Dark muted purple (Rose Pine base) */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.5;
-  color: #e0def4; /* Soft cream text */
-  color-scheme: light;
-  min-width: 320px;
-  max-width: 700px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Berkeley Mono", monospace;
-  font-size: inherit;
-}
-
-header {
-  margin-top: 3rem;
-  margin-bottom: 3rem;
-  padding: 1rem;
-}
-
-header h3 {
+  background-color: #FFF5E1;
   margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  color: #333;
+  position: relative;
+  overflow: hidden;
 }
 
-a {
-  color: #eb6f92; /* Soft rose */
-  margin: 0;
-}
-
-:not(nav) > a:hover {
-  color: #f6c177; /* Warm peach hover color */
-}
-
-nav a {
-  margin-right: 10px;
-  color: #eb6f92; /* Rose Pine rose */
-  text-decoration: none;
-}
-
-main {
-  padding: 0 1rem;
-}
-
-hr {
-  background-color: rgba(224, 222, 244, 0.1); /* Soft muted cream */
-  border-width: 0px;
-  height: 1px;
-}
-
-textarea, input {
-  font-size: 16px;
-  background-color: #26233a; /* Dark purple-gray background for inputs */
-  border: 1px solid #393552; /* Slightly darker purple border */
-  color: #e0def4; /* Soft cream text */
-}
-
-content {
-  line-height: 1.6;
-}
-
-table {
-  width: 100%;
-  border: 1px solid #393552; /* Darker muted purple for table borders */
-}
-
-img {
-  max-width: 100%;
-}
-
-code {
-  font-family: "Berkeley Mono", sans-serif;
-  padding: 2px 5px;
-  background-color: #393552; /* Muted purple for code blocks */
-  color: #e0def4; /* Soft cream text for code */
-}
-
-pre code {
-  text-align: left;
-  display: block;
+/* Container styles */
+.container {
+  background-color: #F5E1C7;
   padding: 20px;
-  white-space: pre-wrap;
-  font-size: 14px;
-  overflow-x: auto;
+  width: 80%;
+  max-width: 900px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
 }
 
-div.highlight pre {
-  background-color: #393552; /* Same muted purple for highlight background */
-  color: #e0def4; /* Soft cream text */
+/* Lines container */
+.connecting-lines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
 }
 
-blockquote {
-  font-style: italic;
-  padding-left: 1rem;
-  border-left: 2px solid #9ccfd8; /* Cool pine green border */
+/* Line styles */
+.line {
+  position: fixed;
+  background-color: red;
+  transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-figure, img {
+.line::after {
+  content: attr(data-position);
+  position: absolute;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 10px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Vertical lines */
+.line-top, .line-bottom {
+  width: 3px;
+  height: 0;
+}
+
+/* Horizontal lines */
+.line-left, .line-right {
+  height: 3px;
+  width: 0;
+}
+
+/* Line positions and animations */
+.line-top {
+  transform-origin: top;
+  animation: dropVertical 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.line-bottom {
+  transform-origin: bottom;
+  animation: dropVertical 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.line-left {
+  transform-origin: left;
+  animation: extendHorizontal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.line-right {
+  transform-origin: right;
+  animation: extendHorizontal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Coordinate display positions */
+.line-top::after {
+  top: 100%;
+  left: 0;
+}
+
+.line-bottom::after {
+  bottom: 100%;
+  left: 0;
+}
+
+.line-left::after {
+  top: 0;
+  left: 100%;
+}
+
+.line-right::after {
+  top: 0;
+  right: 100%;
+}
+
+/* Animations */
+@keyframes dropVertical {
+  from {
+      height: 0;
+  }
+  to {
+      height: calc(75vh - 345px);
+  }
+}
+
+@keyframes extendHorizontal {
+  from {
+      width: 0;
+  }
+  to {
+      width: calc(75vw - 675px);
+  }
+}
+
+/* Header styles */
+header {
+  padding: 10px 20px;
   text-align: center;
-  margin: auto;
 }
 
-ul {
-  list-style: none; /* Remove default list dots */
+.header-container nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
 }
 
-ol {
-  list-style: none;
-  counter-reset: ol-counter;
+.header-container nav ul li {
+  display: inline;
+  margin-right: 15px;
 }
 
-ol li::before {
-  content: counter(ol-counter) ".";
-  counter-increment: ol-counter;
-  color: #9ccfd8; /* Pine green for ordered list */
-  display: inline-block;
-  width: 1em;
-  margin-left: -1em;
+.header-container nav ul li a {
+  color: #5C4033;
+  text-decoration: none;
+  text-transform: lowercase;
 }
 
-:not(header) > h1::before {
-  content: "# ";
-  color: #9ccfd8; /* Pine green heading */
+.header-container nav ul li a:hover {
+  color: #8B5E3C;
 }
 
-h2::before {
-  content: "## ";
-  color: #9ccfd8;
+/* Content styles */
+.content {
+  text-align: left;
+  margin: 20px 0;
 }
 
-h3::before {
-  content: "### ";
-  color: #9ccfd8;
+.about-me p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
 }
 
-footer {
-  padding: 0 1rem;
-  background-color: #26233a; /* Dark muted purple footer */
+.projects p {
+  font-size: 18px;
+  color: rgb(31, 174, 180) !important;
 }
 
-/* Color-changing hyperlink */
-a.color-changing-link {
-  color: #e0def4; /* Soft cream */
-  text-decoration: none; /* Remove underline */
-  font-weight: bold; /* Optional: Make the link bold */
-  animation: colorChange 3s infinite; /* Apply the color-changing animation */
-}
-
-@keyframes colorChange {
-  0% {
-      color: #eb6f92; /* Soft rose */
-  }
-  33% {
-      color: #9ccfd8; /* Pine green */
-  }
-  66% {
-      color: #f6c177; /* Warm peach */
-  }
-  100% {
-      color: #eb6f92; /* Back to soft rose */
-  }
-}
-
-/* Guestbook Styles */
-#guestbook-entries {
-  margin-top: 2rem;
-}
-
-#entriesList {
-  list-style-type: none; /* Remove default list dots */
+.projects-list {
+  list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.entry {
-  background-color: rgba(255, 255, 255, 0.1); /* Light cream overlay */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 5px;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
+.projects-list li {
+  margin: 10px 0;
 }
 
-.entry-header {
-  margin-bottom: 0.5rem; /* Space between header and message */
-  display: flex;
-  align-items: center;
+.projects-list li a {
+  color: rgb(201, 18, 176);
+  text-decoration: none;
 }
 
-.entry-name {
-  font-weight: bold;
-  color: #9ccfd8; /* Pine green for name */
-  margin-right: 0.5rem; /* Space between name and bullet */
+.projects-list li a:hover {
+  color: rgb(31, 174, 180);
 }
 
-.entry-message {
-  margin: 0; /* Remove default margin for a cleaner look */
-  font-size: 16px;
+/* Hairpin image positioning */
+.hairpin-image {
+    position: absolute;
+    top: -50px;  /* Move further up */
+    right: -50px;  /* Move further to the right */
+    width: 150px;  /* Enlarged the image */
+    height: auto;
+    z-index: 10;  /* Ensure it's above other content */
+    transform: rotate(5deg);  /* Rotated counter-clockwise by 10 degrees */
+    opacity: 0.9;  /* Optional: slight transparency */
 }
 
-/* Container for GIFs */
-#gif-container {
-  display: flex; /* Align items horizontally */
-  overflow-x: auto; /* Enable horizontal scroll */
-  white-space: nowrap; /* Prevent GIFs from wrapping to the next line */
-  padding: 10px 0; /* Add some padding for visual spacing */
-  background-color: rgba(25, 23, 36, 0.8); /* Dark muted purple background */
+/* Chatbox positioning */
+.chatbox-container {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;  /* Increased z-index to ensure it's above other elements */
+    margin-right: 20px;  /* Optional: adds a small margin from the screen edge */
 }
 
-#gif-container img {
-  height: 100px; /* Adjust height as needed */
-  margin-right: 10px; /* Space between GIFs */
+.chatbox-container .chatbox-title {
+    color: rgb(61, 200, 200);
+    text-align: center;
+    margin-bottom: 10px;
 }
 
-/* Optional: Hide scrollbar for a cleaner look (works in Webkit-based browsers) */
-#gif-container::-webkit-scrollbar {
-  display: none;
+/* Smol web apps button */
+.smol-web-apps-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: rgb(31, 174, 180);
+    color: #191724;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.smol-web-apps-btn:hover {
+    background-color: rgb(61, 200, 200);
+}
+
+/* Footer Styling */
+.site-footer {
+    width: 100%;
+    max-width: 700px;
+    margin: 20px auto;
+    text-align: center;
+    padding: 20px 0;
+    color: rgb(91, 226, 226);
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#last-updated {
+    color: rgb(31, 174, 180);
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.wakatime-badge {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
 }
