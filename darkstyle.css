@@ -1,0 +1,392 @@
+/* Old School 90s/Early 2000s Web Design Stylesheet */
+body {
+    background-color: #333333;
+    color: #CCCCCC;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    font-size: 14px;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle%3Ecircle%7Bfill:%2399CCFF;%7D%3C/style%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3C/svg%3E"), auto;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #262626;
+    border: 3px ridge #666666;
+    padding: 20px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+header {
+    border-bottom: 2px solid #666666;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 5px 10px;
+}
+
+a {
+    color: #99CCFF;
+    text-decoration: none;
+    transition: color 0.3s;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle%3Ecircle%7Bfill:%23FFFFFF;%7D%3C/style%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3C/svg%3E"), pointer;
+}
+
+a:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.content {
+    background-color: #262626;
+}
+
+.about-me, .projects, .visitor-stats {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid #666666;
+    background-color: #1A1A1A;
+}
+
+.projects-list {
+    list-style-type: disc;
+    padding-left: 30px;
+}
+
+.content-binary {
+    font-size: 10px;
+    color: #999999;
+    text-align: right;
+    opacity: 0.7;
+}
+
+/* Chatbox Modal Styling */
+#chatbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.chatbox-modal-content {
+    background-color: #262626;
+    border: 3px ridge #666666;
+    width: 400px;
+    margin: 15% auto;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+    position: relative;
+}
+
+.chatbox-modal-header {
+    background-color: #333333;
+    color: #CCCCCC;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #666666;
+}
+
+.chatbox-close {
+    color: #CCCCCC;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.chatbox-modal-body {
+    padding: 20px;
+    background-color: #1A1A1A;
+    color: #CCCCCC;
+}
+
+.chatbox-modal-body iframe {
+    border: 2px solid #666666;
+    background-color: #1A1A1A;
+}
+
+.chatbox-modal-footer {
+    padding: 10px;
+    border-top: 2px solid #666666;
+}
+
+.site-footer {
+    margin-top: 20px;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.chatbox-popup-btn {
+    background-color: #333333;
+    color: #99CCFF;
+    border: 2px outset #666666;
+    padding: 5px 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle%3Ecircle%7Bfill:%23FFFFFF;%7D%3C/style%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3C/svg%3E"), pointer;
+    transition: all 0.3s;
+}
+
+.chatbox-popup-btn:hover {
+    background-color: #444444;
+    color: #FFFFFF;
+    border: 2px inset #666666;
+}
+
+.chatbox-popup-link {
+    color: #99CCFF;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+    transition: color 0.3s;
+}
+
+.chatbox-popup-link:hover {
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.chatbox-popup-link.pulse {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { color: #99CCFF; }
+    50% { color: #FFFFFF; }
+    100% { color: #99CCFF; }
+}
+
+/* Blinking Cursor Effect */
+@keyframes blink {
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+body::after {
+    content: '_';
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    color: #99CCFF;
+    animation: blink 1s infinite;
+}
+
+/* Retro Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #262626;
+    border: 2px solid #666666;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #666666;
+    border: 2px solid #333333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999999;
+}
+
+/* Marquee Styling */
+.site-marquee {
+    background-color: #444444;
+    color: #99CCFF;
+    padding: 5px 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    box-sizing: border-box;
+    border-bottom: 2px solid #666666;
+}
+
+/* Page Load Progress Bar */
+#page-load-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #1A1A1A;
+    z-index: 1000;
+}
+
+#progress-bar {
+    width: 0;
+    height: 5px;
+    background-color: #99CCFF;
+    transition: width 0.3s ease;
+}
+
+#progress-text {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #99CCFF;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Music Control */
+#music-control {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+#toggle-music {
+    background-color: #333333;
+    color: #99CCFF;
+    border: 2px outset #666666;
+    padding: 5px 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle%3Ecircle%7Bfill:%23FFFFFF;%7D%3C/style%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3C/svg%3E"), pointer;
+    transition: all 0.3s;
+}
+
+#toggle-music:hover {
+    background-color: #444444;
+    border: 2px inset #666666;
+}
+
+/* Mode Switch Buttons */
+.mode-switch-btn {
+    background-color: #333333;
+    color: #99CCFF;
+    border: 2px outset #666666;
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    display: inline-block;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cstyle%3Ecircle%7Bfill:%23FFFFFF;%7D%3C/style%3E%3Ccircle cx='16' cy='16' r='4'/%3E%3C/svg%3E"), pointer;
+    transition: all 0.3s;
+}
+
+.mode-switch-btn:hover {
+    background-color: #444444;
+    border: 2px inset #666666;
+    color: #FFFFFF;
+}
+
+/* SoundCloud Player Styling */
+#soundcloud-player {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 300px;
+    z-index: 1000;
+    background-color: #333333;
+    border: 2px solid #666666;
+    padding: 10px;
+    display: none;
+}
+
+/* Diagonal Sliding Background Images */
+@keyframes diagonalSlide {
+    0% {
+        transform: translate(-100%, -100%) rotate(-45deg);
+    }
+    100% {
+        transform: translate(100vw, 100vh) rotate(-45deg);
+    }
+}
+
+.background-reel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200vw;
+    height: 300vh;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.background-reel img {
+    position: absolute;
+    width: auto;
+    height: 800px;
+    object-fit: contain;
+    opacity: 0.3;
+    animation: diagonalSlide linear infinite;
+    animation-duration: 20s;
+}
+
+/* First row of images */
+.background-reel .row-1 img {
+    top: 0;
+    left: calc(var(--offset) * 1vw);
+}
+
+/* Second row of images */
+.background-reel .row-2 img {
+    top: 600px;
+    left: calc(var(--offset) * 1vw - 250px);
+}
+
+/* Third row of images */
+.background-reel .row-3 img {
+    top: 1200px;
+    left: calc(var(--offset) * 1vw - 500px);
+}
+
+/* Fourth row of images */
+.background-reel .row-4 img {
+    top: 1800px;
+    left: calc(var(--offset) * 1vw - 750px);
+}
+
+/* Fifth row of images */
+.background-reel .row-5 img {
+    top: 2400px;
+    left: calc(var(--offset) * 1vw - 1000px);
+}
+
+/* Stagger animation delays and offsets */
+.background-reel img:nth-child(1) { 
+    animation-delay: -2s;
+    --offset: -50;
+}
+.background-reel img:nth-child(2) { 
+    animation-delay: -4s;
+    --offset: 0;
+}
+.background-reel img:nth-child(3) { 
+    animation-delay: -6s;
+    --offset: 50;
+}
+.background-reel img:nth-child(4) { 
+    animation-delay: -8s;
+    --offset: 100;
+}
+.background-reel img:nth-child(5) { 
+    animation-delay: -10s;
+    --offset: 150;
+}
