@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @font-face {
+            font-family: 'Digital';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/digital-numbers/1.1.0/digital-numbers-regular.ttf');
+        }
+
+        body {
+            background: #000;
+            color: #b8b8b8;
+            font-family: 'MS PGothic', 'Arial', sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            background-image: 
+                repeating-linear-gradient(
+                    transparent 0px,
+                    transparent 1px,
+                    rgba(0, 0, 0, 0.1) 2px,
+                    rgba(0, 0, 0, 0.1) 3px
+                );
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(16, 16, 16, 0.9);
+            border: 1px solid #333;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* New shader background effects */
+        .shader-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .shader-layer-1 {
+            background: linear-gradient(45deg, rgba(196, 60, 60, 0.1), rgba(0, 0, 0, 0.2));
+            animation: shader-move-1 20s ease infinite;
+        }
+
+        .shader-layer-2 {
+            background: linear-gradient(135deg, rgba(60, 196, 196, 0.1), rgba(0, 0, 0, 0.2));
+            animation: shader-move-2 25s ease-in-out infinite;
+        }
+
+        @keyframes shader-move-1 {
+            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+            50% { transform: translateX(50px) translateY(30px) rotate(10deg); }
+        }
+
+        @keyframes shader-move-2 {
+            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+            50% { transform: translateX(-50px) translateY(-30px) rotate(-10deg); }
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: #111;
+            position: relative;
+        }
+
+        .lab-title {
+            font-size: 2em;
+            color: #c43c3c;
+            text-shadow: 0 0 5px rgba(196, 60, 60, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .divergence {
+            font-family: 'Digital', monospace;
+            color: #c43c3c;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .post {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #333;
+            background: #0a0a0a;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .post:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(196, 60, 60, 0.3);
+        }
+
+        .post:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, #000, #c43c3c, #000);
+        }
+
+        .post-title {
+            color: #c43c3c;
+            font-size: 1.5em;
+            margin: 0 0 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: #c43c3c;
+            text-decoration: none;
+            font-family: 'Courier New', monospace;
+            border: 1px solid #c43c3c;
+            padding: 5px 10px;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .read-more:hover {
+            background: #c43c3c;
+            color: #000;
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0.03)
+            );
+            animation: scanline 6s linear infinite;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div class="shader-bg shader-layer-1"></div>
+    <div class="shader-bg shader-layer-2"></div>
+    <div class="scanline"></div>
+    <div class="container">
+        <header class="header">
+            <div class="lab-title">blog</div>
+            <div class="divergence">Divergence: <script>
+                // Fetch latitude from IP geolocation
+                fetch('https://ipapi.co/json/')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.querySelector('.divergence').textContent = 
+                            `Divergence: ${data.latitude.toFixed(4)}`;
+                    })
+                    .catch(error => {
+                        document.querySelector('.divergence').textContent = 
+                            'Divergence: Unknown';
+                        console.error('Error fetching IP geolocation:', error);
+                    });
+            </script></div>
+        </header>
+
+        <div class="post">
+            <h2 class="post-title">[OPEN] Hello world</h2>
+            <div class="post-meta">lab member 001 | date : 03.01.2025</div>
+            <div class="post-content">
+                Testing out the blog functionality. First post to verify everything is working correctly. Exploring the digital landscape, one byte at a time. More content coming soon...
+            </div>
+            <a href="posts/03012025.html" class="read-more">>READ_MORE</a>
+        </div>
+    </div>
+</body>
+</html>
