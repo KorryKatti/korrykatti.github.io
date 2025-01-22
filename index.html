@@ -13,7 +13,8 @@
             margin: 0;
             padding: 20px;
             text-align: center;
-            overflow: hidden;
+            overflow-y: auto; /* Ensure vertical scrolling is enabled */
+            overflow-x: hidden; /* Disable horizontal scrolling */
             position: relative;
         }
         header {
@@ -58,6 +59,15 @@
         }
         #playAudio {
             display: none;
+        }
+        .animated-button {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -245,11 +255,125 @@
         }
         createParticles();
     </script>
+    <footer class="site-footer">
+        <div id="last-updated">website updated: loading...</div>
+        <div class="footer-actions">
+            <p><div class="wakatime-badge">
+                <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" />
+            </div></p>
+        </div>
+    </footer>
     <footer style="text-align: center; margin-top: 20px;">
         <a href="logs.html">
-            <img src="https://i.pinimg.com/736x/95/55/f2/9555f27a29f99e35b85595069d004bd3.jpg" alt="Go to Logs" style="width: 200px; height: auto; cursor: pointer;">
+            <img src="https://i.pinimg.com/736x/95/55/f2/9555f27a29f99e35b85595069d004bd3.jpg" alt="Click me" class="animated-button" style="width: 200px; height: auto; cursor: pointer;">
         </a>
-        <p>Thanks for visiting my personal space!</p>
     </footer>
+    <script>
+        // Function to convert text to binary
+        function textToBinary(text) {
+            return text.split('').map(char => 
+                char.charCodeAt(0).toString(2).padStart(8, '0')
+            ).join(' ');
+        }
+
+        // Set the binary text when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const binaryElement = document.getElementById('content-binary');
+            binaryElement.textContent = textToBinary('something soon');
+
+            // Get the modal elements
+            const modal = document.getElementById('chatbox-modal');
+            const modalContent = document.getElementById('chatbox-modal-content');
+            const btn = document.getElementById('chatbox-btn');
+            const span = document.getElementsByClassName('chatbox-close')[0];
+            const header = document.querySelector('.chatbox-modal-header');
+
+            // Dragging functionality
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            header.addEventListener('mousedown', dragStart);
+            document.addEventListener('mouseup', dragEnd);
+            document.addEventListener('mousemove', drag);
+
+            function dragStart(e) {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+
+                if (e.target === header) {
+                    isDragging = true;
+                }
+            }
+
+            function dragEnd(e) {
+                initialX = currentX;
+                initialY = currentY;
+
+                isDragging = false;
+            }
+
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+
+                    xOffset = currentX;
+                    yOffset = currentY;
+
+                    setTranslate(currentX, currentY, modalContent);
+                }
+            }
+
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+            }
+
+            // Open the modal 
+            btn.onclick = function() {
+                modal.style.display = "block";
+                // Reset position when opening
+                modalContent.style.transform = 'translate3d(0px, 0px, 0)';
+                xOffset = 0;
+                yOffset = 0;
+            }
+
+            // Close the modal when clicking on <span> (x)
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Close the modal when clicking anywhere outside of it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+        async function getLastCommit() {
+            try {
+                const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
+                const commits = await response.json();
+                const lastCommitDate = new Date(commits[0].commit.committer.date);
+                
+                const now = new Date();
+                const diffTime = Math.abs(now - lastCommitDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        
+                const lastUpdatedElement = document.getElementById('last-updated');
+                lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+            } catch (error) {
+                console.error("error fetching the last commit:", error);
+                document.getElementById('last-updated').textContent = "error loading last updated date";
+            }
+        }
+        getLastCommit();
+    </script>
 </body>
 </html>

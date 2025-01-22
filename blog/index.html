@@ -78,6 +78,10 @@
             color: #c43c3c;
             text-shadow: 0 0 5px rgba(196, 60, 60, 0.8);
             font-family: 'Courier New', monospace;
+            /*make a href follow same color*/
+            a {
+                color: #c43c3c;
+            }
         }
 
         .divergence {
@@ -169,7 +173,7 @@
     <div class="scanline"></div>
     <div class="container">
         <header class="header">
-            <div class="lab-title">blog</div>
+            <div class="lab-title">blog | <a href="../index.html">home</a></div>
             <div class="divergence">Divergence: <script>
                 // Fetch latitude from IP geolocation
                 fetch('https://ipapi.co/json/')
@@ -193,6 +197,14 @@
                 Testing out the blog functionality. First post to verify everything is working correctly. Exploring the digital landscape, one byte at a time. More content coming soon...
             </div>
             <a href="posts/03012025.html" class="read-more">>READ_MORE</a>
+        </div>
+        <div class="post">
+            <h2 class="post-title">[DRAFT]</h2>
+            <div class="post-meta">lab member 001 | date : 22.01.2025</div>
+            <div class="post-content">
+                my second hackathon experience
+            </div>
+            <a href="posts/22012025.html" class="read-more">>READ_MORE</a>
         </div>
     </div>
 </body>
