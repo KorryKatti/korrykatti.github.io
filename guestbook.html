@@ -4,40 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .entry {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        nav {
+            margin: 20px 0; 
+            display: flex; 
+            justify-content: center;
+        }
+        nav ul {
+            list-style-type: none; 
+            padding: 0; 
+            display: flex; 
+            gap: 20px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <div class="connecting-lines"></div>
-    <div class="container">
-        <header>
-            <div class="header-container">
-                <nav>
-                    <ul>
-                        <li><a href="index.html">home</a></li>
-                        <li><a href="https://korrykatti.carrd.co">card</a></li>
-                        <li><a href="https://korrykatti.tumblr.com">random things i think</a></li>
-                        <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
-                        <li><a href="guestbook.html" class="color-changing-link">please sign the guestbook</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-        <div class="content">
-            <img src="img/above.png" alt="Hairpin" class="hairpin-image">
-            <div class="guestbook">
-                <p style="color: rgb(31, 174, 180);">guestbook</p>
-                <div id="guestbook-form">
-                    <form id="guestbookForm">
-                        <input type="text" id="nameInput" placeholder="Your Name" required maxlength="50">
-                        <textarea id="messageInput" placeholder="Your Message" required maxlength="300"></textarea>
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-                <div id="entries"></div>
-            </div>
-        </div>
-    </div>
-
+    <nav>
+        <ul>
+            <li><a href="index.html">home</a></li>
+            <li><a href="https://korrykatti.carrd.co">card</a></li>
+            <li><a href="https://korrykatti.tumblr.com">random things i think</a></li>
+            <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
+            <li><a href="guestbook.html" class="color-changing-link">please sign the guestbook</a></li>
+        </ul>
+    </nav>
+    <h1>Guestbook</h1>
+    <form id="guestbookForm">
+        <input type="text" id="nameInput" placeholder="Your Name" required>
+        <textarea id="messageInput" placeholder="Your Message" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="entries"></div>
     <script>
         async function loadEntries() {
             try {
@@ -99,6 +134,5 @@
         document.addEventListener('DOMContentLoaded', loadEntries);
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);
     </script>
-    <script src="script.js"></script>
 </body>
 </html>

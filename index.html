@@ -3,167 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Korrykatti</title>
+    <title>My Personal Website</title>
     <link rel="stylesheet" href="style.css">
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="625ee17a-199a-4802-a9b9-28f4ab553152"></script>
+    <link rel="icon" href="img/icon.jpeg" type="image/jpeg">
     <style>
-        #last-updated {
-            color: rgb(31, 174, 180);
-            font-size: 18px;
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 20px;
             text-align: center;
-            margin-top: 10px;
-            width: 100%;
+            overflow: hidden;
             position: relative;
-            z-index: 1;
         }
-        .site-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        header {
+            background-color: #ffffff;
+            padding: 10px;
+        }
+        main {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        footer {
             margin-top: 20px;
-            padding: 20px 0;
-            color: rgb(91, 226, 226);
+            font-size: small;
         }
-        .footer-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
+        body.dark-theme {
+            background-color: #333;
+            color: #fff;
         }
-        .wakatime-badge {
-            margin-top: 10px;
+        header.dark-theme {
+            background-color: #444;
         }
-        .content-binary {
-            color: black;
-            font-size: 6px;
-            text-align: right;
-            margin-top: 10px;
-            padding-right: 20px;
-            opacity: 0.5;
+        main.dark-theme {
+            background-color: #555;
         }
-        .chatbox-popup-btn {
-            background-color: rgb(91, 226, 226);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background-color 0.3s ease;
-        }
-        .chatbox-popup-btn:hover {
-            background-color: rgb(31, 174, 180);
-        }
-        .chatbox-popup-link {
-            background: none;
-            border: none;
-            color: rgb(91, 226, 226);
-            text-decoration: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: color 0.3s ease, transform 0.2s ease;
-            position: relative;
-            display: inline-block;
-        }
-        .chatbox-popup-link:hover {
-            color: rgb(31, 174, 180);
-            transform: scale(1.05);
-        }
-        .chatbox-popup-link::after {
-            content: '';
+        .particle {
             position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: -3px;
-            left: 0;
-            background-color: rgb(91, 226, 226);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: move 5s linear infinite;
+            opacity: 0;
         }
-        .chatbox-popup-link:hover::after {
-            transform: scaleX(1);
+        @keyframes move {
+            0% { transform: translate(0, 0); opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { transform: translate(100px, -100px); opacity: 0; }
         }
-        .chatbox-popup-link.pulse {
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% {
-                color: rgb(91, 226, 226);
-                transform: scale(1);
-            }
-            50% {
-                color: rgb(31, 174, 180);
-                transform: scale(1.05);
-            }
-            100% {
-                color: rgb(91, 226, 226);
-                transform: scale(1);
-            }
-        }
-        #chatbox-modal {
+        #playAudio {
             display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0);
-            pointer-events: none;
-        }
-        .chatbox-modal-content {
-            background-color: #1a1a1a;
-            border: 1px solid rgb(91, 226, 226);
-            width: 400px;
-            position: absolute;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            border-radius: 5px;
-            pointer-events: auto;
-            resize: both;
-            overflow: auto;
-        }
-        .chatbox-modal-header {
-            background-color: rgb(91, 226, 226);
-            color: white;
-            padding: 10px;
-            cursor: move;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }
-        .chatbox-close {
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-        .chatbox-close:hover {
-            color: rgb(31, 174, 180);
-        }
-        .chatbox-modal-body {
-            padding: 10px;
-            background-color: #1a1a1a;
-            color: white;
         }
     </style>
 </head>
 <body>
-    <script>
-        window.onload = function() {
-    alert('If the page renders not so well zoom out this page to around 67-75%');
-};
-    </script>
-    <div class="connecting-lines"></div>
-    <div class="container">
-        <img src="img/above.png" alt="Hairpin" class="hairpin-image">
-        <header>
-            <div class="header-container">
-                <nav>
-                    <ul>
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td colspan="2">
+                <header>
+                    <h1>welcome</h1>
+                </header>
+                <nav style="margin: 20px 0; display: flex; justify-content: center;">
+                    <ul style="list-style-type: none; padding: 0; display: flex; gap: 20px;">
                         <li><a href="/guestbook.html">guestbook</a></li>
                         <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
                         <li><a href="https://github.com/korrykatti">github</a></li>
@@ -171,169 +77,179 @@
                         <li><a href="mailto:v53pqteon@mozmail.com">email</a></li>
                         <li><a href="/blog/index.html">blog??</a></li>
                         <li><a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a></li>
+                        <li><button id="theme-toggle" style="margin-left: 20px;">Toggle Theme</button></li>
                     </ul>
                 </nav>
-            </div>
-        </header>
-        <div class="content">
-            <div class="about-me">
-                <p>
-                    I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
-                </p>
-            </div>
-            <div class="projects">
-                <p style="color: rgb(31, 174, 180);">projects:</p>
-                <ul class="projects-list">
-                    <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
-                    <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
-                    <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
-                </ul>
-            </div>
-            
-            <div class="visitor-stats">
-                <p style="color: rgb(4, 135, 223);">visitor stats</p>
-                <p style="color: rgb(91, 226, 226);">
-                    <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
-                </p>
-            </div>
-            <div class="content-binary" id="content-binary"></div>
-        </div>
-    </div>
-
-    <!-- Chatbox Modal -->
-    <div id="chatbox-modal">
-        <div id="chatbox-modal-content" class="chatbox-modal-content">
-            <div class="chatbox-modal-header">
-                <span>Chatbox</span>
-                <span class="chatbox-close">&times;</span>
-            </div>
-            <div class="chatbox-modal-body">
-                <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
-            </div>
-        </div>
-    </div>
-
-
-    <footer class="site-footer">
-        <div id="last-updated">website updated: loading...</div>
-        <p>
-                <a href="darkmode.html">dark mode</a>
-        </p>
-        <div class="footer-actions">
-            <button id="chatbox-btn" class="chatbox-popup-link pulse">Open Chatbox</button>
-            <div class="wakatime-badge">
-                <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" />
-            </div>
-        </div>
-    </footer>
-
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <marquee behavior="scroll" direction="left" style="font-size: 24px; margin: 20px 0;">
+                    I don't care about the alignment, I have suffered with those enough, this website is presented as it is, with ofc forever WIP.
+                </marquee>
+            </td>
+        </tr>
+        <tr>
+            <td width="200" valign="top">
+                <div style="display: flex;">
+                    <div style="margin-right: 10px;">
+                        <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+                    </div>
+                    <div style="flex: 1;">
+                        <main style="display: flex; align-items: center;">
+                            <img src="img/left.png" alt="Left Image" style="width: 150px; height: auto; margin-right: 20px;">
+                            <section>
+                                <div class="about-me">
+                                    <p>
+                                        I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
+                                    </p>
+                                </div>
+                                <div class="projects">
+                                    <p style="color: rgb(31, 174, 180);">projects:</p>
+                                    <ul class="projects-list">
+                                        <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
+                                        <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
+                                        <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
+                                    </ul>
+                                </div>
+                                <div class="visitor-stats">
+                                    <p style="color: rgb(4, 135, 223);">visitor stats</p>
+                                    <p style="color: rgb(91, 226, 226);">
+                                        <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
+                                    </p>
+                                </div>
+                            </section>
+                            <img src="img/above.png" alt="Banner Image" style="width: 150px; height: auto; margin-left: 20px;">
+                        </main>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div id="quote-marquee" style="margin: 20px 0;">
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
+                            <!-- Quotes will be populated here -->
+                        </marquee>
+                        <div style="height: 20px;"></div>
+                        <marquee behavior="scroll" direction="right" style="font-size: 20px; margin: 15px 0;">
+                            <!-- Quotes will be populated here -->
+                        </marquee>
+                        <div style="height: 20px;"></div>
+                        <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
+                            <!-- Quotes will be populated here -->
+                        </marquee>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="playAudio">Play Audio</button>
+                <audio id="backgroundAudio" controls>
+                    <source src="img/msc/song.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </td>
+        </tr>
+    </table>
     <script>
-        // Function to convert text to binary
-        function textToBinary(text) {
-            return text.split('').map(char => 
-                char.charCodeAt(0).toString(2).padStart(8, '0')
-            ).join(' ');
-        }
-
-        // Set the binary text when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const binaryElement = document.getElementById('content-binary');
-            binaryElement.textContent = textToBinary('something soon');
-
-            // Get the modal elements
-            const modal = document.getElementById('chatbox-modal');
-            const modalContent = document.getElementById('chatbox-modal-content');
-            const btn = document.getElementById('chatbox-btn');
-            const span = document.getElementsByClassName('chatbox-close')[0];
-            const header = document.querySelector('.chatbox-modal-header');
-
-            // Dragging functionality
-            let isDragging = false;
-            let currentX;
-            let currentY;
-            let initialX;
-            let initialY;
-            let xOffset = 0;
-            let yOffset = 0;
-
-            header.addEventListener('mousedown', dragStart);
-            document.addEventListener('mouseup', dragEnd);
-            document.addEventListener('mousemove', drag);
-
-            function dragStart(e) {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-
-                if (e.target === header) {
-                    isDragging = true;
-                }
-            }
-
-            function dragEnd(e) {
-                initialX = currentX;
-                initialY = currentY;
-
-                isDragging = false;
-            }
-
-            function drag(e) {
-                if (isDragging) {
-                    e.preventDefault();
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
-
-                    xOffset = currentX;
-                    yOffset = currentY;
-
-                    setTranslate(currentX, currentY, modalContent);
-                }
-            }
-
-            function setTranslate(xPos, yPos, el) {
-                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-            }
-
-            // Open the modal 
-            btn.onclick = function() {
-                modal.style.display = "block";
-                // Reset position when opening
-                modalContent.style.transform = 'translate3d(0px, 0px, 0)';
-                xOffset = 0;
-                yOffset = 0;
-            }
-
-            // Close the modal when clicking on <span> (x)
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            // Close the modal when clicking anywhere outside of it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
+        const toggleButton = document.getElementById('theme-toggle');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            document.querySelector('header').classList.toggle('dark-theme');
+            document.querySelector('main').classList.toggle('dark-theme');
         });
+    </script>
+    <script>
+        const quotes = [
+            "Look, if you’re going to stab me in the back, at least warn me first so I can dodge.",
+            "Did you just call the dragon… a spicy lizard? We’re gonna die, aren’t we?",
+            "I didn’t mean to burn it down! I just… strongly encouraged it to catch fire.",
+            "You keep saying ‘trust me,’ but every time I do, something explodes!",
+            "So, you’ve got a plan, right? Please tell me you have a plan.",
+            "Don’t look at me like that! It’s not my fault the treasure chest bit me.",
+            "You could’ve just asked for help. Instead, you decided to fight a bear with a broom.",
+            "I’m not mad you lied. I’m mad you’re so bad at it.",
+            "The bad news is we’re surrounded. The good news is… uh, actually, there is no good news.",
+            "If you say ‘oops’ one more time while defusing this bomb, I swear—",
+            "You think I enjoy risking my life for you? Spoiler: I don’t.",
+            "Why do I always have to clean up your messes? And why are they always on fire?!",
+            "Oh, sure, let’s split up. Because that always ends well in horror stories.",
+            "I’d love to help, but I value my life, so… good luck with that.",
+            "You call that a battle cry? It sounded like a sneeze.",
+            "I didn’t mean to punch him! He just… walked into my fist. Repeatedly.",
+            "Let me guess: you touched something you weren’t supposed to touch.",
+            "For once, could you not antagonize the person holding a giant sword?",
+            "You told me to act natural. Well, naturally, I’m panicking!",
+            "If we survive this, you owe me dinner. And not the cheap kind.",
+            "You’re bleeding all over the place. Do you even know how to take care of yourself?",
+            "Okay, new rule: no making deals with shady guys in cloaks.",
+            "You can’t just slap a band-aid on betrayal and call it forgiveness.",
+            "Did you really think running away would solve everything? Newsflash: it didn’t.",
+            "No, I don’t want to talk about my feelings. I want to punch something.",
+            "So, hypothetically, if I ate the cursed apple, how bad would that be?",
+            "You can’t just smile at me after saying something that terrifying!",
+            "I didn’t mean to get attached, okay? But here we are.",
+            "If you keep looking at me like that, I’m going to start thinking you care.",
+            "You’re not fine. Stop saying you’re fine when you’re clearly not fine!",
+            "Oh, yeah, sure. Let’s just waltz into the haunted mansion. Great idea.",
+            "If you want me to stay, just say it. Don’t make me guess.",
+            "You’re not a burden. Stop acting like the world’s better off without you.",
+            "You’ve got that ‘I’m about to do something stupid’ look again.",
+            "I’m not a hero. I’m just someone who refuses to watch you give up.",
+            "If you think for one second I’m leaving you behind, you don’t know me at all.",
+            "Some legends are born; others are forced to make their own destiny."
+        ];
 
-        async function getLastCommit() {
-            try {
-                const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
-                const commits = await response.json();
-                const lastCommitDate = new Date(commits[0].commit.committer.date);
-                
-                const now = new Date();
-                const diffTime = Math.abs(now - lastCommitDate);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        
-                const lastUpdatedElement = document.getElementById('last-updated');
-                lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
-            } catch (error) {
-                console.error("error fetching the last commit:", error);
-                document.getElementById('last-updated').textContent = "error loading last updated date";
+        function getRandomQuotes() {
+            const selectedQuotes = [];
+            const quoteCount = Math.floor(Math.random() * 2) + 2; // Randomly select 2 or 3 quotes
+            while (selectedQuotes.length < quoteCount) {
+                const randomIndex = Math.floor(Math.random() * quotes.length);
+                if (!selectedQuotes.includes(quotes[randomIndex])) {
+                    selectedQuotes.push(quotes[randomIndex]);
+                }
+            }
+            return selectedQuotes;
+        }
+
+        const marqueeElements = document.querySelectorAll('#quote-marquee marquee');
+        const randomQuotes = getRandomQuotes();
+        marqueeElements[0].innerHTML = randomQuotes[0];
+        marqueeElements[1].innerHTML = randomQuotes[1];
+        if (randomQuotes.length > 2) {
+            marqueeElements[2].innerHTML = randomQuotes[2];
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('backgroundAudio');
+            audio.play();
+        });
+    </script>
+    <script>
+        function createParticles() {
+            for (let i = 0; i < 50; i++) { // Create 50 particles
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                document.body.appendChild(particle);
+                // Randomize position
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                // Randomize animation duration and delay
+                particle.style.animationDuration = Math.random() * 3 + 2 + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
             }
         }
-        getLastCommit();
+        createParticles();
     </script>
-    <script src="script.js"></script>
+    <footer style="text-align: center; margin-top: 20px;">
+        <a href="logs.html">
+            <img src="https://i.pinimg.com/736x/95/55/f2/9555f27a29f99e35b85595069d004bd3.jpg" alt="Go to Logs" style="width: 200px; height: auto; cursor: pointer;">
+        </a>
+        <p>Thanks for visiting my personal space!</p>
+    </footer>
 </body>
 </html>
