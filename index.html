@@ -3,173 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Personal Website</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="img/icon.jpeg" type="image/jpeg">
+    <title>/index.html</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            overflow-y: auto; /* Ensure vertical scrolling is enabled */
-            overflow-x: hidden; /* Disable horizontal scrolling */
-            position: relative;
-        }
-        header {
-            background-color: #ffffff;
-            padding: 10px;
-        }
-        main {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        footer {
-            margin-top: 20px;
-            font-size: small;
-        }
-        body.dark-theme {
-            background-color: #333;
-            color: #fff;
-        }
-        header.dark-theme {
-            background-color: #444;
-        }
-        main.dark-theme {
-            background-color: #555;
-        }
-        .particle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            animation: move 5s linear infinite;
-            opacity: 0;
-        }
-        @keyframes move {
-            0% { transform: translate(0, 0); opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { transform: translate(100px, -100px); opacity: 0; }
-        }
-        #playAudio {
-            display: none;
-        }
-        .animated-button {
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #f0f0f0;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: 
+        linear-gradient(45deg, rgba(173, 216, 230, 0.2) 0%, rgba(255, 192, 203, 0.2) 100%),
+        url('https://www.transparenttextures.com/patterns/worn-dots.png');
+}
+header {
+    background-color: #e0e0e0;
+    color: #555;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: normal;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid #ccc;
+}
+nav {
+    margin: 10px 0;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+nav a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #666;
+    padding: 5px 10px;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+nav a:hover {
+    background-color: #f0f0f0;
+    color: #333;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+footer {
+    background-color: #f5f5f5;
+    color: #666;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+.weird-image {
+    width: 150px;
+    height: auto;
+    margin: 10px;
+    border: 2px dotted #aaa;
+    filter: grayscale(20%) contrast(110%);
+    transition: all 0.3s ease;
+}
+.weird-image:hover {
+    transform: rotate(2deg);
+}
+.chatbox {
+    margin-top: 20px;
+    border: 1px dashed #999;
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.5);
+    font-style: italic;
+    color: #555;
+}
+.glitch {
+    position: relative;
+    display: inline-block;
+    color: #666;
+    transition: all 0.3s ease;
+}
+.glitch:hover {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+.dark-theme {
+    background-color: #333;
+    color: #fff;
+}
+.dark-theme header {
+    background-color: #444;
+    color: #fff;
+}
+.dark-theme nav {
+    background-color: #555;
+    color: #fff;
+}
+.dark-theme nav a {
+    color: #fff;
+    background-color: #666;
+}
+.dark-theme nav a:hover {
+    background-color: #777;
+    color: #fff;
+}
+.dark-theme .container {
+    background-color: rgba(0, 0, 0, 0.8);
+    border: 1px solid #555;
+}
+.dark-theme footer {
+    background-color: #444;
+    color: #fff;
+    border-top: 1px solid #555;
+}
+.dark-theme .weird-image {
+    border: 2px dotted #666;
+}
+.dark-theme .chatbox {
+    border: 1px dashed #666;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
     </style>
 </head>
 <body>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td colspan="2">
-                <header>
-                    <h1>welcome</h1>
-                </header>
-                <nav style="margin: 20px 0; display: flex; justify-content: center;">
-                    <ul style="list-style-type: none; padding: 0; display: flex; gap: 20px;">
-                        <li><a href="/guestbook.html">guestbook</a></li>
-                        <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
-                        <li><a href="https://github.com/korrykatti">github</a></li>
-                        <li><a href="https://x.com/dunkelkron">x dot com</a></li>
-                        <li><a href="mailto:v53pqteon@mozmail.com">email</a></li>
-                        <li><a href="/blog/index.html">blog??</a></li>
-                        <li><a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a></li>
-                        <li><button id="theme-toggle" style="margin-left: 20px;">Toggle Theme</button></li>
-                    </ul>
-                </nav>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <marquee behavior="scroll" direction="left" style="font-size: 24px; margin: 20px 0;">
-                    I don't care about the alignment, I have suffered with those enough, this website is presented as it is, with ofc forever WIP.
-                </marquee>
-            </td>
-        </tr>
-        <tr>
-            <td width="200" valign="top">
-                <div style="display: flex;">
-                    <div style="margin-right: 10px;">
-                        <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+    <header>
+        <span class="glitch">Welcome to My Site!</span>
+        <nav>
+            <a href="/guestbook.html">guestbook</a>
+            <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
+            <a href="https://github.com/korrykatti">github</a>
+            <a href="https://x.com/dunkelkron">x dot com</a>
+            <a href="mailto:v53pqteon@mozmail.com">email</a>
+            <a href="/blog/index.html">blog??</a>
+            <a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a>
+            <a href="logs.html">logs</a>
+            <button id="theme-toggle" style="margin-left: 20px;">Toggle Theme</button>
+        </nav>
+    </header>
+    <div class="container">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="2">
+                    <marquee behavior="scroll" direction="left" style="font-size: 24px; margin: 20px 0;">
+                        I don't care about the alignment, I have suffered with those enough, this website is presented as it is, with ofc forever WIP.
+                    </marquee>
+                </td>
+            </tr>
+            <tr>
+                <td width="200" valign="top">
+                    <div style="display: flex;">
+                        <div style="flex: 1;">
+                            <main style="display: flex; align-items: center;">
+                                <img src="img/left.png" alt="Left Image" style="width: 150px; height: auto; margin-right: 20px;" class="weird-image">
+                                <section>
+                                    <div class="about-me">
+                                        <p>
+                                            I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
+                                        </p>
+                                    </div>
+                                    <div class="projects">
+                                        <p style="color: rgb(31, 174, 180);">projects:</p>
+                                        <ul class="projects-list">
+                                            <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
+                                            <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
+                                            <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
+                                        </ul>
+                                    </div>
+                                    <div class="visitor-stats">
+                                        <p style="color: rgb(4, 135, 223);">visitor stats</p>
+                                        <p style="color: rgb(91, 226, 226);">
+                                            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
+                                        </p>
+                                    </div>
+                                </section>
+                                <img src="img/above.png" alt="Banner Image" style="width: 150px; height: auto; margin-left: 20px;" class="weird-image">
+                            </main>
+                        </div>
                     </div>
-                    <div style="flex: 1;">
-                        <main style="display: flex; align-items: center;">
-                            <img src="img/left.png" alt="Left Image" style="width: 150px; height: auto; margin-right: 20px;">
-                            <section>
-                                <div class="about-me">
-                                    <p>
-                                        I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
-                                    </p>
-                                </div>
-                                <div class="projects">
-                                    <p style="color: rgb(31, 174, 180);">projects:</p>
-                                    <ul class="projects-list">
-                                        <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
-                                        <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
-                                        <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
-                                    </ul>
-                                </div>
-                                <div class="visitor-stats">
-                                    <p style="color: rgb(4, 135, 223);">visitor stats</p>
-                                    <p style="color: rgb(91, 226, 226);">
-                                        <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
-                                    </p>
-                                </div>
-                            </section>
-                            <img src="img/above.png" alt="Banner Image" style="width: 150px; height: auto; margin-left: 20px;">
-                        </main>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div id="quote-marquee" style="margin: 20px 0;">
+                        <div style="display: flex; flex-direction: column; align-items: center;">
+                            <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
+                                <!-- Quotes will be populated here -->
+                            </marquee>
+                            <div style="height: 20px;"></div>
+                            <marquee behavior="scroll" direction="right" style="font-size: 20px; margin: 15px 0;">
+                                <!-- Quotes will be populated here -->
+                            </marquee>
+                            <div style="height: 20px;"></div>
+                            <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
+                                <!-- Quotes will be populated here -->
+                            </marquee>
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <div id="quote-marquee" style="margin: 20px 0;">
-                    <div style="display: flex; flex-direction: column; align-items: center;">
-                        <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
-                            <!-- Quotes will be populated here -->
-                        </marquee>
-                        <div style="height: 20px;"></div>
-                        <marquee behavior="scroll" direction="right" style="font-size: 20px; margin: 15px 0;">
-                            <!-- Quotes will be populated here -->
-                        </marquee>
-                        <div style="height: 20px;"></div>
-                        <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
-                            <!-- Quotes will be populated here -->
-                        </marquee>
-                    </div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button id="playAudio">Play Audio</button>
-                <audio id="backgroundAudio" controls>
-                    <source src="img/msc/song.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-            </td>
-        </tr>
-    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="playAudio" style="display: none;">Play Audio</button>
+                    <audio id="backgroundAudio" controls>
+                        <source src="img/msc/song.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </td>
+            </tr>
+        </table>
+    </div>
     <script>
         const toggleButton = document.getElementById('theme-toggle');
         toggleButton.addEventListener('click', () => {
             document.body.classList.toggle('dark-theme');
             document.querySelector('header').classList.toggle('dark-theme');
-            document.querySelector('main').classList.toggle('dark-theme');
+            document.querySelector('nav').classList.toggle('dark-theme');
+            document.querySelector('.container').classList.toggle('dark-theme');
+            document.querySelector('footer').classList.toggle('dark-theme');
         });
     </script>
     <script>
@@ -256,17 +313,18 @@
         createParticles();
     </script>
     <footer class="site-footer">
+        <p><a href="cleanversion.html">Clean Version</a></p>
+        <div class="chatbox">
+            <h3>Chatbox</h3>
+            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+        </div>
+        <p><a href="cleanversion.html">Clean Version</a></p>
         <div id="last-updated">website updated: loading...</div>
         <div class="footer-actions">
             <p><div class="wakatime-badge">
                 <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" />
             </div></p>
         </div>
-    </footer>
-    <footer style="text-align: center; margin-top: 20px;">
-        <a href="logs.html">
-            <img src="https://i.pinimg.com/736x/95/55/f2/9555f27a29f99e35b85595069d004bd3.jpg" alt="Click me" class="animated-button" style="width: 200px; height: auto; cursor: pointer;">
-        </a>
     </footer>
     <script>
         // Function to convert text to binary
