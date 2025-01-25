@@ -3,417 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/index.html</title>
+    <title>Your Name</title>
+    <script async src="https://sleepie.uk/oneko.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-body {
-    font-family: 'Courier New', monospace;
-    background-color: #f0f0f0;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    background-image: 
-        linear-gradient(45deg, rgba(173, 216, 230, 0.2) 0%, rgba(255, 192, 203, 0.2) 100%),
-        url('https://www.transparenttextures.com/patterns/worn-dots.png');
-}
-header {
-    background-color: #e0e0e0;
-    color: #555;
-    padding: 15px;
-    font-size: 24px;
-    font-weight: normal;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid #ccc;
-}
-nav {
-    margin: 10px 0;
-    background-color: #f5f5f5;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-}
-nav a {
-    margin: 0 10px;
-    text-decoration: none;
-    color: #666;
-    padding: 5px 10px;
-    background-color: #fff;
-    border-radius: 3px;
-    border: 1px solid #ddd;
-    transition: all 0.3s ease;
-}
-nav a:hover {
-    background-color: #f0f0f0;
-    color: #333;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-.container {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-footer {
-    background-color: #f5f5f5;
-    color: #666;
-    text-align: center;
-    padding: 10px;
-    border-top: 1px solid #ddd;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-.weird-image {
-    width: 150px;
-    height: auto;
-    margin: 10px;
-    border: 2px dotted #aaa;
-    filter: grayscale(20%) contrast(110%);
-    transition: all 0.3s ease;
-}
-.weird-image:hover {
-    transform: rotate(2deg);
-}
-.chatbox {
-    margin-top: 20px;
-    border: 1px dashed #999;
-    padding: 10px;
-    background-color: rgba(240, 240, 240, 0.5);
-    font-style: italic;
-    color: #555;
-}
-.glitch {
-    position: relative;
-    display: inline-block;
-    color: #666;
-    transition: all 0.3s ease;
-}
-.glitch:hover {
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-.dark-theme {
-    background-color: #333;
-    color: #fff;
-}
-.dark-theme header {
-    background-color: #444;
-    color: #fff;
-}
-.dark-theme nav {
-    background-color: #555;
-    color: #fff;
-}
-.dark-theme nav a {
-    color: #fff;
-    background-color: #666;
-}
-.dark-theme nav a:hover {
-    background-color: #777;
-    color: #fff;
-}
-.dark-theme .container {
-    background-color: rgba(0, 0, 0, 0.8);
-    border: 1px solid #555;
-}
-.dark-theme footer {
-    background-color: #444;
-    color: #fff;
-    border-top: 1px solid #555;
-}
-.dark-theme .weird-image {
-    border: 2px dotted #666;
-}
-.dark-theme .chatbox {
-    border: 1px dashed #666;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fff;
-}
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #000000;
+            color: #f0f0f0;
+        }
+        body {
+            font-size: 16px; /* Base font size */
+        }
+        #simulation-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            height: 100vh;
+        }
+        .outer-border {
+            border: none;
+        }
+        .inner-border {
+            border: 2px solid black;
+        }
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        nav a {
+            color: white; /* Set link color to white */
+        }
+        nav a:hover {
+            background-color: grey; /* Grey highlight on hover */
+        }
+        .projects-list {
+            list-style-type: none; /* Remove bullets */
+            padding: 0; /* Remove padding */
+        }
+        .projects-list a {
+            color: white; /* Set link color to white */
+            text-decoration: none; /* Remove underline */
+        }
+        .projects-list a:hover {
+            color: red; /* Change color to red on hover */
+        }
+        #mesh-canvas {
+            display: flex;
+            justify-content: center; /* Center the animation */
+        }
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px; /* Smaller font size for mobile */
+            }
+            #modal {
+                width: 90%; /* Make modal width responsive */
+                height: auto; /* Adjust height for content */
+            }
+            nav a {
+                display: block; /* Stack links vertically on mobile */
+                margin: 10px 0; /* Add margin for spacing */
+            }
+        }
     </style>
 </head>
 <body>
-    <header>
-        <span class="glitch">Welcome to My Site!</span>
-        <nav>
-            <a href="/guestbook.html">guestbook</a>
-            <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
-            <a href="https://github.com/korrykatti">github</a>
-            <a href="https://x.com/dunkelkron">x dot com</a>
-            <a href="mailto:v53pqteon@mozmail.com">email</a>
-            <a href="/blog/index.html">blog??</a>
-            <a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a>
-            <a href="logs.html">logs</a>
-            <button id="theme-toggle" style="margin-left: 20px;">Toggle Theme</button>
-        </nav>
-    </header>
-    <div class="container">
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-                <td colspan="2">
-                    <marquee behavior="scroll" direction="left" style="font-size: 24px; margin: 20px 0;">
-                        I don't care about the alignment, I have suffered with those enough, this website is presented as it is, with ofc forever WIP.
-                    </marquee>
-                </td>
-            </tr>
-            <tr>
-                <td width="200" valign="top">
-                    <div style="display: flex;">
-                        <div style="flex: 1;">
-                            <main style="display: flex; align-items: center;">
-                                <img src="img/left.png" alt="Left Image" style="width: 150px; height: auto; margin-right: 20px;" class="weird-image">
-                                <section>
-                                    <div class="about-me">
-                                        <p>
-                                            I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
-                                        </p>
-                                    </div>
-                                    <div class="projects">
-                                        <p style="color: rgb(31, 174, 180);">projects:</p>
-                                        <ul class="projects-list">
-                                            <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
-                                            <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
-                                            <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
-                                        </ul>
-                                    </div>
-                                    <div class="visitor-stats">
-                                        <p style="color: rgb(4, 135, 223);">visitor stats</p>
-                                        <p style="color: rgb(91, 226, 226);">
-                                            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter">
-                                        </p>
-                                    </div>
-                                </section>
-                                <img src="img/above.png" alt="Banner Image" style="width: 150px; height: auto; margin-left: 20px;" class="weird-image">
-                            </main>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div id="quote-marquee" style="margin: 20px 0;">
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
-                                <!-- Quotes will be populated here -->
-                            </marquee>
-                            <div style="height: 20px;"></div>
-                            <marquee behavior="scroll" direction="right" style="font-size: 20px; margin: 15px 0;">
-                                <!-- Quotes will be populated here -->
-                            </marquee>
-                            <div style="height: 20px;"></div>
-                            <marquee behavior="scroll" direction="left" style="font-size: 20px; margin: 15px 0;">
-                                <!-- Quotes will be populated here -->
-                            </marquee>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button id="playAudio" style="display: none;">Play Audio</button>
-                    <audio id="backgroundAudio" controls>
-                        <source src="img/msc/song.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </td>
-            </tr>
-        </table>
+    <div id="simulation-container">
+        <div class="outer-border">
+            <div id="mesh-canvas" class="inner-border"></div>
+            <div class="content">
+                <div style="text-align: center;">
+                    <h1 style="font-family: 'Orbitron', sans-serif; font-weight: 700;">welcome to my site</h1>
+                    <nav>
+                        <a href="/guestbook.html">guestbook</a>
+                        <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
+                        <a href="https://github.com/korrykatti">github</a>
+                        <a href="https://x.com/dunkelkron">x dot com</a>
+                        <a href="mailto:v53pqteon@mozmail.com">email</a>
+                        <a href="/blog/index.html">blog??</a>
+                        <a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a>
+                        <a href="logs.html">logs</a>
+                    </nav>
+                    <p>
+                        I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
+                    </p>
+                    <ul class="projects-list">
+                        <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
+                        <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
+                        <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
+                    </ul>
+                </div>
+                <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter" style="display: block; margin: 20px auto;">
+                <div id="last-updated">website updated: loading...</div>
+                <button id="open-modal-btn" style="margin: 20px;">Open Window</button>
+            </div>
+        </div>
     </div>
-    <script>
-        const toggleButton = document.getElementById('theme-toggle');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            document.querySelector('header').classList.toggle('dark-theme');
-            document.querySelector('nav').classList.toggle('dark-theme');
-            document.querySelector('.container').classList.toggle('dark-theme');
-            document.querySelector('footer').classList.toggle('dark-theme');
-        });
-    </script>
-    <script>
-        const quotes = [
-            "Look, if you’re going to stab me in the back, at least warn me first so I can dodge.",
-            "Did you just call the dragon… a spicy lizard? We’re gonna die, aren’t we?",
-            "I didn’t mean to burn it down! I just… strongly encouraged it to catch fire.",
-            "You keep saying ‘trust me,’ but every time I do, something explodes!",
-            "So, you’ve got a plan, right? Please tell me you have a plan.",
-            "Don’t look at me like that! It’s not my fault the treasure chest bit me.",
-            "You could’ve just asked for help. Instead, you decided to fight a bear with a broom.",
-            "I’m not mad you lied. I’m mad you’re so bad at it.",
-            "The bad news is we’re surrounded. The good news is… uh, actually, there is no good news.",
-            "If you say ‘oops’ one more time while defusing this bomb, I swear—",
-            "You think I enjoy risking my life for you? Spoiler: I don’t.",
-            "Why do I always have to clean up your messes? And why are they always on fire?!",
-            "Oh, sure, let’s split up. Because that always ends well in horror stories.",
-            "I’d love to help, but I value my life, so… good luck with that.",
-            "You call that a battle cry? It sounded like a sneeze.",
-            "I didn’t mean to punch him! He just… walked into my fist. Repeatedly.",
-            "Let me guess: you touched something you weren’t supposed to touch.",
-            "For once, could you not antagonize the person holding a giant sword?",
-            "You told me to act natural. Well, naturally, I’m panicking!",
-            "If we survive this, you owe me dinner. And not the cheap kind.",
-            "You’re bleeding all over the place. Do you even know how to take care of yourself?",
-            "Okay, new rule: no making deals with shady guys in cloaks.",
-            "You can’t just slap a band-aid on betrayal and call it forgiveness.",
-            "Did you really think running away would solve everything? Newsflash: it didn’t.",
-            "No, I don’t want to talk about my feelings. I want to punch something.",
-            "So, hypothetically, if I ate the cursed apple, how bad would that be?",
-            "You can’t just smile at me after saying something that terrifying!",
-            "I didn’t mean to get attached, okay? But here we are.",
-            "If you keep looking at me like that, I’m going to start thinking you care.",
-            "You’re not fine. Stop saying you’re fine when you’re clearly not fine!",
-            "Oh, yeah, sure. Let’s just waltz into the haunted mansion. Great idea.",
-            "If you want me to stay, just say it. Don’t make me guess.",
-            "You’re not a burden. Stop acting like the world’s better off without you.",
-            "You’ve got that ‘I’m about to do something stupid’ look again.",
-            "I’m not a hero. I’m just someone who refuses to watch you give up.",
-            "If you think for one second I’m leaving you behind, you don’t know me at all.",
-            "Some legends are born; others are forced to make their own destiny."
-        ];
 
-        function getRandomQuotes() {
-            const selectedQuotes = [];
-            const quoteCount = Math.floor(Math.random() * 2) + 2; // Randomly select 2 or 3 quotes
-            while (selectedQuotes.length < quoteCount) {
-                const randomIndex = Math.floor(Math.random() * quotes.length);
-                if (!selectedQuotes.includes(quotes[randomIndex])) {
-                    selectedQuotes.push(quotes[randomIndex]);
-                }
-            }
-            return selectedQuotes;
-        }
-
-        const marqueeElements = document.querySelectorAll('#quote-marquee marquee');
-        const randomQuotes = getRandomQuotes();
-        marqueeElements[0].innerHTML = randomQuotes[0];
-        marqueeElements[1].innerHTML = randomQuotes[1];
-        if (randomQuotes.length > 2) {
-            marqueeElements[2].innerHTML = randomQuotes[2];
-        }
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const audio = document.getElementById('backgroundAudio');
-            audio.play();
-        });
-    </script>
-    <script>
-        function createParticles() {
-            for (let i = 0; i < 50; i++) { // Create 50 particles
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                document.body.appendChild(particle);
-                // Randomize position
-                particle.style.left = Math.random() * 100 + 'vw';
-                particle.style.top = Math.random() * 100 + 'vh';
-                // Randomize animation duration and delay
-                particle.style.animationDuration = Math.random() * 3 + 2 + 's';
-                particle.style.animationDelay = Math.random() * 5 + 's';
-            }
-        }
-        createParticles();
-    </script>
-    <footer class="site-footer">
-        <p><a href="cleanversion.html">Clean Version</a></p>
-        <div class="chatbox">
-            <h3>Chatbox</h3>
-            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="350" height="350" allowtransparency="yes" allow="autoplay" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto"></iframe>
+    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 90%; height: 90%; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center;">
+        <div style="background: #222; color: white; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+            <div style="display: flex; justify-content: space-between; width: 100%;">
+                <img src="img/left.png" alt="Left Image" style="width: auto; height: 500px; margin-right: 20px;">
+                <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400" style="margin: 20px;"></iframe>
+                <img src="img/above.png" alt="Banner Image" style="width: auto; height: 500px; margin-left: 20px;">
+            </div>
+            <button id="close-modal-btn" style="margin-top: 20px;">Close</button>
+            <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" style="margin-top: 20px;" />
         </div>
-        <p><a href="cleanversion.html">Clean Version</a></p>
-        <div id="last-updated">website updated: loading...</div>
-        <div class="footer-actions">
-            <p><div class="wakatime-badge">
-                <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" />
-            </div></p>
-        </div>
-    </footer>
+    </div>
+
     <script>
-        // Function to convert text to binary
-        function textToBinary(text) {
-            return text.split('').map(char => 
-                char.charCodeAt(0).toString(2).padStart(8, '0')
-            ).join(' ');
+        let nodes = [];
+        let connections = [];
+        let colorShift = 0;
+
+        function setup() {
+            let canvas = createCanvas(400, 400);
+            canvas.parent('mesh-canvas');
+            
+            // Create nodes
+            for (let i = 0; i < 20; i++) {
+                nodes.push(new Node());
+            }
+
+            // Create connections
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (random(1) < 0.1) {
+                        connections.push([nodes[i], nodes[j]]);
+                    }
+                }
+            }
         }
 
-        // Set the binary text when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            const binaryElement = document.getElementById('content-binary');
-            binaryElement.textContent = textToBinary('something soon');
+        function draw() {
+            background(0);
+            
+            // Continuous color shift
+            colorShift += 0.01;
+            let r = map(sin(colorShift), -1, 1, 50, 200);
+            let g = map(sin(colorShift + TWO_PI/3), -1, 1, 50, 200);
+            let b = map(sin(colorShift + 2*TWO_PI/3), -1, 1, 50, 200);
 
-            // Get the modal elements
-            const modal = document.getElementById('chatbox-modal');
-            const modalContent = document.getElementById('chatbox-modal-content');
-            const btn = document.getElementById('chatbox-btn');
-            const span = document.getElementsByClassName('chatbox-close')[0];
-            const header = document.querySelector('.chatbox-modal-header');
-
-            // Dragging functionality
-            let isDragging = false;
-            let currentX;
-            let currentY;
-            let initialX;
-            let initialY;
-            let xOffset = 0;
-            let yOffset = 0;
-
-            header.addEventListener('mousedown', dragStart);
-            document.addEventListener('mouseup', dragEnd);
-            document.addEventListener('mousemove', drag);
-
-            function dragStart(e) {
-                initialX = e.clientX - xOffset;
-                initialY = e.clientY - yOffset;
-
-                if (e.target === header) {
-                    isDragging = true;
-                }
+            // Draw connections
+            for (let connection of connections) {
+                let n1 = connection[0];
+                let n2 = connection[1];
+                
+                stroke(r, g, b, 50);
+                line(n1.x, n1.y, n2.x, n2.y);
             }
 
-            function dragEnd(e) {
-                initialX = currentX;
-                initialY = currentY;
+            // Update and draw nodes
+            for (let node of nodes) {
+                node.update();
+                node.display(r, g, b);
+            }
+        }
 
-                isDragging = false;
+        class Node {
+            constructor() {
+                this.x = random(width);
+                this.y = random(height);
+                this.vx = random(-0.5, 0.5);
+                this.vy = random(-0.5, 0.5);
+                this.size = random(5, 10);
             }
 
-            function drag(e) {
-                if (isDragging) {
-                    e.preventDefault();
-                    currentX = e.clientX - initialX;
-                    currentY = e.clientY - initialY;
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
 
-                    xOffset = currentX;
-                    yOffset = currentY;
-
-                    setTranslate(currentX, currentY, modalContent);
-                }
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
             }
 
-            function setTranslate(xPos, yPos, el) {
-                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+            display(r, g, b) {
+                // Glowing effect
+                let glowIntensity = 50 + sin(frameCount * 0.1) * 50;
+                
+                noStroke();
+                fill(r, g, b, glowIntensity);
+                ellipse(this.x, this.y, this.size);
             }
+        }
+    </script>
 
-            // Open the modal 
-            btn.onclick = function() {
-                modal.style.display = "block";
-                // Reset position when opening
-                modalContent.style.transform = 'translate3d(0px, 0px, 0)';
-                xOffset = 0;
-                yOffset = 0;
-            }
-
-            // Close the modal when clicking on <span> (x)
-            span.onclick = function() {
-                modal.style.display = "none";
-            }
-
-            // Close the modal when clicking anywhere outside of it
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        });
-
+    <script>
         async function getLastCommit() {
             try {
                 const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
@@ -423,7 +211,7 @@ footer {
                 const now = new Date();
                 const diffTime = Math.abs(now - lastCommitDate);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-        
+
                 const lastUpdatedElement = document.getElementById('last-updated');
                 lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
             } catch (error) {
@@ -432,6 +220,20 @@ footer {
             }
         }
         getLastCommit();
+    </script>
+
+    <script>
+        const openModalBtn = document.getElementById('open-modal-btn');
+        const modal = document.getElementById('modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        openModalBtn.onclick = function() {
+            modal.style.display = 'flex';
+        };
+
+        closeModalBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
     </script>
 </body>
 </html>
