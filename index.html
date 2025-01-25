@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name</title>
+    <title>/index.html</title>
     <script async src="https://sleepie.uk/oneko.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
@@ -234,6 +234,15 @@
         closeModalBtn.onclick = function() {
             modal.style.display = 'none';
         };
+    </script>
+
+    <script>
+        const titles = ['welcome', 'hello there',"korrykatti","/index.html"];
+        let index = 0;
+        setInterval(() => {
+            document.title = titles[index];
+            index = (index + 1) % titles.length;
+        }, 2000); // Change title every 2 seconds
     </script>
 </body>
 </html>
