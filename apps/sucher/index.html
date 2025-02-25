@@ -8,598 +8,14 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            /* Refined color palette with subtle, muted tones */
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
-            --secondary: #f97316;
-            --secondary-dark: #ea580c;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-            --bg-light: #f9fafb;
-            --bg-dark: #111827;
-
-            /* Subtle shadows for depth without heaviness */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-
-            /* Refined border radius - consistent but not exaggerated */
-            --border-radius: 8px;
-
-            /* Spacing system */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 1.5rem;
-            --space-lg: 2.5rem;
-            --space-xl: 4rem;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-light);
-            color: var(--text-dark);
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 0;
-            margin: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .container {
-            max-width: 1140px;
-            margin: 0 auto;
-            padding: 0 var(--space-md);
-        }
-
-        /* Refined header - more subtle gradient and simplified shape */
-        header {
-            background: var(--bg-light);
-            color: var(--text-dark);
-            padding: var(--space-lg) 0;
-            margin-bottom: var(--space-lg);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: var(--space-xs);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-xs);
-            letter-spacing: -0.02em;
-        }
-
-        .tagline {
-            font-size: 1rem;
-            font-weight: 400;
-            color: var(--text-light);
-            margin-bottom: var(--space-md);
-        }
-
-        /* Clean, minimal search box */
-        .search-box {
-            display: flex;
-            max-width: 600px;
-            margin: 0 auto;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
-            overflow: hidden;
-            background: white;
-            transition: all 0.2s ease;
-        }
-
-        .search-box:focus-within {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-        }
-
-        input[type="text"] {
-            flex-grow: 1;
-            padding: var(--space-sm) var(--space-md);
-            border: none;
-            font-size: 0.95rem;
-            outline: none;
-            background: transparent;
-        }
-
-        button.search-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 0 var(--space-lg);
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: background 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        button.search-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        .search-stats {
-            color: var(--text-light);
-            font-size: 0.85rem;
-            margin-top: var(--space-xs);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-        }
-
-        .progress-ring {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary) 0%, rgba(59, 130, 246, 0.1) 0);
-            margin-right: 8px;
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        /* Refined, lighter cards */
-        .card {
-            background: white;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            margin-bottom: var(--space-lg);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .card-header {
-            padding: var(--space-md) var(--space-md);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-        }
-
-        .card-header-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(59, 130, 246, 0.08);
-            color: var(--primary);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-        }
-
-        .card-header h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-            flex-grow: 1;
-            letter-spacing: -0.01em;
-        }
-
-        .card-body {
-            padding: var(--space-md);
-        }
-
-        /* Refined summary section */
-        .summary-content {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-dark);
-            padding: var(--space-md);
-            border-radius: var(--border-radius);
-            margin-bottom: var(--space-lg);
-            position: relative;
-            border-left: 2px solid var(--primary);
-            background: rgba(59, 130, 246, 0.03);
-        }
-
-        .summary-content p {
-            margin-bottom: var(--space-sm);
-        }
-
-        .summary-content::before {
-            content: '"';
-            font-size: 5rem;
-            position: absolute;
-            top: -10px;
-            left: 10px;
-            color: rgba(59, 130, 246, 0.07);
-            font-family: Georgia, serif;
-        }
-
-        /* Clean sources section */
-        .sources-container {
-            margin-top: var(--space-lg);
-        }
-
-        .sources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: var(--space-md);
-            margin-top: var(--space-md);
-        }
-
-        .source-card {
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .source-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
-        }
-
-        .source-image {
-            height: 140px;
-            overflow: hidden;
-            position: relative;
-            background: #f3f4f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .source-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .source-card:hover .source-image img {
-            transform: scale(1.03);
-        }
-
-        .source-image-placeholder {
-            width: 40px;
-            height: 40px;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-light);
-            font-size: 1.2rem;
-        }
-
-        .source-content {
-            padding: var(--space-md);
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .source-title {
-            font-weight: 500;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            margin-bottom: var(--space-xs);
-            color: var(--text-dark);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .source-link {
-            margin-top: auto;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .source-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Simplified loading states */
-        .loading-container {
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: var(--space-lg);
-            text-align: center;
-            gap: var(--space-md);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 2px solid rgba(59, 130, 246, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .progress-container {
-            width: 100%;
-            max-width: 400px;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 100px;
-            overflow: hidden;
-            height: 4px;
-            margin-top: var(--space-sm);
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.5s ease;
-            border-radius: 100px;
-        }
-
-        .progress-text {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin-top: var(--space-xs);
-            font-weight: 400;
-        }
-
-        .loading-message {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        /* Refined button styles */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            gap: 8px;
-            border: none;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
-        }
-
-        .btn-secondary {
-            background: white;
-            color: var(--text-dark);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-secondary:hover {
-            background: #f9fafb;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .btn-large {
-            padding: 12px 24px;
-            font-size: 1rem;
-        }
-
-        .btn-block {
-            display: flex;
-            width: 100%;
-        }
-
-        /* No results - simplified */
-        .no-results {
-            text-align: center;
-            padding: var(--space-xl) var(--space-lg);
-            background: white;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .no-results i {
-            font-size: 2.5rem;
-            color: var(--text-light);
-            margin-bottom: var(--space-md);
-            opacity: 0.5;
-        }
-
-        .no-results h3 {
-            font-size: 1.25rem;
-            margin-bottom: var(--space-xs);
-            color: var(--text-dark);
-            font-weight: 600;
-        }
-
-        .no-results p {
-            color: var(--text-light);
-            max-width: 400px;
-            margin: 0 auto;
-            font-size: 0.95rem;
-        }
-
-        /* Hardware notice - simplified */
-        .hardware-notice {
-            background: rgba(59, 130, 246, 0.03);
-            padding: var(--space-md);
-            border-radius: var(--border-radius);
-            display: flex;
-            align-items: center;
-            gap: var(--space-sm);
-            margin: var(--space-lg) 0;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        .hardware-notice-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--border-radius);
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            color: var(--primary);
-            flex-shrink: 0;
-            border: 1px solid rgba(59, 130, 246, 0.1);
-        }
-
-        .hardware-notice-content {
-            flex-grow: 1;
-        }
-
-        .hardware-notice-content h4 {
-            font-size: 1rem;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .hardware-notice-content p {
-            font-size: 0.9rem;
-            color: var(--text-light);
-            margin: 0;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.75rem;
-            }
-
-            .tagline {
-                font-size: 0.95rem;
-            }
-
-            .search-box {
-                flex-direction: column;
-                border-radius: var(--border-radius);
-            }
-
-            input[type="text"] {
-                width: 100%;
-                border-radius: var(--border-radius) var(--border-radius) 0 0;
-            }
-
-            button.search-btn {
-                width: 100%;
-                padding: 12px;
-                border-radius: 0 0 var(--border-radius) var(--border-radius);
-            }
-
-            .summary-content {
-                font-size: 1rem;
-                padding: var(--space-sm);
-            }
-
-            .card-header {
-                padding: var(--space-sm);
-            }
-
-            .card-body {
-                padding: var(--space-sm);
-            }
-        }
-
-        /* Subtle animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        .delay-1 {
-            animation-delay: 0.05s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.1s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.15s;
-        }
-
-        /* Refined pulse effect */
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        .pulse {
-            animation: pulse 1.2s infinite;
-        }
-    </style>
+    <link rel="stylesheet" href="lol.css">
 </head>
 
 <body x-data="{
     query: '',
     results: [],
     searchCount: localStorage.getItem('searchCount') || 0,
-    maxSearches: 99,
+    maxSearches: 49,
     isLoading: false,
     isSummarizing: false,
     fetchingContent: false,
@@ -624,11 +40,24 @@
         this.pageContents = [];
         this.progress = 0;
         this.progressText = '';
-        
+    
         try {
-            const response = await fetch(`https://project-sites.onrender.com/search?q=${encodeURIComponent(this.query)}&user_ip=test_user`);
-            const data = await response.json();
-            this.results = data.results || [];
+            // fetch from your onrender backend
+            const onrenderResponse = await fetch(`https://project-sites.onrender.com/search?q=${encodeURIComponent(this.query)}&user_ip=test_user`);
+            const onrenderData = await onrenderResponse.json();
+            
+            // fetch from duckduckgo (or another API)
+            const ddgResponse = await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(this.query)}&format=json`);
+            const ddgData = await ddgResponse.json();
+            
+            // merge results from both sources
+            const ddgResults = (ddgData.RelatedTopics || []).map(item => ({
+                title: item.Text,
+                url: item.FirstURL,
+                desc: item.Text
+            }));
+            
+            this.results = [...onrenderData.results, ...ddgResults];
             this.searchCount++;
             localStorage.setItem('searchCount', this.searchCount);
         } catch (error) {
@@ -705,7 +134,8 @@
             this.progress = 60;
             
             // Create a summarization pipeline
-            const summarizer = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+            const summarizer = await pipeline('summarization', 'Xenova/t5-base');
+
             
             this.progressText = 'Analyzing content...';
             this.progress = 70;
@@ -723,8 +153,8 @@
             
             // Generate summary - using larger parameters
             const result = await summarizer(allContent, {
-                max_length: 400,  // Increased for more detailed summary
-                min_length: 200   // Increased for more content
+                max_length: 2000,  // Increased for more detailed summary
+                min_length: 500  // Increased for more content
             });
             
             this.combinedSummary = result[0].summary_text;
@@ -747,8 +177,9 @@
     <!-- Header with search input -->
     <header>
         <div class="container">
-            <h1><i class="fas fa-bolt"></i> sakuga </h1>
-            <p class="tagline">Discover, synthesize, understand — all in one place</p>
+            <h1><i class="fas fa-bolt"></i> sucher </h1>
+            <p class="tagline">ultra stupid news analyzer</p>
+            <p class="tagline">do not trust this on important information</p>
 
             <div class="search-box">
                 <input type="text" x-model="query" placeholder="What do you want to know about?"
@@ -766,6 +197,26 @@
             </div>
         </div>
     </header>
+    <style>
+        .sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: var(--sidebar-bg, #222);
+    padding: 10px;
+    text-align: center;
+    overflow-y: auto; /* Scroll if ads overflow */
+}
+
+.sidebar img {
+    width: 100%;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+    </style>
 
     <div class="container">
         <!-- Loading indicator for search -->
@@ -874,6 +325,18 @@
             </div>
         </div>
     </div>
+    <div class="sidebar">
+        <a href="https://example.com/ad1" target="_blank">
+            <img src="https://i.pinimg.com/736x/88/c8/30/88c830ba333c027807a5b972f12d3a0a.jpg" alt="Ad 1">
+        </a>
+        <a href="https://example.com/ad2" target="_blank">
+            <img src="https://via.placeholder.com/200x300" alt="Ad 2">
+        </a>
+        <a href="https://example.com/ad3" target="_blank">
+            <img src="https://via.placeholder.com/200x300" alt="Ad 3">
+        </a>
+    </div>
+    
 </body>
 
 </html>
