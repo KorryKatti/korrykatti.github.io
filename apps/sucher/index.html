@@ -153,8 +153,8 @@
             
             // Generate summary - using larger parameters
             const result = await summarizer(allContent, {
-                max_length: 2000,  // Increased for more detailed summary
-                min_length: 500  // Increased for more content
+                max_length: 120000,  
+                min_length: 15000 
             });
             
             this.combinedSummary = result[0].summary_text;
@@ -193,7 +193,7 @@
                 <div class="progress-ring"
                     :style="`background: conic-gradient(var(--secondary) ${Math.floor((searchCount/maxSearches)*100)}%, rgba(255, 255, 255, 0.2) 0)`">
                 </div>
-                <span x-text="searchCount"></span> of <span x-text="maxSearches"></span> searches used today
+                <span x-text="searchCount"></span> of <span x-text="maxSearches"></span> searches used today [<a href="../">go back</a>]
             </div>
         </div>
     </header>
@@ -326,14 +326,15 @@
         </div>
     </div>
     <div class="sidebar">
-        <a href="https://example.com/ad1" target="_blank">
-            <img src="https://i.pinimg.com/736x/88/c8/30/88c830ba333c027807a5b972f12d3a0a.jpg" alt="Ad 1">
+        <p>advertisements</p>
+        <a href="https://2captcha.com/?from=12276705" target="_blank">
+            <img src="https://i.pinimg.com/736x/2a/07/c2/2a07c2e9d3353e65eedada8b356cb13e.jpg" alt="click me">
         </a>
-        <a href="https://example.com/ad2" target="_blank">
-            <img src="https://via.placeholder.com/200x300" alt="Ad 2">
+        <a href="https://packetstream.io/?psr=1GKc" target="_blank">
+            <img src="https://i.pinimg.com/736x/9c/60/a6/9c60a6e943413db941770b93a1406eb6.jpg" alt="honeygain">
         </a>
-        <a href="https://example.com/ad3" target="_blank">
-            <img src="https://via.placeholder.com/200x300" alt="Ad 3">
+        <a href="https://gravatar.com/korrykattii" target="_blank">
+            <img src="https://i.pinimg.com/736x/07/ac/ae/07acaeeddca32feb47ab828b4eff8e10.jpg" alt="gib me money">
         </a>
     </div>
     
