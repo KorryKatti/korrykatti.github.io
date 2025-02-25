@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sucher</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Refined color palette with subtle, muted tones */
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f97316;
+            --secondary-dark: #ea580c;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-dark: #111827;
+
+            /* Subtle shadows for depth without heaviness */
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+            /* Refined border radius - consistent but not exaggerated */
+            --border-radius: 8px;
+
+            /* Spacing system */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2.5rem;
+            --space-xl: 4rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+        }
+
+        /* Refined header - more subtle gradient and simplified shape */
+        header {
+            background: var(--bg-light);
+            color: var(--text-dark);
+            padding: var(--space-lg) 0;
+            margin-bottom: var(--space-lg);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-light);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Clean, minimal search box */
+        .search-box {
+            display: flex;
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            font-size: 0.95rem;
+            outline: none;
+            background: transparent;
+        }
+
+        button.search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0 var(--space-lg);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button.search-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .search-stats {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: var(--space-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .progress-ring {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0%, rgba(59, 130, 246, 0.1) 0);
+            margin-right: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Refined, lighter cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: var(--space-lg);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            padding: var(--space-md) var(--space-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .card-header-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--primary);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+            flex-grow: 1;
+            letter-spacing: -0.01em;
+        }
+
+        .card-body {
+            padding: var(--space-md);
+        }
+
+        /* Refined summary section */
+        .summary-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            padding: var(--space-md);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            border-left: 2px solid var(--primary);
+            background: rgba(59, 130, 246, 0.03);
+        }
+
+        .summary-content p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .summary-content::before {
+            content: '"';
+            font-size: 5rem;
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            color: rgba(59, 130, 246, 0.07);
+            font-family: Georgia, serif;
+        }
+
+        /* Clean sources section */
+        .sources-container {
+            margin-top: var(--space-lg);
+        }
+
+        .sources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+        }
+
+        .source-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .source-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .source-image {
+            height: 140px;
+            overflow: hidden;
+            position: relative;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .source-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .source-card:hover .source-image img {
+            transform: scale(1.03);
+        }
+
+        .source-image-placeholder {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        .source-content {
+            padding: var(--space-md);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .source-title {
+            font-weight: 500;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: var(--space-xs);
+            color: var(--text-dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .source-link {
+            margin-top: auto;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Simplified loading states */
+        .loading-container {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            text-align: center;
+            gap: var(--space-md);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(59, 130, 246, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 100px;
+            overflow: hidden;
+            height: 4px;
+            margin-top: var(--space-sm);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 100px;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: var(--space-xs);
+            font-weight: 400;
+        }
+
+        .loading-message {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Refined button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            gap: 8px;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-dark);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-large {
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+
+        .btn-block {
+            display: flex;
+            width: 100%;
+        }
+
+        /* No results - simplified */
+        .no-results {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            background: white;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .no-results i {
+            font-size: 2.5rem;
+            color: var(--text-light);
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--space-xs);
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .no-results p {
+            color: var(--text-light);
+            max-width: 400px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        /* Hardware notice - simplified */
+        .hardware-notice {
+            background: rgba(59, 130, 246, 0.03);
+            padding: var(--space-md);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin: var(--space-lg) 0;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .hardware-notice-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--primary);
+            flex-shrink: 0;
+            border: 1px solid rgba(59, 130, 246, 0.1);
+        }
+
+        .hardware-notice-content {
+            flex-grow: 1;
+        }
+
+        .hardware-notice-content h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .hardware-notice-content p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .tagline {
+                font-size: 0.95rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+                border-radius: var(--border-radius);
+            }
+
+            input[type="text"] {
+                width: 100%;
+                border-radius: var(--border-radius) var(--border-radius) 0 0;
+            }
+
+            button.search-btn {
+                width: 100%;
+                padding: 12px;
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+
+            .summary-content {
+                font-size: 1rem;
+                padding: var(--space-sm);
+            }
+
+            .card-header {
+                padding: var(--space-sm);
+            }
+
+            .card-body {
+                padding: var(--space-sm);
+            }
+        }
+
+        /* Subtle animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.05s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.15s;
+        }
+
+        /* Refined pulse effect */
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .pulse {
+            animation: pulse 1.2s infinite;
+        }
+    </style>
+</head>
+
+<body x-data="{
+    query: '',
+    results: [],
+    searchCount: localStorage.getItem('searchCount') || 0,
+    maxSearches: 99,
+    isLoading: false,
+    isSummarizing: false,
+    fetchingContent: false,
+    combinedSummary: '',
+    pageContents: [],
+    progress: 0,
+    progressText: '',
+    
+    async search() {
+        if (this.searchCount >= this.maxSearches) {
+            alert('Daily search limit reached!');
+            return;
+        }
+        
+        if (!this.query.trim()) {
+            return;
+        }
+        
+        this.isLoading = true;
+        this.results = [];
+        this.combinedSummary = '';
+        this.pageContents = [];
+        this.progress = 0;
+        this.progressText = '';
+        
+        try {
+            const response = await fetch(`https://project-sites.onrender.com/search?q=${encodeURIComponent(this.query)}&user_ip=test_user`);
+            const data = await response.json();
+            this.results = data.results || [];
+            this.searchCount++;
+            localStorage.setItem('searchCount', this.searchCount);
+        } catch (error) {
+            console.error('Search error:', error);
+        } finally {
+            this.isLoading = false;
+        }
+    },
+    
+    async fetchAllPageContents() {
+        if (this.results.length === 0) return;
+        
+        this.fetchingContent = true;
+        this.pageContents = [];
+        this.progress = 0;
+        
+        const cors_proxy = 'https://corsproxy.io/?';
+        
+        for (let i = 0; i < this.results.length; i++) {
+            const result = this.results[i];
+            this.progressText = `Fetching content from ${i+1}/${this.results.length} sources...`;
+            this.progress = Math.floor((i / this.results.length) * 50); // First 50% for fetching
+            
+            try {
+                const response = await fetch(cors_proxy + encodeURIComponent(result.url));
+                const html = await response.text();
+                
+                // Extract text content from HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                
+                // Remove scripts, styles, and other non-content elements
+                const scripts = tempDiv.querySelectorAll('script, style, nav, footer, header');
+                scripts.forEach(el => el.remove());
+                
+                // Extract main content (simplified approach)
+                const mainContent = tempDiv.querySelector('main, article, .content, #content, .article') || tempDiv.body;
+                const textContent = mainContent.textContent.replace(/\\s+/g, ' ').trim();
+                
+                // Add to pageContents array
+                this.pageContents.push({
+                    title: result.title,
+                    url: result.url,
+                    content: textContent.substring(0, 5000) // Limit length for performance
+                });
+            } catch (error) {
+                console.error(`Error fetching ${result.url}:`, error);
+                // Still add the result description as fallback
+                this.pageContents.push({
+                    title: result.title,
+                    url: result.url,
+                    content: result.desc
+                });
+            }
+        }
+        
+        this.fetchingContent = false;
+    },
+    
+    async generateCombinedSummary() {
+        if (this.results.length === 0) return;
+        
+        this.isSummarizing = true;
+        await this.fetchAllPageContents();
+        
+        try {
+            // Load the transformers.js pipeline
+            this.progressText = 'Loading AI model...';
+            this.progress = 50;
+            
+            const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0/dist/transformers.min.js');
+            
+            this.progressText = 'Preparing summarization model...';
+            this.progress = 60;
+            
+            // Create a summarization pipeline
+            const summarizer = await pipeline('summarization', 'Xenova/distilbart-cnn-6-6');
+            
+            this.progressText = 'Analyzing content...';
+            this.progress = 70;
+            
+            // Combine all page contents
+            let allContent = this.pageContents.map((item, index) => 
+                `Source ${index + 1} (${item.title}): ${item.content}`
+            ).join('\\n\\n').trim();
+            
+            // Truncate to avoid model limitations
+            allContent = allContent.substring(0, 4000);
+            
+            this.progressText = 'Generating summary...';
+            this.progress = 80;
+            
+            // Generate summary - using larger parameters
+            const result = await summarizer(allContent, {
+                max_length: 400,  // Increased for more detailed summary
+                min_length: 200   // Increased for more content
+            });
+            
+            this.combinedSummary = result[0].summary_text;
+            this.progress = 100;
+            this.progressText = 'Summary complete!';
+        } catch (error) {
+            console.error('Summarization error:', error);
+            this.combinedSummary = 'Unable to generate a summary. This may be due to browser limitations or connectivity issues.';
+        } finally {
+            this.isSummarizing = false;
+        }
+    },
+    
+    handleKeyUp(event) {
+        if (event.key === 'Enter') {
+            this.search();
+        }
+    }
+}">
+    <!-- Header with search input -->
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-bolt"></i> sakuga </h1>
+            <p class="tagline">Discover, synthesize, understand — all in one place</p>
+
+            <div class="search-box">
+                <input type="text" x-model="query" placeholder="What do you want to know about?"
+                    @keyup="handleKeyUp($event)">
+                <button class="search-btn" @click="search">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+
+            <div class="search-stats">
+                <div class="progress-ring"
+                    :style="`background: conic-gradient(var(--secondary) ${Math.floor((searchCount/maxSearches)*100)}%, rgba(255, 255, 255, 0.2) 0)`">
+                </div>
+                <span x-text="searchCount"></span> of <span x-text="maxSearches"></span> searches used today
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Loading indicator for search -->
+        <div class="loading-container" x-show="isLoading">
+            <div class="spinner"></div>
+            <div class="loading-message">Searching the web for "<span x-text="query"></span>"...</div>
+        </div>
+
+        <!-- No results message -->
+        <div class="no-results" x-show="!isLoading && results.length === 0 && query.trim() !== ''">
+            <i class="fas fa-search fa-3x pulse"></i>
+            <h3>No results found</h3>
+            <p>Try different keywords or check your spelling</p>
+        </div>
+
+        <!-- Results overview -->
+        <div x-show="!isLoading && results.length > 0">
+            <!-- If summary not yet generated -->
+            <div class="card fade-in" x-show="!isSummarizing && !combinedSummary">
+                <div class="card-header">
+                    <div class="card-header-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h2>Found <span x-text="results.length"></span> results for "<span x-text="query"></span>"</h2>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-secondary btn-large btn-block" @click="generateCombinedSummary()">
+                        <i class="fas fa-magic"></i> Generate AI Summary
+                    </button>
+
+                    <div class="hardware-notice">
+                        <div class="hardware-notice-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="hardware-notice-content">
+                            <h4>Processing Speed Notice</h4>
+                            <p>AI summarization speed depends on your device's hardware. This process may take 30-60
+                                seconds on modern devices and longer on older hardware.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading indicator for summarization -->
+            <div class="loading-container" x-show="isSummarizing || fetchingContent">
+                <div class="spinner"></div>
+                <div class="loading-message" x-text="progressText">Processing...</div>
+                <div class="progress-container">
+                    <div class="progress-bar" :style="`width: ${progress}%`"></div>
+                </div>
+                <p>Please wait while we analyze multiple sources for you...</p>
+            </div>
+
+            <!-- Combined summary result -->
+            <div x-show="combinedSummary && !isSummarizing">
+                <!-- Summary Card -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <div class="card-header-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h2>AI-Generated Insight</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-content" x-html="combinedSummary.split('\\n').join('<p></p>')"></div>
+
+                        <button class="btn btn-primary" @click="search()">
+                            <i class="fas fa-search"></i> New Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sources Card -->
+                <div class="card fade-in delay-1">
+                    <div class="card-header">
+                        <div class="card-header-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <h2>Sources Used</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="sources-grid">
+                            <template x-for="(result, index) in results" :key="index">
+                                <div class="source-card fade-in" :class="`delay-${(index % 3) + 1}`">
+                                    <div class="source-image">
+                                        <template x-if="result.image">
+                                            <img :src="result.image" alt="Source image">
+                                        </template>
+                                        <template x-if="!result.image">
+                                            <div class="source-image-placeholder">
+                                                <i class="fas fa-file-alt"></i>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="source-content">
+                                        <div class="source-title" x-text="result.title"></div>
+                                        <a :href="result.url" target="_blank" class="source-link">
+                                            Visit Source <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
