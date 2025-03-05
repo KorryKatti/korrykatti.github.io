@@ -79,7 +79,7 @@
     </style>
 </head>
 <body>
-    <link href="https://melonking.net/styles/flood.css" rel="stylesheet" type="text/css" media="all" />
+    
 <script src="https://melonking.net/scripts/flood.js"></script>
     <div id="simulation-container">
         <div class="outer-border">
@@ -88,14 +88,28 @@
                 <div style="text-align: center;">
                     <h1 style="font-family: 'Orbitron', sans-serif; font-weight: 700;">welcome to my site</h1>
                     <nav>
-                        <a href="/guestbook.html">guestbook</a>
+                        <a href="/guestbook.html" style="color: yellow; font-weight: bold; text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);">guestbook</a>
                         <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
                         <a href="https://github.com/korrykatti">github</a>
                         <a href="https://x.com/dunkelkron">x dot com</a>
                         <a href="mailto:v53pqteon@mozmail.com">email</a>
                         <a href="/blog/index.html">blog??</a>
-                        <a href="apps/index.html" class="smol-web-apps-btn">smol web apps</a>
-                        <a href="logs.html">logs</a>
+                        <a href="apps/index.html" class="smol-web-apps-btn" style="animation: rainbowGlow 2s infinite;">smol web apps</a>
+                        <a href="logs.html" style="animation: rainbowGlow 2s infinite;">logs</a>
+
+                        <style>
+                            @keyframes rainbowGlow {
+                                0% { text-shadow: 0 0 5px red; }
+                                20% { text-shadow: 0 0 5px orange; }
+                                40% { text-shadow: 0 0 5px yellow; }
+                                60% { text-shadow: 0 0 5px green; }
+                                80% { text-shadow: 0 0 5px blue; }
+                                100% { text-shadow: 0 0 5px violet; }
+                            }
+                            .smol-web-apps-btn, a[style*="rainbowGlow"] {
+                                animation: rainbowGlow 12s infinite;
+                            }
+                        </style>
                     </nav>
                     <p>
                         I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.

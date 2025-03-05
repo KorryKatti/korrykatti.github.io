@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self-Learning Chess AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="game-info">
+            <h1>Self-Learning Chess AI</h1>
+            <h6>surrender isn't working and i know it</h6>
+            <div class="status-panel">
+                <div class="player-info white-player">
+                    <span class="player-label">White (You)</span>
+                    <div class="captured-pieces white-captured"></div>
+                </div>
+                <div class="game-status-container">
+                    <p class="status-text">Game Status: <span id="game-status">Starting...</span></p>
+                    <div id="thinking" class="thinking hidden">AI is thinking<span class="thinking-dots"></span></div>
+                </div>
+                <div class="player-info black-player">
+                    <span class="player-label">Black (AI)</span>
+                    <div class="captured-pieces black-captured"></div>
+                </div>
+            </div>
+            <div class="controls">
+                <button id="new-game" class="button primary">New Game</button>
+                <button id="surrender" class="button danger">Surrender</button>
+                <button id="undo" class="button secondary" disabled>Undo Move</button>
+            </div>
+            <div class="game-info-panel">
+                <h3>Move History</h3>
+                <div id="move-history" class="move-history"></div>
+                <div class="stats-panel">
+                    <h3>Game Statistics</h3>
+                    <div id="game-stats" class="game-stats">
+                        <p>Total Games: <span id="total-games">0</span></p>
+                        <p>Wins: <span id="wins">0</span></p>
+                        <p>Losses: <span id="losses">0</span></p>
+                        <p>Draws: <span id="draws">0</span></p>
+                    </div>
+                    <h3 class="learning-header">Learning Progress</h3>
+                    <div id="learning-stats" class="learning-stats">
+                        <div class="learning-progress">
+                            <div class="progress-label">Database Size:</div>
+                            <div class="progress-bar">
+                                <div id="database-fill" class="progress-fill"></div>
+                            </div>
+                            <div id="database-size">0 positions</div>
+                        </div>
+                        <div class="learning-progress">
+                            <div class="progress-label">Move Selection:</div>
+                            <div class="progress-bar">
+                                <div id="learning-fill" class="progress-fill"></div>
+                            </div>
+                            <div id="learning-ratio">Learned: 0% / Random: 100%</div>
+                        </div>
+                        <div class="learning-metrics">
+                            <p>Positions Analyzed: <span id="positions-analyzed">0</span></p>
+                            <p>Successful Patterns: <span id="successful-patterns">0</span></p>
+                            <p>Learning Rate: <span id="learning-rate">0%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="board-container">
+            <div class="coordinates top">
+                <div>a</div><div>b</div><div>c</div><div>d</div>
+                <div>e</div><div>f</div><div>g</div><div>h</div>
+            </div>
+            <div class="board-wrapper">
+                <div class="coordinates left">
+                    <div>8</div><div>7</div><div>6</div><div>5</div>
+                    <div>4</div><div>3</div><div>2</div><div>1</div>
+                </div>
+                <div id="board" class="chess-board"></div>
+                <div class="coordinates right">
+                    <div>8</div><div>7</div><div>6</div><div>5</div>
+                    <div>4</div><div>3</div><div>2</div><div>1</div>
+                </div>
+            </div>
+            <div class="coordinates bottom">
+                <div>a</div><div>b</div><div>c</div><div>d</div>
+                <div>e</div><div>f</div><div>g</div><div>h</div>
+            </div>
+            <div id="bot-move-preview" class="bot-move-preview">
+                <div class="preview-content">Bot is analyzing the position...</div>
+                <div class="confidence-meter">
+                    <div class="confidence-label">Bot Confidence:</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill"></div>
+                    </div>
+                    <div class="confidence-text">Learning...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
