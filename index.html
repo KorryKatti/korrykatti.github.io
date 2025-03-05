@@ -151,6 +151,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Structure -->
+    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center;">
+        <div style="background: #fff8e1; padding: 20px; border-radius: 5px; text-align: center; border: 2px solid #f0e68c;">
+            <h2 style="color: #f9a825;">chatbox</h2>
+            <p>you control the buttons you press</p>
+            <img src="img/left.png" alt="Left Image" style="width: auto; height: 500px; margin-right: 20px;">
+            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400" style="margin: 20px;"></iframe>
+            <img src="img/above.png" alt="Banner Image" style="width: auto; height: 500px; margin-left: 20px;">
+            <br>
+            <button id="close-modal-btn" style="margin-top: 20px;">Close</button>
+        </div>
+    </div>
+
     <style>
         @keyframes rainbowGlow {
             0% { text-shadow: 0 0 5px red; }
@@ -165,8 +179,9 @@
         }
     </style>
     <script>
-        // Fade-in effect on load
+        // Alert on page load
         window.onload = function() {
+            alert("This website isn't meant for opening on mobile and small screens. If content feels cut off, please zoom out to 80%.");
             const terminal = document.getElementById('terminal');
             terminal.style.opacity = 1; // Set opacity to 1 for fade-in
 
