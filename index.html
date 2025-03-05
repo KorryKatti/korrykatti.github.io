@@ -3,218 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/index.html</title>
+    <title>/index2.html</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
     <script async src="https://sleepie.uk/oneko.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body, html {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #000000;
-            color: #f0f0f0;
+            font-family: 'Courier Prime', monospace;
+            background-color: #f9f3e9; /* Cream background */
+            color: #3b3b3b; /* Dark text for contrast */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark mode */
         }
-        body {
-            font-size: 16px; /* Base font size */
-        }
-        #simulation-container {
+        #terminal-container {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px 0;
             height: 100vh;
+            overflow: hidden;
         }
-        .outer-border {
-            border: none;
-        }
-        .inner-border {
-            border: 2px solid black;
-        }
-        .content {
-            max-width: 800px;
-            margin: 0 auto;
+        .terminal {
+            background-color: #fff8e1; /* Light butter color */
+            border: 2px solid #f0e68c; /* Soft yellow border */
+            border-radius: 5px;
             padding: 20px;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: left;
+            overflow-y: auto; /* Allow scrolling */
+            height: 80vh; /* Set height for terminal */
+            opacity: 0; /* Start invisible for fade-in effect */
+            transition: opacity 0.5s ease; /* Fade-in effect */
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #f9a825; /* Bright yellow for headings */
+        }
+        .current-time {
+            font-size: 18px; /* Adjusted font size for current time */
+            margin-bottom: 10px; /* Space below the time */
         }
         nav a {
-            color: white; /* Set link color to white */
+            color: #3b3b3b; /* Dark link color */
+            text-decoration: none; /* Remove underline */
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s; /* Smooth transition for glow */
+            animation: glow 1.5s infinite alternate; /* Glow animation */
         }
         nav a:hover {
-            background-color: grey; /* Grey highlight on hover */
+            background-color: #f0e68c; /* Highlight on hover */
         }
-        .projects-list {
-            list-style-type: none; /* Remove bullets */
-            padding: 0; /* Remove padding */
+        .dark-mode nav a {
+            color: #f0f0f0; /* Light text for links in dark mode */
         }
-        .projects-list a {
-            color: white; /* Set link color to white */
-            text-decoration: none; /* Remove underline */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #f57f20, 0 0 10px #f57f20, 0 0 15px #f57f20;
+            }
+            100% {
+                text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00, 0 0 30px #ffcc00;
+            }
         }
-        .projects-list a:hover {
-            color: red; /* Change color to red on hover */
+        .command {
+            color: #f57f20; /* Orange for command text */
         }
-        #mesh-canvas {
-            display: flex;
-            justify-content: center; /* Center the animation */
+        .output {
+            color: #3b3b3b; /* Dark text for output */
+        }
+        .dark-mode {
+            background-color: #1e1e1e; /* Dark background */
+            color: #f0f0f0; /* Light text for contrast */
+        }
+        .dark-mode .terminal {
+            background-color: #2e2e2e; /* Dark terminal background */
+            border: 2px solid #444; /* Darker border */
+        }
+        .dark-mode .command {
+            color: #ffcc00; /* Light yellow for command text in dark mode */
+        }
+        .dark-mode .output {
+            color: #f0f0f0; /* Light text for output in dark mode */
         }
         @media (max-width: 768px) {
             body {
                 font-size: 14px; /* Smaller font size for mobile */
             }
-            #modal {
-                width: 90%; /* Make modal width responsive */
-                height: auto; /* Adjust height for content */
-            }
-            nav a {
-                display: block; /* Stack links vertically on mobile */
-                margin: 10px 0; /* Add margin for spacing */
-            }
+        }
+        .system-info {
+            display: flex; /* Flexbox for image and text */
+            align-items: center; /* Center vertically */
+        }
+        .system-info pre {
+            margin: 0; /* Remove default margin */
+        }
+        #chart-container {
+            width: 100%;
+            height: 400px; /* Set height for the chart */
+            margin-top: 20px; /* Space above the chart */
         }
     </style>
 </head>
 <body>
-    
-<script src="https://melonking.net/scripts/flood.js"></script>
-    <div id="simulation-container">
-        <div class="outer-border">
-            <div id="mesh-canvas" class="inner-border"></div>
-            <div class="content">
-                <div style="text-align: center;">
-                    <h1 style="font-family: 'Orbitron', sans-serif; font-weight: 700;">welcome to my site</h1>
-                    <nav>
-                        <a href="/guestbook.html" style="color: yellow; font-weight: bold; text-shadow: 0 0 5px rgba(255, 255, 0, 0.7);">guestbook</a>
-                        <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
-                        <a href="https://github.com/korrykatti">github</a>
-                        <a href="https://x.com/dunkelkron">x dot com</a>
-                        <a href="mailto:v53pqteon@mozmail.com">email</a>
-                        <a href="/blog/index.html">blog??</a>
-                        <a href="apps/index.html" class="smol-web-apps-btn" style="animation: rainbowGlow 2s infinite;">smol web apps</a>
-                        <a href="logs.html" style="animation: rainbowGlow 2s infinite;">logs</a>
-
-                        <style>
-                            @keyframes rainbowGlow {
-                                0% { text-shadow: 0 0 5px red; }
-                                20% { text-shadow: 0 0 5px orange; }
-                                40% { text-shadow: 0 0 5px yellow; }
-                                60% { text-shadow: 0 0 5px green; }
-                                80% { text-shadow: 0 0 5px blue; }
-                                100% { text-shadow: 0 0 5px violet; }
-                            }
-                            .smol-web-apps-btn, a[style*="rainbowGlow"] {
-                                animation: rainbowGlow 12s infinite;
-                            }
-                        </style>
-                    </nav>
-                    <p>
-                        I am a computer science and systems engineering undergrad (still studying). I play some games and surf the web in my free time (trying to change that). If you're from college, hi 👋! And no, I'm not an expert in coding—anyone can make a site like this.
-                    </p>
-                    <ul class="projects-list">
-                        <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
-                        <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
-                        <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
-                    </ul>
-                </div>
-                <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter" style="display: block; margin: 20px auto;">
-                <div id="last-updated">website updated: loading...</div>
-                <button id="open-modal-btn" style="margin: 20px;">Open Window</button>
+    <div id="terminal-container">
+        <div class="terminal" id="terminal">
+            <h1>welcome to my site</h1>
+            <div class="output system-info">
+                <a href="https://github.com/kittinan/spotify-github-profile">
+                    <img src="https://spotify-github-profile.kittinanx.com/api/view?uid=c9khdo6s2n2q8o54qe7punql7&cover_image=true&theme=novatorem&show_offline=true&background_color=121212&interchange=false&bar_color=53b14f&bar_color_cover=true" alt="Spotify Profile" style="width: 100%; max-width: 400px; margin-top: 10px;">
+                </a>
+                <hr>
+                <p><h2>my time : <span id="current-time"></span></h2></p>
+            </div>
+            <div class="command">~$ <span style="color: #f57f20;">cd projects</span></div>
+            <div class="output">
+                <ul>
+                    <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool (wip)</li>
+                    <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application (wip)</li>
+                    <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler & launcher (wip)</li>
+                </ul>
+            </div>
+            <div class="command">~$ <span style="color: #f57f20;">exit</span></div>
+            <div class="output">Goodbye!</div>
+            <hr>
+            <nav>
+                <a href="/guestbook.html">Guestbook</a>
+                <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">Spotify</a>
+                <a href="https://github.com/korrykatti">GitHub</a>
+                <a href="https://x.com/dunkelkron">X.com</a>
+                <a href="mailto:v53pqteon@mozmail.com">Email</a>
+                <a href="/blog/index.html">Blog</a>
+                <a href="apps/index.html" class="smol-web-apps-btn" style="animation: rainbowGlow 2s infinite;">smol web apps</a>
+                <a href="logs.html" style="animation: rainbowGlow 2s infinite;">logs</a>
+            </nav>
+            <button id="open-modal-btn" style="margin: 20px;">Open Window</button>
+            <button id="toggle-dark-mode" style="margin-top: 20px;">Toggle Dark Mode</button>
+            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter" style="display: block; margin: 20px auto;">
+            <center><div id="last-updated">website updated: loading...</div></center>
+            <div id="chart-container">
+                <canvas id="languageChart"></canvas>
             </div>
         </div>
     </div>
-
-    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 90%; height: 90%; background: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center;">
-        <div style="background: #222; color: white; padding: 20px; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
-            <div style="display: flex; justify-content: space-between; width: 100%;">
-                <img src="img/left.png" alt="Left Image" style="width: auto; height: 500px; margin-right: 20px;">
-                <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400" style="margin: 20px;"></iframe>
-                <img src="img/above.png" alt="Banner Image" style="width: auto; height: 500px; margin-left: 20px;">
-            </div>
-            <button id="close-modal-btn" style="margin-top: 20px;">Close</button>
-            <img src="https://wakatime.com/badge/user/575be6fb-dae0-4ee6-89bb-0c841fb08a85.svg" alt="total time coded since may 6 2024" style="margin-top: 20px;" />
-        </div>
-    </div>
-
+    <style>
+        @keyframes rainbowGlow {
+            0% { text-shadow: 0 0 5px red; }
+            20% { text-shadow: 0 0 5px orange; }
+            40% { text-shadow: 0 0 5px yellow; }
+            60% { text-shadow: 0 0 5px green; }
+            80% { text-shadow: 0 0 5px blue; }
+            100% { text-shadow: 0 0 5px violet; }
+        }
+        .smol-web-apps-btn, a[style*="rainbowGlow"] {
+            animation: rainbowGlow 12s infinite;
+        }
+    </style>
     <script>
-        let nodes = [];
-        let connections = [];
-        let colorShift = 0;
+        // Fade-in effect on load
+        window.onload = function() {
+            const terminal = document.getElementById('terminal');
+            terminal.style.opacity = 1; // Set opacity to 1 for fade-in
 
-        function setup() {
-            let canvas = createCanvas(400, 400);
-            canvas.parent('mesh-canvas');
-            
-            // Create nodes
-            for (let i = 0; i < 20; i++) {
-                nodes.push(new Node());
-            }
+            // Update current time every second in 24-hour format
+            setInterval(() => {
+                const now = new Date();
+                const currentTime = now.toLocaleTimeString('en-GB'); // 24-hour format
+                document.getElementById('current-time').textContent = currentTime;
+            }, 1000);
 
-            // Create connections
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    if (random(1) < 0.1) {
-                        connections.push([nodes[i], nodes[j]]);
+            // Lazy load Wakatime data after 2 seconds
+            setTimeout(() => {
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://wakatime.com/share/@korrykatti/c19c5194-c5db-4963-8290-8dfd587d3c71.json',
+                    dataType: 'jsonp',
+                    success: function(response) {
+                        console.log(response.data);
+                        // Create a chart from the fetched data
+                        const wakatimeData = response.data;
+                        const labels = wakatimeData.map(item => item.name);
+                        const data = wakatimeData.map(item => item.percent);
+                        const colors = wakatimeData.map(item => item.color);
+
+                        const ctx = document.getElementById('languageChart').getContext('2d');
+                        const languageChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Language Usage (%)',
+                                    data: data,
+                                    backgroundColor: colors,
+                                    borderColor: colors.map(color => color.replace(')', ', 0.5)').replace('rgb', 'rgba')),
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Percentage'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Languages'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function(error) {
+                        console.error("Error fetching Wakatime data:", error);
                     }
-                }
-            }
-        }
+                });
+            }, 2000); // Delay the AJAX call by 2 seconds
+        };
 
-        function draw() {
-            background(0);
-            
-            // Continuous color shift
-            colorShift += 0.01;
-            let r = map(sin(colorShift), -1, 1, 50, 200);
-            let g = map(sin(colorShift + TWO_PI/3), -1, 1, 50, 200);
-            let b = map(sin(colorShift + 2*TWO_PI/3), -1, 1, 50, 200);
+        // Dark mode toggle functionality
+        const toggleButton = document.getElementById('toggle-dark-mode');
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+        });
 
-            // Draw connections
-            for (let connection of connections) {
-                let n1 = connection[0];
-                let n2 = connection[1];
-                
-                stroke(r, g, b, 50);
-                line(n1.x, n1.y, n2.x, n2.y);
-            }
-
-            // Update and draw nodes
-            for (let node of nodes) {
-                node.update();
-                node.display(r, g, b);
-            }
-        }
-
-        class Node {
-            constructor() {
-                this.x = random(width);
-                this.y = random(height);
-                this.vx = random(-0.5, 0.5);
-                this.vy = random(-0.5, 0.5);
-                this.size = random(5, 10);
-            }
-
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // Bounce off edges
-                if (this.x < 0 || this.x > width) this.vx *= -1;
-                if (this.y < 0 || this.y > height) this.vy *= -1;
-            }
-
-            display(r, g, b) {
-                // Glowing effect
-                let glowIntensity = 50 + sin(frameCount * 0.1) * 50;
-                
-                noStroke();
-                fill(r, g, b, glowIntensity);
-                ellipse(this.x, this.y, this.size);
-            }
-        }
     </script>
 
     <script>
@@ -239,21 +261,28 @@
     </script>
 
     <script>
-        const openModalBtn = document.getElementById('open-modal-btn');
-        const modal = document.getElementById('modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
+        // Ensure modal elements exist before adding event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            const openModalBtn = document.getElementById('open-modal-btn');
+            const modal = document.getElementById('modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
 
-        openModalBtn.onclick = function() {
-            modal.style.display = 'flex';
-        };
+            if (openModalBtn) {
+                openModalBtn.onclick = function() {
+                    modal.style.display = 'flex';
+                };
+            }
 
-        closeModalBtn.onclick = function() {
-            modal.style.display = 'none';
-        };
+            if (closeModalBtn) {
+                closeModalBtn.onclick = function() {
+                    modal.style.display = 'none';
+                };
+            }
+        });
     </script>
 
     <script>
-        const titles = ['welcome', 'hello there',"korrykatti","/index.html"];
+        const titles = ['welcome', 'hello there',"korrykatti","/index2.html"];
         let index = 0;
         setInterval(() => {
             document.title = titles[index];
