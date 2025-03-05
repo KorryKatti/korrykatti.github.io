@@ -6,20 +6,25 @@
     <title>Guestbook</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
+            background: #000;
+            color: #b8b8b8;
+            font-family: 'Courier New', monospace;
             padding: 20px;
-            background-color: #f9f9f9;
         }
         .entry {
-            background: #fff;
-            border: 1px solid #ddd;
+            background: #0a0a0a;
+            border: 1px solid #333;
             border-radius: 5px;
             padding: 10px;
             margin-bottom: 10px;
+            animation: flicker 0.15s infinite;
         }
         form {
             margin-bottom: 20px;
+            background: #111;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #333;
         }
         input, textarea {
             width: 100%;
@@ -27,6 +32,8 @@
             margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background: #222;
+            color: #fff;
         }
         button {
             background-color: #4CAF50;
@@ -39,37 +46,27 @@
         button:hover {
             background-color: #45a049;
         }
-        nav {
-            margin: 20px 0; 
-            display: flex; 
-            justify-content: center;
+        #captchaQuestion {
+            margin: 10px 0;
+            color: #c43c3c;
         }
-        nav ul {
-            list-style-type: none; 
-            padding: 0; 
-            display: flex; 
-            gap: 20px;
-        }
-        nav a {
-            text-decoration: none;
-            color: #333;
+        /* Flicker effect */
+        @keyframes flicker {
+            0% { opacity: 1; }
+            49% { opacity: 1; }
+            50% { opacity: 0.8; }
+            51% { opacity: 1; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="index.html">home</a></li>
-            <li><a href="https://korrykatti.carrd.co">card</a></li>
-            <li><a href="https://korrykatti.tumblr.com">random things i think</a></li>
-            <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
-            <li><a href="guestbook.html" class="color-changing-link">please sign the guestbook</a></li>
-        </ul>
-    </nav>
     <h1>Guestbook</h1>
     <form id="guestbookForm">
         <input type="text" id="nameInput" placeholder="Your Name" required>
         <textarea id="messageInput" placeholder="Your Message" required></textarea>
+        <div id="captchaQuestion"></div>
+        <input type="text" id="captchaAnswer" placeholder="Your Answer" required>
         <button type="submit">Submit</button>
     </form>
     <div id="entries"></div>
@@ -100,10 +97,37 @@
             }
         }
 
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10);
+            const num2 = Math.floor(Math.random() * 10);
+            const question = `What is ${num1} + ${num2}?`;
+            document.getElementById('captchaQuestion').textContent = question;
+            return num1 + num2;
+        }
+
+        let correctAnswer = generateCaptcha();
+
         async function submitMessage(event) {
             event.preventDefault();
             const nameInput = document.getElementById('nameInput');
             const messageInput = document.getElementById('messageInput');
+            const userAnswer = parseInt(document.getElementById('captchaAnswer').value, 10);
+
+            // Check localStorage for submission timestamp
+            const lastSubmission = localStorage.getItem('lastSubmission');
+            const currentTime = Date.now();
+            const twentyDaysInMillis = 20 * 24 * 60 * 60 * 1000; // 20 days in milliseconds
+
+            if (lastSubmission && (currentTime - lastSubmission < twentyDaysInMillis)) {
+                alert('You can only submit once every 20 days. Please wait before trying again.');
+                return;
+            }
+
+            if (userAnswer !== correctAnswer) {
+                alert('Incorrect answer to the CAPTCHA. Please try again.');
+                correctAnswer = generateCaptcha();
+                return;
+            }
 
             try {
                 const response = await fetch('https://korrykatti.pythonanywhere.com/submit_message', {
@@ -113,15 +137,19 @@
                     },
                     body: new URLSearchParams({ 
                         name: nameInput.value.trim(), 
-                        message: messageInput.value.trim() 
+                        message: messageInput.value.trim()
                     })
                 });
                 
                 const result = await response.json();
                 
                 if (result.status === 'success') {
+                    // Store the current timestamp in localStorage
+                    localStorage.setItem('lastSubmission', currentTime);
                     nameInput.value = '';
                     messageInput.value = '';
+                    document.getElementById('captchaAnswer').value = '';
+                    correctAnswer = generateCaptcha();
                     loadEntries();
                 } else {
                     console.error('Error submitting message:', result.message);
@@ -131,7 +159,10 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', loadEntries);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEntries();
+            generateCaptcha();
+        });
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);
     </script>
 </body>
