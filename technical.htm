@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>korrykatti | technical page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff;
+      font-family: 'Times New Roman', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      /* changed from height to min-height */
+      text-align: center;
+      padding: 2rem;
+    }
+
+    :root {
+      --bg-color: #fff;
+      --text-color: #000;
+      --link-color: #000;
+      --link-hover-color: #555;
+    }
+
+    .dark-mode {
+      --bg-color: #111;
+      --text-color: #fff;
+      --link-color: #fff;
+      --link-hover-color: #ddd;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+
+    a {
+      color: var(--link-color);
+      transition: color 0.3s, filter 0.3s;
+    }
+
+    a:hover {
+      color: var(--link-hover-color);
+    }
+
+    .dark-mode a {
+      color: var(--link-color);
+    }
+
+
+    .logo-container {
+      position: relative;
+      width: 80vw;
+      max-width: 900px;
+    }
+
+    /* swirl behind text */
+    .logo-container::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 120%;
+      height: 120%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+      background: repeating-radial-gradient(circle at center,
+          #000 0%,
+          #000 10%,
+          transparent 11%,
+          transparent 20%);
+      opacity: 0.15;
+      z-index: -1;
+    }
+
+    /* glitchy effect */
+    .main-logo {
+      font-size: 4rem;
+      color: #000;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      text-shadow: -2px 2px #ff0000, 2px -2px #0000ff;
+      animation: glitch 0.5s infinite alternate;
+      margin-bottom: 0.5rem;
+    }
+
+    @keyframes glitch {
+      0% {
+        text-shadow: -2px 2px #ff0000, 2px -2px #0000ff;
+      }
+
+      100% {
+        text-shadow: 2px -2px #ff0000, -2px 2px #0000ff;
+      }
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+
+    .overlay-text {
+      font-size: 1rem;
+      color: #000;
+      width: 80%;
+      margin: 0 auto 1rem;
+      line-height: 1.2em;
+      opacity: 0.8;
+    }
+
+    .section {
+      margin-top: 2rem;
+      width: 80%;
+      max-width: 900px;
+      text-align: center;
+    }
+
+    .section img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+
+    .lorem-ipsum {
+      font-size: 0.9rem;
+      color: #111;
+      width: 75%;
+      margin: 1rem auto;
+      line-height: 1.3em;
+      opacity: 0.7;
+    }
+
+    .links {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+
+    .links a {
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0 10px;
+      opacity: 0.8;
+    }
+
+    .links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    .subtitle,
+    .overlay-text,
+    .lorem-ipsum,
+    .section h2,
+    .links a {
+      color: var(--text-color);
+    }
+
+    .dark-mode a {
+      color: var(--link-color);
+    }
+
+    .lorem-ipsum {
+      color: var(--text-color);
+    }
+
+    .subtitle {
+      color: var(--text-color);
+    }
+
+    .overlay-text {
+      color: var(--text-color);
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const trailContainer = document.createElement("div");
+      trailContainer.style.position = "fixed";
+      trailContainer.style.top = "0";
+      trailContainer.style.left = "0";
+      trailContainer.style.width = "100%";
+      trailContainer.style.height = "100%";
+      trailContainer.style.pointerEvents = "none";
+      document.body.appendChild(trailContainer);
+  
+      let particles = [];
+  
+      document.addEventListener("mousemove", (e) => {
+        const particle = document.createElement("div");
+        particle.className = "cursor-trail";
+        particle.style.left = `${e.clientX}px`;
+        particle.style.top = `${e.clientY}px`;
+        trailContainer.appendChild(particle);
+  
+        particles.push(particle);
+        setTimeout(() => {
+          particle.style.opacity = "0";
+          setTimeout(() => {
+            trailContainer.removeChild(particle);
+            particles.shift();
+          }, 500);
+        }, 100);
+      });
+    });
+  </script>
+  
+  <style>
+    .cursor-trail {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: rgba(255, 0, 150, 0.8);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: trailAnim 0.5s ease-out;
+      pointer-events: none;
+    }
+  
+    @keyframes trailAnim {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.5); opacity: 0; }
+    }
+  </style>
+  
+  <div class="logo-container">
+    <div class="main-logo">Welcome to the site</div>
+    <div class="subtitle">You are now on the technical page <a href="/"> [go back]</a></div>
+    <p><img src="https://cyber.dabamos.de/88x31/blink-0.gif"></p>
+    <div class="overlay-text">
+      hey, i'm korry—just another random guy on the internet and a cs undergrad. welcome to my site!<br />
+      this is the technical page so expect a lot of data in a not so eye pleasing format
+    </div>
+  </div>
+  <button id="theme-toggle"
+    style="position: fixed; top: 10px; right: 10px; padding: 5px 10px; cursor: pointer;">🌙</button>
+
+  <div class="section">
+    <h2>projects</h2>
+    <p class="lorem-ipsum">
+    <ul style="list-style-type: none;">
+      <li><a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html">ziggle</a> - command-based drawing tool
+        (wip)</li>
+      <li><a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html">mirage</a> - basic chat application
+        (wip)</li>
+      <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a> - one-click code compiler &
+        launcher (wip)</li>
+    </ul>
+    </p>
+    <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" alt="visitor counter"
+      style="display: block; margin: 20px auto;">
+  </div>
+  <style>
+    @keyframes rainbowGlow {
+        0% { text-shadow: 0 0 5px red; }
+        20% { text-shadow: 0 0 5px orange; }
+        40% { text-shadow: 0 0 5px yellow; }
+        60% { text-shadow: 0 0 5px green; }
+        80% { text-shadow: 0 0 5px blue; }
+        100% { text-shadow: 0 0 5px violet; }
+    }
+    .smol-web-apps-btn, a[style*="rainbowGlow"] {
+        animation: rainbowGlow 12s infinite;
+    }
+</style>
+  <div class="section">
+    <h2>links</h2>
+    <p class="lorem-ipsum">
+    <nav>
+      <a href="/guestbook.html">guestbook</a>
+      <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
+      <a href="https://github.com/korrykatti">gitHub</a>
+      <a href="https://x.com/dunkelkron">x dot com</a>
+      <a href="mailto:v53pqteon@mozmail.com">email</a>
+      <a href="/blog/index.html" style="animation: rainbowGlow 1.61803398875s infinite;">blog</a>
+      <a href="apps/index.html" class="smol-web-apps-btn" style="animation: rainbowGlow 2s infinite;">smol web apps</a>
+      <a href="logs.html" style="animation: rainbowGlow 2s infinite;">logs</a>
+    </nav>
+    </p>
+    <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400"
+      style="margin: 20px;"></iframe>
+  </div>
+
+  <div class="section">
+    <h2>Contact</h2>
+    <p class="lorem-ipsum">Reach out through these channels:</p>
+    <div class="links">
+      <a href="https://github.com/korrykatti">GitHub</a> |
+      <a href="mailto:v53pqteon@mozmail.com">Email</a>
+    </div>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('theme-toggle');
+    const isDarkMode = localStorage.getItem('dark-mode') === 'enabled';
+
+    if (isDarkMode) {
+      document.body.classList.add('dark-mode');
+      toggleBtn.textContent = '☀️';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const mode = document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+      localStorage.setItem('dark-mode', mode);
+      toggleBtn.textContent = mode === 'enabled' ? '☀️' : '🌙';
+    });
+  </script>
+<hr>
+<div class="section">
+  <h2>data dump</h2>
+  <p class="lorem-ipsum">
+  <p>
+    <a href="https://wakatime.com"><img src="https://wakatime.com/share/@korrykatti/79392608-c52e-4eeb-a3d8-d6dfd381092a.png" /></a>
+  </p>
+  <p>
+    <img src="https://spotify-github-profile.kittinanx.com/api/view?uid=c9khdo6s2n2q8o54qe7punql7&amp;cover_image=true&amp;theme=novatorem&amp;show_offline=true&amp;background_color=121212&amp;interchange=false&amp;bar_color=53b14f&amp;bar_color_cover=true" alt="Spotify Profile" style="width: 100%; max-width: 400px; margin-top: 10px;">
+  </p>
+  <p>
+    <div id="last-updated">website updated: loading...</div>
+    entropy calculation → measure randomness from user inputs like mouse movement, keypress timings, and maybe even scrolling patterns.
+  </p>
+  <p>
+    <script>
+      let entropy = 0;
+    const maxEntropy = 100; // Arbitrary cap for visualization
+    
+    // Capture mouse movements
+    window.addEventListener("mousemove", (e) => {
+      entropy += Math.random() * 2;
+      updateEntropy();
+    });
+    
+    // Capture keypress randomness
+    window.addEventListener("keydown", (e) => {
+      entropy += Math.random() * 3;
+      updateEntropy();
+    });
+    
+    // Capture scroll behavior
+    window.addEventListener("scroll", (e) => {
+      entropy += Math.random() * 1.5;
+      updateEntropy();
+    });
+    
+    // Update the UI
+    function updateEntropy() {
+      entropy = Math.min(entropy, maxEntropy);
+      const bar = document.getElementById("entropy-bar");
+      bar.style.width = `${(entropy / maxEntropy) * 100}%`;
+      bar.style.background = `rgb(${entropy * 2.5}, 50, 150)`;
+      
+      const text = document.getElementById("entropy-text");
+      text.innerText = getEntropyMessage(entropy);
+    }
+    
+    // Dynamic text based on entropy levels
+    function getEntropyMessage(entropy) {
+      if (entropy < 20) return "Stable Order...";
+      if (entropy < 50) return "Disrupting Patterns...";
+      if (entropy < 80) return "Chaos Rising...";
+      return "Entropy Overload!";
+    }
+    
+    // Add the UI to the page
+    document.addEventListener("DOMContentLoaded", () => {
+      const meter = document.createElement("div");
+      meter.innerHTML = `
+          <div style="width: 100%; max-width: 400px; border: 2px solid #fff; padding: 5px; margin-top: 20px;">
+              <div id="entropy-bar" style="height: 20px; width: 0%; background: blue; transition: width 0.3s ease-out;"></div>
+          </div>
+          <p id="entropy-text" style="color: #fff; font-weight: bold; text-align: center; margin-top: 5px;">Stable Order...</p>
+      `;
+      document.body.appendChild(meter);
+    });
+    
+    </script>
+  </p>
+  <script>
+    const dMailContainer = document.createElement('div');
+dMailContainer.style.position = 'fixed';
+dMailContainer.style.bottom = '20px';
+dMailContainer.style.right = '20px';
+dMailContainer.style.width = '300px';
+dMailContainer.style.background = 'rgba(0, 0, 0, 0.8)';
+dMailContainer.style.color = '#00ff00';
+dMailContainer.style.fontFamily = 'monospace';
+dMailContainer.style.padding = '10px';
+dMailContainer.style.border = '1px solid #00ff00';
+dMailContainer.style.display = 'none';
+dMailContainer.style.animation = 'glitch 0.5s infinite alternate';
+document.body.appendChild(dMailContainer);
+
+const messages = [
+    "D-Mail received... Decoding...",
+    "[Altered Past Detected] The choice of Steins;Gate is yours...",
+    "Sent to: July 28, 2010 - 'Do not trust them'",
+    "Divergence % Update: 1.048596 -> 1.049201",
+    "Warning: SERN Surveillance Active. Change the worldline.",
+        "The divergence number has shifted...", 
+    "A worldline change is imminent.", 
+    "They're watching. Don't respond.", 
+    "The future isn't what you think.", 
+    "In 3 hours, everything resets.", 
+    "42.195 - Remember this number.", 
+    "A false past is being overwritten.", 
+    "SERN has intercepted this signal.",
+    "The time machine is already here.",
+    "Deja vu? Or timeline bleed?"
+];
+
+function showDMail() {
+    const message = messages[Math.floor(Math.random() * messages.length)];
+    dMailContainer.innerText = message;
+    dMailContainer.style.display = 'block';
+    setTimeout(() => {
+        dMailContainer.style.display = 'none';
+    }, 5000);
+}
+
+setInterval(showDMail, 10000);
+</script>
+    
+
+  </p>
+</div>
+
+<script>
+  async function getLastCommit() {
+      try {
+          const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
+          const commits = await response.json();
+          const lastCommitDate = new Date(commits[0].commit.committer.date);
+          
+          const now = new Date();
+          const diffTime = Math.abs(now - lastCommitDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+          const lastUpdatedElement = document.getElementById('last-updated');
+          lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+      } catch (error) {
+          console.error("error fetching the last commit:", error);
+          document.getElementById('last-updated').textContent = "error loading last updated date";
+      }
+  }
+  getLastCommit();
+</script>
+
+</body>
+
+</html>
