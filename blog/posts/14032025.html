@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @font-face {
+            font-family: 'Digital';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/digital-numbers/1.1.0/digital-numbers-regular.ttf');
+        }
+
+        body {
+            background: #000;
+            color: #b8b8b8;
+            font-family: 'MS PGothic', 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(16, 16, 16, 0.9);
+            padding: 30px;
+            border: 1px solid #333;
+        }
+
+        .post-title {
+            color: #c43c3c;
+            font-family: 'Courier New', monospace;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .post-meta {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        .post-content {
+            margin-top: 20px;
+        }
+
+        a {
+            color: #c43c3c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="post-title">can ai think at the speed of light? a dumb idea that might actually work</h1>
+        <div class="post-meta">lab member 001 | date : 14.02.2025</div>
+
+        <div class="post-content">
+            <h2>tldr : how I overcomplicated a simple problem for fun</h2>
+            <p>so to begin , first of all i know very less of all these ml concepts kinda in still a learning phase. the
+                most i can do is make api calls to ollama thats it so take what i say with a grain of salt (actually you
+                don't need to ik no mle will even read this)</p>
+            <p> so what's the big idea ?</p>
+            <p>
+                so we all know AI models use "attention" to figure out what matters in a sentence. it’s cool, it works,
+                but what if i told you there’s another way?
+            </p>
+            <p>
+                instead of AI crunching numbers like a nerd, imagine if it just sent out a light beam to find the right
+                answer—literally searching in a 3D space like a laser bouncing in a mirror box. faster? maybe. insane?
+                absolutely.
+            </p>
+            <p>if you are still with me till here you might ask why even do this? well </p>
+            <ul>
+                <li>attention is great, but it still has to compare every word and do a ton of math.</li>
+                <li>what if we stored responses in 3D, and instead of calculating, we just "searched" for the best
+                    answer by moving through space?</li>
+                <li>in physics, light always takes the shortest path—so why not make AI do the same?</li>
+            </ul>
+            <p>
+            <h3>The Wild Idea</h3>
+            </p>
+            <p>Instead of a boring old text-based search where you match words, what if:</p>
+
+            <ul>
+                <li>Every response in a dataset was mapped to a 3D space with coordinates between 0 and 1?</li>
+                <li>A user’s input (the query) was also plotted in that space?</li>
+                <li>The AI then searched for the closest response like a particle moving toward its best match—measuring
+                    distance as displacement?</li>
+            </ul>
+            <p> light moves fast, so maybe this setup could be an intuitive way to visualize AI decisions?</p>
+            <p>at this point i needed to take some help and so i did</p>
+            <h3>
+                <p>But Can We Actually Code This?</p>
+            </h3>
+            <p>
+                Short answer: yes.
+            </p>
+            <p>
+                Longer answer: I threw together a Python script that:
+
+            <ul>
+                <li>Randomly generates 50 responses (each represented as a dot in 3D space).</li>
+                <li>Plots a query point somewhere in that space.</li>
+                <li>Finds the closest match based on Euclidean distance.</li>
+                <li>Animates the searcher traveling toward it so we can watch AI “think” visually.</li>
+            </ul>
+            </p>
+            <hr>
+            <pre><code>
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+# Generate random 3D data points
+num_points = 50
+data_points = np.random.rand(num_points, 3)  
+text_data = [f"Response {i}" for i in range(num_points)]  
+query_point = np.random.rand(3)
+
+# Find the closest match
+distances = np.linalg.norm(data_points - query_point, axis=1)
+nearest_idx = np.argmin(distances)
+nearest_point = data_points[nearest_idx]
+nearest_text = text_data[nearest_idx]
+
+# Generate search path
+steps = 50
+search_path = np.linspace(query_point, nearest_point, steps)
+
+# Create figure
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+# Scatter plot for points
+ax.scatter(data_points[:, 0], data_points[:, 1], data_points[:, 2], c='blue', label="Data Points")
+ax.scatter(query_point[0], query_point[1], query_point[2], c='red', s=100, label="Query")
+ax.scatter(nearest_point[0], nearest_point[1], nearest_point[2], c='green', s=100, label="Nearest Match")
+
+# Plot empty searcher point
+searcher, = ax.plot([], [], [], 'ko', markersize=8, label="Searcher")
+
+ax.legend()
+
+# Animation function
+def update(frame):
+    searcher.set_data([search_path[frame, 0]], [search_path[frame, 1]])
+    searcher.set_3d_properties([search_path[frame, 2]])
+    return searcher,
+
+# Create animation
+ani = animation.FuncAnimation(fig, update, frames=steps, interval=50, blit=False)
+
+# Save as GIF
+ani.save("search_animation.gif", writer="pillow", fps=20)  
+
+plt.show()
+            </code></pre>
+            <hr>
+            <p>
+                <img src="https://files.catbox.moe/qxp2wp.gif">
+            </p>
+            <p>
+            <h3>What This Does (For People Who Don’t Want to Read the Code)</h3>
+            <ul>
+                <li>Random dots = AI responses floating in space</li>
+                <li>Red dot = user’s input</li>
+                <li>Green dot = best match AI picks</li>
+                <li>Black dot = “searcher” moving toward the answer</li>
+                <li>It animates the search so you can see how fast AI “thinks”</li>
+            </ul>
+
+            </p>
+            <p>
+                Does This Actually Make AI Faster?
+            </p>
+            <p>
+                Not really. Transformers are already insanely optimized, so attention is still king. But this approach:
+            <ul>
+                <li>✅ gives a visual representation of how ai searches for an answer</li>
+                <li>✅ feels like light-speed reasoning (even though it’s just a math trick)</li>
+                <li>✅ looks cool on a blog post</li>
+            </ul>
+            </p>
+            <p>
+                Final Thoughts: A Fun, Useless, Yet Cool Visualization
+            </p>
+            <p>
+                <ul>
+                    <li>is openai gonna replace transformers with my 3D displacement search method? nah.</li>
+                    <li>did i originally just think about light traveling in a mirror maze and assume it would be faster? yes.</li>
+                    <li>was the code written mostly with help? also yes.</li>
+                </ul>
+                but hey, if nothing else, it was a fun way to overcomplicate a simple idea.
+            </p>
+            <p>
+                thanks for reading. you’re now 5% dumber. or smarter. i honestly can’t tell.
+            </p>
+            <p>this is how writing this felt like ngl</p>
+            <p><img src="https://i.pinimg.com/736x/67/61/63/67616302ed4e0c8fe1937c0c422e7c70.jpg" height="200"
+                    width="200"></p>
+        </div>
+        <p><a href="../index.html">← Back to Blog Index</a></p>
+
+        <div class="navigation"
+            style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; font-family: 'Courier New', monospace;">
+            <a href="03012025.html" class="nav-button"
+                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">&lt;&lt;PREVIOUS_LOG</a>
+            <a href="#" class="nav-button"
+                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">NEXT_LOG&gt;&gt;</a>
+        </div>
+    </div>
+</body>
+
+</html>
