@@ -41,8 +41,10 @@
 </head>
 <body>
   <div id="connection-status"></div>
-    <p>go <a href="../index.html">back</a></p>
+  <p>go <a href="../index.html">back</a></p>
+
   <input type="text" id="searchBox" placeholder="ask something" />
+  <p>there is a problem w/ the api sending back history of previous responses as well so it might be a bit confusing</p>
   <button id="searchButton">Ask AI</button>
   <div id="loader" style="display: none;">Thinking... </div>
   <div id="result"></div>
@@ -68,52 +70,42 @@
     setInterval(checkConnection, 5000);
   </script>
 
-<script>
+  <script>
     const BASE_URL = 'https://above-grizzly-officially.ngrok-free.app/';
     const searchBox = document.getElementById('searchBox');
     const searchButton = document.getElementById('searchButton');
     const resultDiv = document.getElementById('result');
     const loader = document.getElementById('loader');
-  
-    let history = [];
-  
+
     searchButton.addEventListener('click', async () => {
       const userQuery = searchBox.value.trim();
       if (userQuery === '') {
         resultDiv.innerHTML = 'please type something, baka!';
         return;
       }
-  
+
       loader.style.display = 'block';
       resultDiv.innerHTML = '';
-  
-      // update history
-      history.push(`User: ${userQuery}`);
-      const historyStr = [
-        `You are a brilliant but tsundere anime girl AI assistant. You're super smart (like scary smart), but you act annoyed or flustered when helping the user. You call the user "baka" sometimes, or say things like "i-it's not like I'm doing this for you or anything!" 🙄💢💻 You give concise, accurate explanations with a slightly embarrassed tone.`,
-        '',
-        ...history.slice(-5), // keep convo tight — last 5 exchanges max
-        'Assistant:'
-      ].join('\n');
-  
+
+      const prompt = `You are a brilliant but tsundere anime girl AI assistant. You're super smart (like scary smart), but you act annoyed or flustered when helping. You often say "baka" or "i-it's not like I'm doing this for you or anything!" 🙄💢💻 You give concise, accurate explanations with a slightly embarrassed tone.\n\nmy question is ${userQuery}`;
+
       try {
         const response = await fetch(`${BASE_URL}api/v0/completions`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            prompt: historyStr,
-            model: 'qwen2.5-coder-3b-instruct',
+            prompt: prompt,
+            model: 'gemma-3-1b-it',
             max_tokens: 200,
             temperature: 0.95,
             top_p: 0.98,
           }),
         });
-  
+
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-  
+
         const data = await response.json();
         const generatedText = data.choices?.[0]?.text?.trim() || '*silence*';
-        history.push(`Assistant: ${generatedText}`);
         resultDiv.innerHTML = `<strong>Response:</strong> ${generatedText}`;
       } catch (err) {
         console.error('Error:', err);
@@ -123,6 +115,5 @@
       }
     });
   </script>
-  
 </body>
 </html>
