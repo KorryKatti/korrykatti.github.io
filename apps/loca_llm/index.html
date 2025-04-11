@@ -59,6 +59,9 @@
 
   <img id="corner-img" src="" alt="random corner img" />
 
+  <!-- Include marked.js -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
   <script>
     async function checkConnection() {
       const statusElement = document.getElementById('connection-status');
@@ -105,7 +108,7 @@
       loader.style.display = 'block';
       resultDiv.innerHTML = '';
 
-      const prompt = `You are an intelligent assistant. You're witty, sharp, and a little sarcastic, but always helpful. Keep answers smart and concise.\n\nUser's question: ${userQuery}`;
+      const prompt = `You are an intelligent assistant. You're witty, sharp, and a little sarcastic, but always helpful. Keep answers smart and concise and never exceed 198 words. Try to act cute , you may use emojis and act like a anime girl.\n\nUser's question: ${userQuery}`;
 
       try {
         const response = await fetch(`${BASE_URL}api/v0/completions`, {
@@ -114,7 +117,7 @@
           body: JSON.stringify({
             prompt: prompt,
             model: 'qwen2.5-coder-3b-instruct',
-            max_tokens: 500,
+            max_tokens: 200,
             temperature: 0.85,
             top_p: 0.95,
           }),
@@ -124,7 +127,9 @@
 
         const data = await response.json();
         const generatedText = data.choices?.[0]?.text?.trim() || '*no response*';
-        resultDiv.innerHTML = `<strong>Response:</strong> ${generatedText}`;
+
+        // Render the response as Markdown
+        resultDiv.innerHTML = marked.parse(generatedText);
       } catch (err) {
         console.error('Error:', err);
         resultDiv.innerHTML = 'ugh, it broke. again.';
