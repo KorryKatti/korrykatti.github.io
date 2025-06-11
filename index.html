@@ -4,255 +4,170 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Primary Meta Tags -->
     <title>korry</title>
-    <meta name="title" content="korrykatti — cs undergrad">
     <meta name="description" content="no thoughts inside">
     <link rel="icon" href="https://i.pinimg.com/736x/69/8b/dc/698bdcfb1599a1c3473cb772b9c66f46.jpg" type="image/png">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://korrykatti.github.io/">
-    <meta property="og:title" content="korrykatti — cs undergrad, builder of smol cool stuff">
-    <meta property="og:description"
-        content="mirage, thunder, smol web apps, logs, guestbook, and vibes. click in.">
-    <meta property="og:image" content="https://i.pinimg.com/736x/16/2c/cb/162ccb0de230d5eddabe965b8254394d.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://korrykatti.github.io">
-    <meta name="twitter:creator" content="@dunkelkron">
-
-    <meta property="twitter:title" content="korrykatti — cs undergrad, builder of smol cool stuff">
-    <meta property="twitter:description"
-        content=" mirage, thunder, smol web apps, logs, guestbook, and vibes. click in.">
-    <meta property="twitter:image" content="https://i.pinimg.com/736x/83/a0/f4/83a0f4631933193ff6893840ac443269.jpg">
-
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <script async src="https://sleepie.uk/oneko.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #f9f9f9;
-            font-family: sans-serif;
-            margin: 0;
-        }
-
-        .wrapper {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-            max-width: 1000px;
-            padding: 20px;
-        }
-
-        .text {
-            max-width: 500px;
-        }
-
-        samp {
-            font-size: 1rem;
-            display: block;
-        }
-
-        .hit-counter {
-            margin-top: 20px;
-        }
-
-        a {
-            color: #0077cc;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div class="wrapper">
-        <img src="https://i.pinimg.com/736x/a5/2d/bd/a52dbd887a08204c7960c7e035167eef.jpg" width="400" />
-
-        <div class="text">
-            <samp>
-                hi there <br><br>
-                cs undergrad <br>
-                projects:
-                <!-- <a href="https://korrykatti.is-a.dev/project_sites/ziggle/index.html" target="_none">ziggle</a>, -->
-                <a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html" target="_none">mirage</a>,
-                <a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html"
-                    target="_none">thunder</a><br><br>
-                more links :
-                <a href="/guestbook.html">guestbook</a>
-                <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a>
-                <a href="https://github.com/korrykatti">github</a>
-                <a href="https://x.com/dunkelkron">x dot com</a>
-                <a href="mailto:korrykatti@proton.me">email</a>
-                <a href="/blog/index.html">blog</a>
-                <a href="apps/index.html" class="smol-web-apps-btn" style="animation: rainbowGlow 2s infinite;">smol web
-                    apps</a>
-                <a href="logs.html" style="animation: rainbowGlow 2s infinite;">logs</a>
-                <br><br>
-                <div class="hit-counter">
-                    <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" width="250px" />
-                </div>
-                <button id="toggle-collapse" style="margin-top: 10px;">show more</button>
-                <div id="collapse-section" style="display: none; margin-top: 10px;">
-                    <div id="last-updated">website updated: loading...</div>
-                    <br>
-                    <a href="technical.htm">more detailed page</a><br>
-                    <br>
-
-                    <button id="open-modal-btn">Open Window</button>
-                </div>
-
-            </samp>
-
-
+    <div class="divergence" id="divergence">DIVERGENCE: 1.130426%</div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="title">korrykatti</div>
+            <div class="subtitle">cs undergrad — no thoughts inside</div>
         </div>
 
+        <div class="main-content">
+            <img src="https://i.pinimg.com/736x/a5/2d/bd/a52dbd887a08204c7960c7e035167eef.jpg" 
+                 alt="profile" class="profile-img" />
+
+            <div class="info-section">
+                <div class="section">
+                    <div class="section-title">[PROJECTS]</div>
+                    <div class="links">
+                        <a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html" class="link">mirage</a>
+                        <a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html" class="link">thunder</a>
+                        <a href="https://korrykatti.pythonanywhere.com/" class="link">image board</a>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">[LINKS]</div>
+                    <div class="links">
+                        <a href="/guestbook.html" class="link">guestbook</a>
+                        <a href="https://github.com/korrykatti" class="link">github</a>
+                        <a href="https://x.com/dunkelkron" class="link">x.com</a>
+                        <a href="mailto:korrykatti@proton.me" class="link">email</a>
+                        <a href="/blog/index.html" class="link">blog</a>
+                        <a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7" class="link">spotify</a>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">[SPECIAL]</div>
+                    <div class="links">
+                        <a href="apps/index.html" class="link special-link">smol web apps</a>
+                        <a href="logs.html" class="link special-link">logs</a>
+                    </div>
+                </div>
+
+                <div class="expandable">
+                    <button class="toggle-btn" id="toggle-collapse">SHOW_MORE</button>
+                    <div class="collapse-content" id="collapse-section">
+                        <div id="last-updated">SYSTEM_STATUS: loading...</div>
+                        <br>
+                        <!-- <a href="technical.htm" class="link">detailed_specs</a>
+                        <br><br> -->
+                        <button class="toggle-btn" id="open-modal-btn">OPEN_CHAT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="hit-counter">
+            <img src="https://counter.seku.su/cmoe?name=korrykatti&theme=mb" class="counter-img" width="200" />
+        reason for removal : it buffed up too big for some reason 
+        </div>
+    </div> -->
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <span>STATUS: ONLINE</span>
+        <span id="current-time"></span>
     </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">COMMUNICATION_LINK</div>
+            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400"></iframe>
+            <button class="close-btn" id="close-modal-btn">DISCONNECT</button>
+        </div>
+    </div>
+
     <script>
+        // Toggle collapse functionality
         document.addEventListener('DOMContentLoaded', () => {
             const toggleBtn = document.getElementById('toggle-collapse');
             const collapseSection = document.getElementById('collapse-section');
 
             toggleBtn.addEventListener('click', () => {
-                const isVisible = collapseSection.style.display === 'block';
-                collapseSection.style.display = isVisible ? 'none' : 'block';
-                toggleBtn.textContent = isVisible ? 'show more' : 'hide more';
+                const isVisible = collapseSection.classList.contains('show');
+                if (isVisible) {
+                    collapseSection.classList.remove('show');
+                    toggleBtn.textContent = 'SHOW_MORE';
+                } else {
+                    collapseSection.classList.add('show');
+                    toggleBtn.textContent = 'HIDE_MORE';
+                }
+            });
+
+            // Modal functionality
+            const openModalBtn = document.getElementById('open-modal-btn');
+            const modal = document.getElementById('modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+
+            if (openModalBtn) {
+                openModalBtn.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+
+            // Close modal on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
             });
         });
-    </script>
+
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB');
+            document.getElementById('current-time').textContent = `TIME: ${timeString}`;
+        }
+
+        function isOnline() {
+    const now = new Date();
+    const hourIST = Number(now.toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        hour12: false
+    }));
+    return hourIST >= 10 && hourIST < 22;
+}
 
 
-    <!-- Modal Structure -->
-    <div id="modal"
-        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); justify-content: center; align-items: center;">
-        <div>
-            <h2 style="color: #f9a825;">chatbox</h2>
-            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400"
-                style="margin: 20px;"></iframe>
-            <button id="close-modal-btn" style="margin-top: 20px;">Close</button>
-        </div>
-    </div>
-    <style>
-        @keyframes rainbowGlow {
-            0% {
-                text-shadow: 0 0 5px red;
-            }
 
-            20% {
-                text-shadow: 0 0 5px orange;
-            }
-
-            40% {
-                text-shadow: 0 0 5px yellow;
-            }
-
-            60% {
-                text-shadow: 0 0 5px green;
-            }
-
-            80% {
-                text-shadow: 0 0 5px blue;
-            }
-
-            100% {
-                text-shadow: 0 0 5px violet;
+        function updateStatus() {
+            const statusBar = document.querySelector('.status-bar span');
+            if (isOnline()) {
+            statusBar.textContent = 'STATUS: ONLINE';
+            } else {
+            statusBar.textContent = 'STATUS: OFFLINE';
             }
         }
 
-        .smol-web-apps-btn,
-        a[style*="rainbowGlow"] {
-            animation: rainbowGlow 12s infinite;
-        }
-    </style>
+        setInterval(updateStatus, 1000);
+        updateStatus();
+        
+        updateTime();
+        setInterval(updateTime, 1000);
 
-    <script>
-        // Alert on page load
-        window.onload = function () {
-            //alert("This website isn't meant for opening on mobile and small screens. If content feels cut off, please zoom out to 80%.");
-            const terminal = document.getElementById('terminal');
-            terminal.style.opacity = 1; // Set opacity to 1 for fade-in
-
-            // Update current time every second in 24-hour format
-            setInterval(() => {
-                const now = new Date();
-                const currentTime = now.toLocaleTimeString('en-GB'); // 24-hour format
-                document.getElementById('current-time').textContent = currentTime;
-            }, 1000);
-
-            // Lazy load Wakatime data after 2 seconds
-            setTimeout(() => {
-                $.ajax({
-                    type: 'GET',
-                    url: 'https://wakatime.com/share/@korrykatti/c19c5194-c5db-4963-8290-8dfd587d3c71.json',
-                    dataType: 'jsonp',
-                    success: function (response) {
-                        console.log(response.data);
-                        // Create a chart from the fetched data
-                        const wakatimeData = response.data;
-                        const labels = wakatimeData.map(item => item.name);
-                        const data = wakatimeData.map(item => item.percent);
-                        const colors = wakatimeData.map(item => item.color);
-
-                        const ctx = document.getElementById('languageChart').getContext('2d');
-                        const languageChart = new Chart(ctx, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: 'Language Usage (%)',
-                                    data: data,
-                                    backgroundColor: colors,
-                                    borderColor: colors.map(color => color.replace(')', ', 0.5)').replace('rgb', 'rgba')),
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        title: {
-                                            display: true,
-                                            text: 'Percentage'
-                                        }
-                                    },
-                                    x: {
-                                        title: {
-                                            display: true,
-                                            text: 'Languages'
-                                        }
-                                    }
-                                }
-                            }
-                        });
-                    },
-                    error: function (error) {
-                        console.error("Error fetching Wakatime data:", error);
-                    }
-                });
-            }, 2000); // Delay the AJAX call by 2 seconds
-        };
-
-        // Dark mode toggle functionality
-        const toggleButton = document.getElementById('toggle-dark-mode');
-        toggleButton.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-        });
-
-    </script>
-
-    <script>
+        // Get last commit info
         async function getLastCommit() {
             try {
                 const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
@@ -263,44 +178,39 @@
                 const diffTime = Math.abs(now - lastCommitDate);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                const lastUpdatedElement = document.getElementById('last-updated');
-                lastUpdatedElement.textContent = `last updated: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+                document.getElementById('last-updated').textContent = 
+                    `LAST_UPDATE: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
             } catch (error) {
-                console.error("error fetching the last commit:", error);
-                document.getElementById('last-updated').textContent = "error loading last updated date";
+                console.error("Error fetching last commit:", error);
+                document.getElementById('last-updated').textContent = "SYSTEM_ERROR: update data unavailable";
             }
         }
-        getLastCommit();
-    </script>
 
-    <script>
-        // Ensure modal elements exist before adding event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            const openModalBtn = document.getElementById('open-modal-btn');
-            const modal = document.getElementById('modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
+        // Divergence meter animation
+        function animateDivergence() {
+            const divergence = document.getElementById('divergence');
+            const values = ['1.130426%', '1.130427%', '1.130425%', '1.130428%'];
+            let index = 0;
+            
+            setInterval(() => {
+                divergence.textContent = `DIVERGENCE: ${values[index]}`;
+                index = (index + 1) % values.length;
+            }, 3000);
+        }
 
-            if (openModalBtn) {
-                openModalBtn.onclick = function () {
-                    modal.style.display = 'flex';
-                };
-            }
-
-            if (closeModalBtn) {
-                closeModalBtn.onclick = function () {
-                    modal.style.display = 'none';
-                };
-            }
+        // Initialize
+        window.addEventListener('load', () => {
+            getLastCommit();
+            animateDivergence();
         });
-    </script>
 
-    <script>
-        const titles = ['welcome', 'hello there', "korrykatti", "/index2.html"];
-        let index = 0;
+        // Title cycling
+        const titles = ['korry', 'TERMINAL_ACCESS', 'SYSTEM_ONLINE', 'korrykatti'];
+        let titleIndex = 0;
         setInterval(() => {
-            document.title = titles[index];
-            index = (index + 1) % titles.length;
-        }, 2000); // Change title every 2 seconds
+            document.title = titles[titleIndex];
+            titleIndex = (titleIndex + 1) % titles.length;
+        }, 2000);
     </script>
 </body>
 
