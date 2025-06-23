@@ -7,175 +7,210 @@
             src: url('https://cdnjs.cloudflare.com/ajax/libs/digital-numbers/1.1.0/digital-numbers-regular.ttf');
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            background: #000;
-            color: #b8b8b8;
-            font-family: 'MS PGothic', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: #d0d0d0;
+            font-family: 'Courier New', monospace;
             margin: 0;
-            overflow-x: hidden;
-            background-image: 
-                repeating-linear-gradient(
-                    transparent 0px,
-                    transparent 1px,
-                    rgba(0, 0, 0, 0.1) 2px,
-                    rgba(0, 0, 0, 0.1) 3px
-                );
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 750px;
             margin: 0 auto;
-            padding: 20px;
-            background: rgba(16, 16, 16, 0.9);
-            border: 1px solid #333;
-            position: relative;
-            z-index: 2;
-        }
-
-        /* New shader background effects */
-        .shader-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.3;
-        }
-
-        .shader-layer-1 {
-            background: linear-gradient(45deg, rgba(196, 60, 60, 0.1), rgba(0, 0, 0, 0.2));
-            animation: shader-move-1 20s ease infinite;
-        }
-
-        .shader-layer-2 {
-            background: linear-gradient(135deg, rgba(60, 196, 196, 0.1), rgba(0, 0, 0, 0.2));
-            animation: shader-move-2 25s ease-in-out infinite;
-        }
-
-        @keyframes shader-move-1 {
-            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
-            50% { transform: translateX(50px) translateY(30px) rotate(10deg); }
-        }
-
-        @keyframes shader-move-2 {
-            0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
-            50% { transform: translateX(-50px) translateY(-30px) rotate(-10deg); }
+            padding: 25px;
+            background: rgba(17, 17, 17, 0.95);
+            border: 1px solid #444;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(196, 60, 60, 0.1);
         }
 
         .header {
             text-align: center;
+            padding: 0 0 25px;
+            margin-bottom: 35px;
             border-bottom: 2px solid #333;
-            padding: 20px;
-            margin-bottom: 30px;
-            background: #111;
             position: relative;
         }
 
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c43c3c, transparent);
+        }
+
         .lab-title {
-            font-size: 2em;
             color: #c43c3c;
-            text-shadow: 0 0 5px rgba(196, 60, 60, 0.8);
-            font-family: 'Courier New', monospace;
-            /*make a href follow same color*/
-            a {
-                color: #c43c3c;
-            }
+            font-size: 2em;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(196, 60, 60, 0.3);
+            font-weight: bold;
+        }
+
+        .lab-title a {
+            color: #c43c3c;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .lab-title a:hover {
+            text-shadow: 0 0 15px rgba(196, 60, 60, 0.6);
         }
 
         .divergence {
             font-family: 'Digital', monospace;
             color: #c43c3c;
-            font-size: 1.2em;
-            margin: 10px 0;
+            margin: 15px 0 0;
+            font-size: 1.1em;
+            opacity: 0.8;
         }
 
         .post {
-            margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #333;
-            background: #0a0a0a;
-            position: relative;
+            margin: 25px 0;
+            padding: 25px;
+            border: 1px solid #444;
+            background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+            border-radius: 6px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .post:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(196, 60, 60, 0.3);
-        }
-
-        .post:before {
+        .post::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, #000, #c43c3c, #000);
+            height: 3px;
+            background: linear-gradient(90deg, #c43c3c, #c4603c, #c43c3c);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(196, 60, 60, 0.15);
+            border-color: #c43c3c;
+        }
+
+        .post:hover::before {
+            opacity: 1;
         }
 
         .post-title {
             color: #c43c3c;
+            margin: 0 0 12px;
             font-size: 1.5em;
-            margin: 0 0 10px 0;
-            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(196, 60, 60, 0.2);
         }
 
         .post-meta {
-            color: #666;
+            color: #888;
             font-size: 0.9em;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .post-content {
+            margin-bottom: 20px;
+            font-size: 1.05em;
         }
 
         .read-more {
-            display: inline-block;
             color: #c43c3c;
             text-decoration: none;
-            font-family: 'Courier New', monospace;
-            border: 1px solid #c43c3c;
-            padding: 5px 10px;
-            margin-top: 10px;
-            transition: all 0.3s;
+            border: 2px solid #c43c3c;
+            padding: 8px 16px;
+            display: inline-block;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .read-more::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: #c43c3c;
+            transition: left 0.3s ease;
+            z-index: -1;
         }
 
         .read-more:hover {
-            background: #c43c3c;
             color: #000;
+            box-shadow: 0 0 15px rgba(196, 60, 60, 0.4);
         }
 
-        .scanline {
-            position: fixed;
-            top: 0;
+        .read-more:hover::before {
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0.03)
-            );
-            animation: scanline 6s linear infinite;
-            pointer-events: none;
-            z-index: 3;
         }
 
-        @keyframes scanline {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100vh); }
+        .post-title[data-status="DRAFT"] { 
+            color: #c4a03c; 
+        }
+        
+        .post-title[data-status="DISCARDED"] { 
+            color: #666; 
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .post[data-status="DISCARDED"] {
+            opacity: 0.7;
+            filter: grayscale(0.3);
+        }
+
+        /* Subtle pulse animation for divergence meter */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .divergence {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .lab-title {
+                font-size: 1.6em;
+            }
+            
+            .post {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="shader-bg shader-layer-1"></div>
-    <div class="shader-bg shader-layer-2"></div>
-    <div class="scanline"></div>
     <div class="container">
         <header class="header">
             <div class="lab-title">blog | <a href="../index.html">home</a></div>
             <div class="divergence">Divergence: <script>
-                // Fetch latitude from IP geolocation
                 fetch('https://ipapi.co/json/')
                     .then(response => response.json())
                     .then(data => {
@@ -185,50 +220,44 @@
                     .catch(error => {
                         document.querySelector('.divergence').textContent = 
                             'Divergence: Unknown';
-                        console.error('Error fetching IP geolocation:', error);
                     });
             </script></div>
         </header>
 
         <div class="post">
-            <h2 class="post-title">[OPEN] Hello world</h2>
-            <div class="post-meta">lab member 001 | date : 03.01.2025</div>
+            <h2 class="post-title" data-status="OPEN">Hello world</h2>
+            <div class="post-meta">lab member 001 | 03.01.2025</div>
             <div class="post-content">
-                Testing out the blog functionality. First post to verify everything is working correctly. Exploring the digital landscape, one byte at a time. More content coming soon...
+                Testing out the blog functionality. First post to verify everything is working correctly.
             </div>
-            <a href="posts/03012025.html" class="read-more">>READ_MORE</a>
+            <a href="posts/03012025.html" class="read-more">READ_MORE</a>
         </div>
-        <!-- <div class="post">
-            <h2 class="post-title">[DRAFT]</h2>
-            <div class="post-meta">lab member 001 | date : 22.01.2025</div>
-            <div class="post-content">
-                my second hackathon experience
-            </div>
-            <a href="posts/22012025.html" class="read-more">>READ_MORE</a>
-        </div> -->
+
         <div class="post">
-            <h2 class="post-title">[OPEN] How not to fix a mouse</h2>
-            <div class="post-meta">lab member 001 | date : 06.03.2025</div>
+            <h2 class="post-title" data-status="OPEN">How not to fix a mouse</h2>
+            <div class="post-meta">lab member 001 | 06.03.2025</div>
             <div class="post-content">
-                my mouse stopped working and i tried fixing it , here is how it went ( hint : i had to buy a new one )
+                My mouse stopped working and I tried fixing it. Here is how it went.
             </div>
-            <a href="posts/06032025.html" class="read-more">>READ_MORE</a>
+            <a href="posts/06032025.html" class="read-more">READ_MORE</a>
         </div>
+
         <div class="post">
-            <h2 class="post-title">[OPEN] thinking at speed of light</h2>
-            <div class="post-meta">lab member 001 | date : 14.03.2025</div>
+            <h2 class="post-title" data-status="OPEN">Thinking at speed of light</h2>
+            <div class="post-meta">lab member 001 | 14.03.2025</div>
             <div class="post-content">
-                can ai think at the speed of light? a dumb idea that might actually work
+                Can AI think at the speed of light? A dumb idea that might actually work.
             </div>
-            <a href="posts/14032025.html" class="read-more">>READ_MORE</a>
+            <a href="posts/14032025.html" class="read-more">READ_MORE</a>
         </div>
-        <div class="post">
-            <h2 class="post-title">[DISCARDED] Donuts, LiFi, and Time Travel</h2>
-            <div class="post-meta">lab member 001 | date : 03.05.2025</div>
+
+        <div class="post" data-status="DISCARDED">
+            <h2 class="post-title" data-status="DISCARDED">Donuts, LiFi, and Time Travel</h2>
+            <div class="post-meta">lab member 001 | 03.05.2025</div>
             <div class="post-content">
-                watching too much steins;gate, hear me out
+                Watching too much Steins;Gate, hear me out.
             </div>
-            <a href="posts/03052025.html" class="read-more">>READ_MORE</a>
+            <a href="posts/03052025.html" class="read-more">READ_MORE</a>
         </div>
     </div>
 </body>
