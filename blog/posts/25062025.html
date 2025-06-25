@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="blogpost.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="post-title">making a strategy game in one file - with cpp</h1>
+        <div class="post-meta">lab member 001 | date : 25.06.2025</div>
+
+        <div class="post-content">
+            <p>consider this a devlog where i post my progress and what i have learnt while making this</p>
+            <p> the main goal is to learn cpp , and well i tried many things to do so but decided to learn the core of
+                cpp this would be the best way to</p>
+            <h2>introduction</h2>
+            <p>so i like to play map games , sitting in front of the screen for hours looking at my nations progress and
+                get attacked, but you know all of them have a big learning curve , like a big tutorial you have to go
+                through before you even understand what to do</p>
+            <p>so i decided to make a similar game , tho with no graphics ( as of yet ) using cpp to play strategy games
+                without getting paywalled to rise my level</p>
+            <p>that was the primary inspiration for making this , combined with the fact that i wanted to learn c++ at a
+                good level</p>
+            <p> so below is the devlog ( as they call it) , i will include some images too i guess but no videos ( as of
+                writing this ) </p>
+            <h2>progress</h2>
+            <h3>June 25 2025 ; what has happened till now</h3>
+            <p>code uptil now is <a
+                    href="https://github.com/KorryKatti/strat_game/commit/e03cd9ac8f48c5d7f01bf7240bf383bbe59e9c4e"
+                    target="_blank">available here</a></p>
+            <p>
+            <p> i will start explaining the flow from the main funciton</p>
+            <p>
+                so first, i define two integers: <code>rows</code> and <code>cols</code>.
+                then i take input from the user to let them pick a custom size—like 40 x 40.
+                after that, i call <code>makeRegion(rows, cols)</code> and use <code>auto</code> to store the result.
+            </p>
+
+            <p>
+                <code>makeRegion</code> returns a pair—first is a 2D vector (our grid), second is a map of
+                <code>int → string</code> for region names.
+                inside <code>makeRegion</code>, we call <code>createGrid(rows, cols)</code> which just builds the 2D
+                vector.
+                the result is stored back using <code>auto grid</code>.
+            </p>
+
+            <p>
+                then, i prep a map named <code>regionNames</code> that links region ids to names—stuff like
+                <code>{1: "coastline"}</code>, <code>{2: "midlands"}</code>, etc.
+            </p>
+
+            <p>
+                then , i made a set called usedNames  , set because it doesn't allow duplicate entries and well having two or more regions with the same name can be confusing
+            </p>
+            <p>
+                now the code doesn't know the limits it can make the region in yet , so i defined a max size which takes the min of the number of rows and cols and divides it by 2 , so that no region has a huge starting advantage of area
+            </p>
+
+
+            </p>
+        </div>
+        <p><a href="../index.html">← Back to Blog Index</a></p>
+
+        <div class="navigation"
+            style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; font-family: 'Courier New', monospace;">
+            <a href="03052025.html" class="nav-button"
+                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">&lt;&lt;PREVIOUS_LOG</a>
+            <a href="#" class="nav-button"
+                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">NEXT_LOG&gt;&gt;</a>
+        </div>
+    </div>
+</body>
+
+</html>
