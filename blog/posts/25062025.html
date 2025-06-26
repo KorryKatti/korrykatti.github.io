@@ -51,11 +51,83 @@
             </p>
 
             <p>
-                then , i made a set called usedNames  , set because it doesn't allow duplicate entries and well having two or more regions with the same name can be confusing
+                then , i made a set called usedNames , set because it doesn't allow duplicate entries and well having
+                two or more regions with the same name can be confusing
             </p>
             <p>
-                now the code doesn't know the limits it can make the region in yet , so i defined a max size which takes the min of the number of rows and cols and divides it by 2 , so that no region has a huge starting advantage of area
+                now the code doesn't know the limits it can make the region in yet , so i defined a max size which takes
+                the min of the number of rows and cols and divides it by 2 , so that no region has a huge starting
+                advantage of area, also initialized the random module with current time as seed
             </p>
+            <p>
+                <!-- std::uniform_int_distribution: is is a tool in C++ that helps you generate random integers where each
+                number within a given range has an equal chance of being selected. It's like a fair dice roll, but for
+                any range of numbers you want. -->
+                next we define randSize which is a random integer in the range of 1 to maxSize , randRow from 0 to
+                rows-1 and then at last randCol which is again 0 to cols - 1. defining these help us ease our work of
+                creating a region , why ? you will learn later
+            </p>
+            <p>
+                after this i defined a array of strings called namepool to assign name to regions cause honestly ,
+                calling regions by name is way better than calling them by their id
+            </p>
+            <p>
+                then the program goes into a loop to assign the available values to the map , we do 500 tries (a good
+                number, not to big not too small)
+            <p>we use the grid we defined earlier along with random assigned value of row ,column, height and width and
+                pass it to check if the said area is free </p>
+            <p>
+                the area free checking function checks if a (h x w) rectangle starting at (r, c) in grid fits and is all
+                zero. returns false if it goes out of bounds or hits any non-zero cell.
+            </p>
+            <p>if the area is indeed free we pass the similar values as earlier but with region id into the fillRegion
+                function</p>
+            <p>the function fills a (h x w) rectangle in grid starting at (r, c) with id. basically stamps a block of
+                value id onto the grid.</p>
+            <p>so remember how we earlier defined a map called regionNames ? we will use it to to make a key value pair
+                with the key being the region id and the value being the region name which is randomly fetched from our
+                pool and is assigned a random name (not reused) from namePool to regionNames[regionId].</p>
+            <p> we then incremement the regionId integer with normal ++ </p>
+            <p> this function then returns the grid(a 2D vector) and regionNames(an unordered map)</p>
+            </p>
+            <p>
+                now we are back to the main function which now has the grid and regionNames it needed earlier.
+            </p>
+            <p>
+                the grid and regionNames is now passed to printRegionInfo function , which well obv by the name , print
+                the region info and how it does that is it
+            <p>
+
+                tracks bounding boxes for each non-zero region in the grid.
+
+                Bounds holds min/max row & col for each region id.
+
+                loops over grid, for every cell with a region id ≠ 0, updates its bounds.
+
+                uses regions map to store bounds per region id.
+
+                after scanning, prints each region's id, name (from names map), top-left coord, and size (height x
+                width).
+
+                finally, prints how many unique regions were found.
+
+            </p>
+            </p>
+            <p>
+                at last we will use the printmap to print the map to get a look on what the map actually looks like for the game
+                <p>
+                    prints the 2D `grid` as a colored ASCII map in terminal.
+zeros show up as gray dots, non-zero cells get colored by region id.
+colors are reused modulo-style if ids > color count.
+`regionColors` maps each unique id to a color (only once).
+`std::setw(3)` keeps spacing clean.
+`\033[xxm` are ANSI escape codes for terminal colors.
+visual debug tool to see how regions look spatially.
+
+                </p>
+            </p>
+
+<h4>and well that is till today , i will update more probably saving to txt file will be next</h4>
 
 
             </p>
