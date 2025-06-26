@@ -11,135 +11,82 @@
         <div class="post-meta">lab member 001 | date : 25.06.2025</div>
 
         <div class="post-content">
-            <p>consider this a devlog where i post my progress and what i have learnt while making this</p>
-            <p> the main goal is to learn cpp , and well i tried many things to do so but decided to learn the core of
-                cpp this would be the best way to</p>
+
+            <p>consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file. yes, really.</p>
+
+            <p>goal? learn C++ deeply. no frameworks. no engine. just raw STL and a grid-based fever dream.</p>
+
             <h2>introduction</h2>
-            <p>so i like to play map games , sitting in front of the screen for hours looking at my nations progress and
-                get attacked, but you know all of them have a big learning curve , like a big tutorial you have to go
-                through before you even understand what to do</p>
-            <p>so i decided to make a similar game , tho with no graphics ( as of yet ) using cpp to play strategy games
-                without getting paywalled to rise my level</p>
-            <p>that was the primary inspiration for making this , combined with the fact that i wanted to learn c++ at a
-                good level</p>
-            <p> so below is the devlog ( as they call it) , i will include some images too i guess but no videos ( as of
-                writing this ) </p>
+
+            <p>i play a lot of map games. stare at borders. micromanage. get invaded. rinse. repeat.</p>
+
+            <p>but those games come with a 10-page tutorial and 4 DLCs. so i figured: make my own — no GUI, no paywalls. just C++ and vibes.</p>
+
             <h2>progress</h2>
-            <h3>June 25 2025 ; what has happened till now</h3>
-            <p>code uptil now is <a
-                    href="https://github.com/KorryKatti/strat_game/commit/e03cd9ac8f48c5d7f01bf7240bf383bbe59e9c4e"
-                    target="_blank">available here</a></p>
-            <p>
-            <p> i will start explaining the flow from the main funciton</p>
-            <p>
-                so first, i define two integers: <code>rows</code> and <code>cols</code>.
-                then i take input from the user to let them pick a custom size—like 40 x 40.
-                after that, i call <code>makeRegion(rows, cols)</code> and use <code>auto</code> to store the result.
+            <h3>🗓️ June 25, 2025</h3>
+
+            <p>→ <a href="https://github.com/KorryKatti/strat_game/commit/e03cd9ac8f48c5d7f01bf7240bf383bbe59e9c4e" target="_blank">current code</a></p>
+
+            <blockquote>
+                TL;DR: build a grid → randomly generate regions → name them → print them pretty in terminal.
+            </blockquote>
+
+            <p><strong>[1]</strong> take user input for <code>rows</code> and <code>cols</code> → define map size</p>
+
+            <p><strong>[2]</strong> call <code>makeRegion(rows, cols)</code> → returns a grid + map of region names</p>
+
+            <p><strong>[3]</strong> <code>createGrid()</code> builds 2D base; <code>regionNames</code> maps ids like <code>{1: "coastline"}</code></p>
+
+            <p><strong>[4]</strong> <code>usedNames</code> (a set) avoids duplicate region names</p>
+
+            <p><strong>[5]</strong> cap region size with:<br><code>maxSize = min(rows, cols) / 2;</code></p>
+
+            <p><strong>[6]</strong> pick random values:<br>
+                → <code>randSize</code>: 1 to <code>maxSize</code><br>
+                → <code>randRow</code>, <code>randCol</code>: within bounds
             </p>
 
-            <p>
-                <code>makeRegion</code> returns a pair—first is a 2D vector (our grid), second is a map of
-                <code>int → string</code> for region names.
-                inside <code>makeRegion</code>, we call <code>createGrid(rows, cols)</code> which just builds the 2D
-                vector.
-                the result is stored back using <code>auto grid</code>.
+            <p><strong>[7]</strong> use <code>namePool[]</code> for random, non-repeating region names</p>
+
+            <p><strong>[8]</strong> loop (500 tries):<br>
+                → check if area is free with <code>checkFreeArea()</code><br>
+                → if yes, fill it via <code>fillRegion()</code><br>
+                → assign name, bump <code>regionId++</code>
             </p>
+
+            <p>then we return the <code>grid</code> and <code>regionNames</code> map.</p>
+
+            <h3>🖨️ printRegionInfo()</h3>
+            <p>tracks bounding boxes for each region id:</p>
 
             <p>
-                then, i prep a map named <code>regionNames</code> that links region ids to names—stuff like
-                <code>{1: "coastline"}</code>, <code>{2: "midlands"}</code>, etc.
+                → scans grid<br>
+                → updates min/max row+col for each id<br>
+                → prints: region id, name, top-left coords, and size
             </p>
+
+            <h3>🗺️ printMap()</h3>
+            <p>prints grid as a color-coded ASCII map:</p>
 
             <p>
-                then , i made a set called usedNames , set because it doesn't allow duplicate entries and well having
-                two or more regions with the same name can be confusing
-            </p>
-            <p>
-                now the code doesn't know the limits it can make the region in yet , so i defined a max size which takes
-                the min of the number of rows and cols and divides it by 2 , so that no region has a huge starting
-                advantage of area, also initialized the random module with current time as seed
-            </p>
-            <p>
-                <!-- std::uniform_int_distribution: is is a tool in C++ that helps you generate random integers where each
-                number within a given range has an equal chance of being selected. It's like a fair dice roll, but for
-                any range of numbers you want. -->
-                next we define randSize which is a random integer in the range of 1 to maxSize , randRow from 0 to
-                rows-1 and then at last randCol which is again 0 to cols - 1. defining these help us ease our work of
-                creating a region , why ? you will learn later
-            </p>
-            <p>
-                after this i defined a array of strings called namepool to assign name to regions cause honestly ,
-                calling regions by name is way better than calling them by their id
-            </p>
-            <p>
-                then the program goes into a loop to assign the available values to the map , we do 500 tries (a good
-                number, not to big not too small)
-            <p>we use the grid we defined earlier along with random assigned value of row ,column, height and width and
-                pass it to check if the said area is free </p>
-            <p>
-                the area free checking function checks if a (h x w) rectangle starting at (r, c) in grid fits and is all
-                zero. returns false if it goes out of bounds or hits any non-zero cell.
-            </p>
-            <p>if the area is indeed free we pass the similar values as earlier but with region id into the fillRegion
-                function</p>
-            <p>the function fills a (h x w) rectangle in grid starting at (r, c) with id. basically stamps a block of
-                value id onto the grid.</p>
-            <p>so remember how we earlier defined a map called regionNames ? we will use it to to make a key value pair
-                with the key being the region id and the value being the region name which is randomly fetched from our
-                pool and is assigned a random name (not reused) from namePool to regionNames[regionId].</p>
-            <p> we then incremement the regionId integer with normal ++ </p>
-            <p> this function then returns the grid(a 2D vector) and regionNames(an unordered map)</p>
-            </p>
-            <p>
-                now we are back to the main function which now has the grid and regionNames it needed earlier.
-            </p>
-            <p>
-                the grid and regionNames is now passed to printRegionInfo function , which well obv by the name , print
-                the region info and how it does that is it
-            <p>
-
-                tracks bounding boxes for each non-zero region in the grid.
-
-                Bounds holds min/max row & col for each region id.
-
-                loops over grid, for every cell with a region id ≠ 0, updates its bounds.
-
-                uses regions map to store bounds per region id.
-
-                after scanning, prints each region's id, name (from names map), top-left coord, and size (height x
-                width).
-
-                finally, prints how many unique regions were found.
-
-            </p>
-            </p>
-            <p>
-                at last we will use the printmap to print the map to get a look on what the map actually looks like for the game
-                <p>
-                    prints the 2D `grid` as a colored ASCII map in terminal.
-zeros show up as gray dots, non-zero cells get colored by region id.
-colors are reused modulo-style if ids > color count.
-`regionColors` maps each unique id to a color (only once).
-`std::setw(3)` keeps spacing clean.
-`\033[xxm` are ANSI escape codes for terminal colors.
-visual debug tool to see how regions look spatially.
-
-                </p>
+                → <code>0</code> → gray dots<br>
+                → other ids → colored blocks via ANSI codes<br>
+                → <code>std::setw(3)</code> for spacing
             </p>
 
-<h4>and well that is till today , i will update more probably saving to txt file will be next</h4>
+            <blockquote>
+                it's a visual debug tool, but honestly kinda satisfying to look at
+            </blockquote>
 
+            <h4>next: saving to .txt, maybe adding basic region editing</h4>
 
-            </p>
         </div>
+
         <p><a href="../index.html">← Back to Blog Index</a></p>
 
-        <div class="navigation"
-            style="display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid #333; font-family: 'Courier New', monospace;">
-            <a href="03052025.html" class="nav-button"
-                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">&lt;&lt;PREVIOUS_LOG</a>
-            <a href="#" class="nav-button"
-                style="color: #c43c3c; text-decoration: none; border: 1px solid #c43c3c; padding: 5px 10px;">NEXT_LOG&gt;&gt;</a>
+        <div class="navigation">
+            <a href="03052025.html" class="nav-button">&lt;&lt;PREVIOUS_LOG</a>
+            <a href="#" class="nav-button">NEXT_LOG&gt;&gt;</a>
         </div>
     </div>
 </body>
