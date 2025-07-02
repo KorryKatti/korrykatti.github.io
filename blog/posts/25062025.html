@@ -12,7 +12,8 @@
 
         <div class="post-content">
 
-            <p>consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file. yes, really.</p>
+            <p>consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file.
+                yes, really.</p>
 
             <p>goal? learn C++ deeply. no frameworks. no engine. just raw STL and a grid-based fever dream.</p>
 
@@ -20,12 +21,14 @@
 
             <p>i play a lot of map games. stare at borders. micromanage. get invaded. rinse. repeat.</p>
 
-            <p>but those games come with a 10-page tutorial and 4 DLCs. so i figured: make my own — no GUI, no paywalls. just C++ and vibes.</p>
+            <p>but those games come with a 10-page tutorial and 4 DLCs. so i figured: make my own — no GUI, no paywalls.
+                just C++ and vibes.</p>
 
             <h2>progress</h2>
             <h3>🗓️ June 25, 2025</h3>
 
-            <p>→ <a href="https://github.com/KorryKatti/strat_game/commit/e03cd9ac8f48c5d7f01bf7240bf383bbe59e9c4e" target="_blank">current code</a></p>
+            <p>→ <a href="https://github.com/KorryKatti/strat_game/commit/e03cd9ac8f48c5d7f01bf7240bf383bbe59e9c4e"
+                    target="_blank">current code</a></p>
 
             <blockquote>
                 TL;DR: build a grid → randomly generate regions → name them → print them pretty in terminal.
@@ -35,7 +38,8 @@
 
             <p><strong>[2]</strong> call <code>makeRegion(rows, cols)</code> → returns a grid + map of region names</p>
 
-            <p><strong>[3]</strong> <code>createGrid()</code> builds 2D base; <code>regionNames</code> maps ids like <code>{1: "coastline"}</code></p>
+            <p><strong>[3]</strong> <code>createGrid()</code> builds 2D base; <code>regionNames</code> maps ids like
+                <code>{1: "coastline"}</code></p>
 
             <p><strong>[4]</strong> <code>usedNames</code> (a set) avoids duplicate region names</p>
 
@@ -79,6 +83,28 @@
             </blockquote>
 
             <h4>next: saving to .txt, maybe adding basic region editing</h4>
+            <hr>
+
+            <h3>🗓️ July 2, 2025</h3>
+
+            <p>→ <a href="https://github.com/KorryKatti/strat_game/commit/944fdd6bd8483e91173ebdafa7b95d7b8037e91d"
+                    target="_blank">current code</a></p>
+            <!-- <p><img src="../../img/above.png"></p> -->
+            <blockquote>
+                TL;DR: save the map to txt file and also intialize map and add resources , to distribute later , to be
+                saved in a file too
+            </blockquote>
+            <p><strong>[1]</strong> btw i have started making gemini cli summarize the file changes in
+                <code>documentation.md</code></p>
+            <p><strong>[2]</strong>so now the map is saved at <code>data/map.txt</code> in format of size then the grid then the region names</p>
+            <p><strong>[3]</strong>now when the program is started and the map is found at said path we load the map using the <code>loadMap</code> function , also made a struct named `cells` to easily store the data in the format i want that is row , column , regionId and name of the region</p>
+            <p><strong>[4]</strong>then i defined a <code>std::vector</code> with cell innit and well stored the data of the file into it , thus loading our map</p>
+            <p><strong>[5]</strong>then the <code>loadMap</code> function prints our map and all details , honestly wasn't needed but i wanted to create the effect of lot of things loading</p>
+            <p><strong>[6]</strong>so now i defined <code>primaryResources</code> and <code>derivedUnit</code> to differentiate between like primary is present by default in regions , distributed using random (to be done ) and auto supplies a fixed amount every turn (TBD) and collecting these resources we can make things in the derivedUnits like outpost , tanks , aircrafts and other things. some derived units need other derived units to be made in the region. for ease i have taken the approach of `build it and you have it` instead of research then build and what not. also for now i have decided popuplation or say human resources doesn't really matter</p>
+            <p><strong>[7]</strong> then after defining all those units and their dependencies i have finsihed this segment of todo things , next i have to define <code>giveAndSaveResources</code> function which will give primary resources randomly to each region by ID</p>
+
+            <h4>next : save the resources and their location in a separate txt file , honestly i wish cpp supported json natively or any db</h4>
+            <br>
 
         </div>
 
