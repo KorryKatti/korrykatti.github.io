@@ -1,71 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>@dunkelkron</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="description" content="no thoughts inside">
     <link rel="icon" href="https://i.pinimg.com/736x/69/8b/dc/698bdcfb1599a1c3473cb772b9c66f46.jpg" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
-    <script async src="https://sleepie.uk/oneko.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <header>
-        <h1>Welcome to my website!</h1>
-        <p class="intro">The site might look basic for now, as I'm learning web development (the serious one) and building everything from scratch without relying too much on external resources. This content is all from memory.</p>
-        <p><a href="./oldindex.html" class="old-version-link">Check out the old version of my site</a></p>
-    </header>
+    <div class="banner"></div>
+    
+    <div class="container">
+        <h1>@dunkelkron</h1>
+        <p class="intro">the site might look basic for now, as i'm learning web development (the serious one) and building everything from scratch without relying too much on external resources.</p>
+        
+        <div class="section">
+            <img src="https://i.pinimg.com/736x/98/8d/af/988daf755913d5bb01864e6969a41f45.jpg" alt="profile" class="profile-img">
+            <p>hi there! i'm a computer science undergrad (currently in my 2nd year). this is my side projects account, so i test stuff out here and make things presentable for my main account.</p>
+        </div>
 
-    <main>
-        <section id="about-me">
-            <img src="https://i.pinimg.com/736x/98/8d/af/988daf755913d5bb01864e6969a41f45.jpg" alt="isn't she cute ?" class="profile-img">
-            <p>Hi there! I'm a computer science undergrad (currently in my 2nd year). This is my side projects account, so I test stuff out here and make things presentable for my main account. Projects on both sides are working, but the ones here are more about exploration. What am I working on should be deducible from <a href="https://wakatime.com/@korrykatti" target="_blank">WakaTime</a>.</p>
-        </section>
-
-        <section id="projects">
-            <h2>Projects:</h2>
+        <div class="section">
+            <h2>projects</h2>
             <ul>
-                <li><a href="https://korrykatti.github.io/project_sites/mirage/index.html">Mirage</a></li>
-                <li><a href="./apps/index.html">Smol Web Apps (mostly down)</a></li>
-                <li><a href="https://korrykatti.pythonanywhere.com/">Image Board</a></li>
+                <li><a href="https://korrykatti.github.io/project_sites/mirage/index.html">mirage</a></li>
+                <li><a href="./apps/index.html">smol web apps (mostly down)</a></li>
+                <li><a href="https://korrykatti.pythonanywhere.com/">image board</a></li>
+                <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">thunder</a></li>
             </ul>
+        </div>
 
-            <h2>More Links:</h2>
+        <div class="section">
+            <h2>more links</h2>
             <ul>
-                <li><a href="./blog/index.html">Blogs</a></li>
-                <li><a href="/guestbook.html">Guestbook</a></li>
-                <li><a href="https://github.com/korrykatti">GitHub</a></li>
-                <li><a href="https://x.com/dunkelkron">X.com</a></li>
-                <li><a href="mailto:korrykatti@proton.me">Email</a></li>
-                <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">Spotify</a></li>
+                <li><a href="./blog/index.html">blogs</a></li>
+                <li><a href="/guestbook.html">guestbook</a></li>
+                <li><a href="https://github.com/korrykatti">github</a></li>
+                <li><a href="https://x.com/dunkelkron">x.com</a></li>
+                <li><a href="mailto:korrykatti@proton.me">email</a></li>
+                <li><a href="https://wakatime.com/@korrykatti" target="_blank">wakatime</a></li>
+                <li><a href="https://open.spotify.com/user/c9khdo6s2n2q8o54qe7punql7">spotify</a></li>
+                <li><a href="./logs.html">logs</a></li>
             </ul>
+        </div>
 
-            <h2>Useless Links:</h2>
-            <ul>
-                <li><a href="https://korrykatti.is-a.dev/project_sites/thunder/index.html">Thunder</a></li>
-                <li><a href="./logs.html">Logs</a></li>
-            </ul>
-        </section>
-
-        <section id="chatbox">
-            <h3>Chatbox</h3>
+        <div class="section">
+            <h3>chatbox</h3>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="400" height="400"></iframe>
-            <p><div id="last-updated">SYSTEM_STATUS: loading...</div></p>
-        </section>
+        </div>
 
-        <section id="more">
-            <h4>Notes for some reference idk?</h4>
-            <p>The plan is to rebuild the website in Svelte, but don't waste too much time on it.</p>
-        </section>
-    </main>
+        <div class="status" id="status">system_status: loading...</div>
 
-    <footer>
-        <p>Thanks for visiting! More content coming soon!</p>
-    </footer>
+        <div class="break-line">-- thoughts and random stuff below --</div>
+        
+        <div class="section">
+            <h3>notes for some reference idk?</h3>
+            <p>the plan is to rebuild the website in svelte, but don't waste too much time on it.</p>
+            <p>also i think instead of manually updating everytime i  have a new thing to put on here i should make an api</p>
+        </div>
+    </div>
 
     <script>
         async function getLastCommit() {
@@ -73,21 +65,18 @@
                 const response = await fetch("https://api.github.com/repos/korrykatti/korrykatti.github.io/commits");
                 const commits = await response.json();
                 const lastCommitDate = new Date(commits[0].commit.committer.date);
-
                 const now = new Date();
                 const diffTime = Math.abs(now - lastCommitDate);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                document.getElementById('last-updated').textContent =
-                    `LAST_UPDATE: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
+                
+                document.getElementById('status').textContent = 
+                    `last_update: ${diffDays} days ago (${lastCommitDate.toDateString()})`;
             } catch (error) {
-                console.error("Error fetching last commit:", error);
-                document.getElementById('last-updated').textContent = "SYSTEM_ERROR: update data unavailable";
+                document.getElementById('status').textContent = "system_error: update data unavailable";
             }
         }
-
+        
         getLastCommit();
     </script>
 </body>
-
 </html>
