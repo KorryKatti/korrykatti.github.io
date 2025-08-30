@@ -77,6 +77,53 @@
         }
         
         getLastCommit();
+
+               function createStars() {
+            const numberOfStars = 150;
+            for (let i = 0; i < numberOfStars; i++) {
+                let star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}vw`;
+                star.style.top = `${Math.random() * 100}vh`;
+                star.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                document.body.appendChild(star);
+            }
+        }
+
+        // Create shooting stars
+        function createShootingStar() {
+            const shootingStar = document.createElement('div');
+            
+            // 20% chance for colored "UFO/airplane" shooting star
+            const isColored = Math.random() < 0.2;
+            
+            if (isColored) {
+                shootingStar.classList.add('shooting-star', 'colored-shooting');
+            } else {
+                shootingStar.classList.add('shooting-star');
+            }
+            
+            // Start from top-left area of viewport
+            shootingStar.style.left = `${Math.random() * 30}vw`;
+            shootingStar.style.top = `${Math.random() * 30}vh`;
+            shootingStar.style.animationDuration = `${Math.random() * 1 + 1}s`;
+            document.body.appendChild(shootingStar);
+
+            // Remove shooting star after animation
+            setTimeout(() => {
+                if (shootingStar.parentNode) {
+                    shootingStar.remove();
+                }
+            }, 2000);
+        }
+
+        // Create shooting stars every 2-3 seconds
+        setInterval(createShootingStar, 4500);
+
+        // Call function to create stars
+        createStars();
+
+
     </script>
 </body>
 </html>

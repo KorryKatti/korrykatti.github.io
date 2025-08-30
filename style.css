@@ -97,3 +97,64 @@
             opacity: 0.6;
             margin-top: 2rem;
         }
+
+                .star {
+            position: fixed;
+            background-color: white;
+            border-radius: 50%;
+            width: 2px;
+            height: 2px;
+            animation: twinkle 1.5s infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background-color: white;
+            border-radius: 50%;
+            animation: shoot 1.5s linear infinite;
+            z-index: -1;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 410px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 100%);
+            transform: rotate(45deg);
+            transform-origin: right center;
+        }
+
+        .colored-shooting {
+            background-color: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        .colored-shooting::before {
+            background: linear-gradient(90deg, rgba(0, 255, 136, 0) 0%, rgba(0, 255, 136, 0.8) 100%);
+        }
+
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(1800px) translateY(1800px);
+                opacity: 0;
+            }
+        }
