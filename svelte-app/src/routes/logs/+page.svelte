@@ -1,0 +1,34 @@
+<svelte:head>
+    <title>Logs - Korrykatti</title>
+</svelte:head>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+    nav {
+        margin-bottom: 20px;
+    }
+    nav a {
+        text-decoration: none;
+        color: #333;
+    }
+    iframe {
+        width: 100%;
+        height: 600px;
+        border: none;
+    }
+</style>
+
+<nav>
+    <a href="/">Back to Home</a>
+</nav>
+<iframe src="https://korrykatti.tumblr.com" style="width: 100%; height: 100vh; border: none;"></iframe>
+<footer style="text-align: center; margin-top: 20px;">
+    <a href="/logs">
+        <img src="https://i.pinimg.com/736x/95/55/f2/9555f27a29f99e35b85595069d004bd3.jpg" alt="Go to Logs" style="width: 200px; height: auto; cursor: pointer;">
+    </a>
+</footer>
