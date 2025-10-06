@@ -212,3 +212,14 @@ body.dark .modal-content {
 #last-updated {
     margin-top: 1rem;
 }
+
+.counter-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.counter-container img {
+    max-width: 150px; /* Adjust as needed */
+    height: auto; /* Maintain aspect ratio */
+}
