@@ -21,10 +21,6 @@ body.dark {
     color: #e8e8e8;
 }
 
-body.light #shader-bg {
-    display: none;
-}
-
 #shader-bg {
     position: fixed;
     top: 0;
