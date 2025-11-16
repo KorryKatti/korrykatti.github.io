@@ -45,7 +45,7 @@ async function getLastCommit() {
 
 async function getStatus() {
     try {
-        const response = await fetch('http://duinogame.pythonanywhere.com/statusget');
+        const response = await fetch('https://duinogame.pythonanywhere.com/statusget');
         const data = await response.json();
         const statusContainer = document.getElementById('status-container');
 
