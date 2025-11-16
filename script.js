@@ -22,6 +22,37 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.style.display = 'none';
         }
     });
+
+    // Image enlargement functionality
+    const mainImage = document.querySelector('.main-image');
+    
+    // Create overlay element
+    const overlay = document.createElement('div');
+    overlay.className = 'image-overlay';
+    document.body.appendChild(overlay);
+
+    // Click to enlarge image
+    mainImage.addEventListener('click', () => {
+        mainImage.classList.add('enlarged');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when image is enlarged
+    });
+
+    // Click overlay to close
+    overlay.addEventListener('click', () => {
+        mainImage.classList.remove('enlarged');
+        overlay.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+    });
+
+    // Press Escape key to close
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mainImage.classList.contains('enlarged')) {
+            mainImage.classList.remove('enlarged');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
 });
 
 // Get last commit info
