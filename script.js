@@ -24,34 +24,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Image enlargement functionality 
-    // not working for some reason
     const mainImage = document.querySelector('.main-image');
+    let clonedImage = null;
     
     // Create overlay element
     const overlay = document.createElement('div');
     overlay.className = 'image-overlay';
     document.body.appendChild(overlay);
 
-    // Click to enlarge image
-    mainImage.addEventListener('click', () => {
-        mainImage.classList.add('enlarged');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when image is enlarged
-    });
-
-    // Click overlay to close
-    overlay.addEventListener('click', () => {
-        mainImage.classList.remove('enlarged');
+    function closeImage() {
+        if (clonedImage) {
+            clonedImage.remove();
+            clonedImage = null;
+        }
         overlay.classList.remove('active');
         document.body.style.overflow = ''; // Restore scrolling
-    });
+    }
+
+    // Click to enlarge image
+    if (mainImage) {
+        mainImage.addEventListener('click', () => {
+            clonedImage = mainImage.cloneNode(true);
+            clonedImage.classList.add('enlarged');
+            // Remove the click listener from the clone effectively (since cloneNode doesn't copy listeners)
+            // But we might want clicking the enlarged image to close it too
+            clonedImage.addEventListener('click', closeImage);
+            
+            document.body.appendChild(clonedImage);
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling when image is enlarged
+        });
+    }
+
+    // Click overlay to close
+    overlay.addEventListener('click', closeImage);
 
     // Press Escape key to close
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && mainImage.classList.contains('enlarged')) {
-            mainImage.classList.remove('enlarged');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
+        if (e.key === 'Escape' && overlay.classList.contains('active')) {
+            closeImage();
         }
     });
 });

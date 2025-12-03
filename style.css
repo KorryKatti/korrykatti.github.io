@@ -284,6 +284,7 @@ a:hover {
     z-index: 2000;
     cursor: zoom-out;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    margin: 0;
 }
 
 .image-overlay {
