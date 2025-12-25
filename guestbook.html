@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
             font-family: 'Courier New', monospace;
             padding: 20px;
         }
+
         .entry {
             background: #0a0a0a;
             border: 1px solid #333;
@@ -19,6 +21,7 @@
             margin-bottom: 10px;
             animation: flicker 0.15s infinite;
         }
+
         form {
             margin-bottom: 20px;
             background: #111;
@@ -26,7 +29,9 @@
             border-radius: 5px;
             border: 1px solid #333;
         }
-        input, textarea {
+
+        input,
+        textarea {
             width: 100%;
             padding: 10px;
             margin: 5px 0;
@@ -35,6 +40,7 @@
             background: #222;
             color: #fff;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -43,23 +49,41 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         #captchaQuestion {
             margin: 10px 0;
             color: #c43c3c;
         }
+
         /* Flicker effect */
         @keyframes flicker {
-            0% { opacity: 1; }
-            49% { opacity: 1; }
-            50% { opacity: 0.8; }
-            51% { opacity: 1; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            49% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            51% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
+
 <body>
     <h1>Guestbook</h1>
     <form id="guestbookForm">
@@ -70,6 +94,7 @@
         <button type="submit">Submit</button>
     </form>
     <div id="entries"></div>
+    <script src="prefetch.js"></script>
     <script>
         async function loadEntries() {
             try {
@@ -77,7 +102,7 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const entries = await response.json();
                 const entriesContainer = document.getElementById('entries');
-                
+
                 // Basic XSS prevention
                 const escapeHTML = (str) => {
                     const div = document.createElement('div');
@@ -135,14 +160,14 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: new URLSearchParams({ 
-                        name: nameInput.value.trim(), 
+                    body: new URLSearchParams({
+                        name: nameInput.value.trim(),
                         message: messageInput.value.trim()
                     })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.status === 'success') {
                     // Store the current timestamp in localStorage
                     localStorage.setItem('lastSubmission', currentTime);
@@ -166,4 +191,5 @@
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);
     </script>
 </body>
+
 </html>

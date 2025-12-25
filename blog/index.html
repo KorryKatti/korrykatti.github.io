@@ -1,24 +1,28 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="./blogindex.css">
 </head>
+
 <body>
     <div class="container">
         <header class="header">
             <div class="lab-title">blog | <a href="../index.html">home</a></div>
-            <div class="divergence">Divergence: <script>
-                fetch('https://ipapi.co/json/')
-                    .then(response => response.json())
-                    .then(data => {
-                        document.querySelector('.divergence').textContent = 
-                            `Divergence: ${data.latitude.toFixed(4)}`;
-                    })
-                    .catch(error => {
-                        document.querySelector('.divergence').textContent = 
-                            'Divergence: Unknown';
-                    });
-            </script></div>
+            <div class="divergence">Divergence:
+                <script>
+                    fetch('https://ipapi.co/json/')
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector('.divergence').textContent =
+                                `Divergence: ${data.latitude.toFixed(4)}`;
+                        })
+                        .catch(error => {
+                            document.querySelector('.divergence').textContent =
+                                'Divergence: Unknown';
+                        });
+                </script>
+            </div>
         </header>
 
         <div class="post">
@@ -52,7 +56,8 @@
             <h2 class="post-title" data-status="OPEN">Making a strategy game in one file - with cpp</h2>
             <div class="post-meta">lab member 001 | 25.06.2025</div>
             <div class="post-content">
-                devlog of me making a map game, in cpp (for learning purposes). consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file.
+                devlog of me making a map game, in cpp (for learning purposes). consider this a devlog. progress, fails,
+                lessons — all while building a strategy game in one C++ file.
             </div>
             <a href="posts/25062025.html" class="read-more">READ_MORE</a>
         </div>
@@ -65,5 +70,7 @@
             <a href="posts/03052025.html" class="read-more">READ_MORE</a>
         </div>
     </div>
+    <script src="../prefetch.js"></script>
 </body>
+
 </html>

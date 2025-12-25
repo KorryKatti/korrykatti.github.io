@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <style>
         /* Base styles */
@@ -24,12 +25,29 @@
         }
 
         @keyframes flicker {
-            0% { opacity: 1; }
-            49% { opacity: 1; }
-            50% { opacity: 0.8; }
-            51% { opacity: 1; }
-            80% { opacity: 0.9; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+
+            49% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            51% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.9;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         /* Glitch Effect */
@@ -39,12 +57,29 @@
         }
 
         @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
+            0% {
+                transform: translate(0)
+            }
+
+            20% {
+                transform: translate(-2px, 2px)
+            }
+
+            40% {
+                transform: translate(-2px, -2px)
+            }
+
+            60% {
+                transform: translate(2px, 2px)
+            }
+
+            80% {
+                transform: translate(2px, -2px)
+            }
+
+            100% {
+                transform: translate(0)
+            }
         }
 
         /* Decrypt Effect */
@@ -66,9 +101,17 @@
         }
 
         @keyframes steiner {
-            0% { filter: brightness(1) blur(0); }
-            50% { filter: brightness(2) blur(4px); }
-            100% { filter: brightness(1) blur(0); }
+            0% {
+                filter: brightness(1) blur(0);
+            }
+
+            50% {
+                filter: brightness(2) blur(4px);
+            }
+
+            100% {
+                filter: brightness(1) blur(0);
+            }
         }
 
         /* Loading Screen */
@@ -80,8 +123,13 @@
         }
 
         @keyframes typing {
-            from { width: 0 }
-            to { width: 50px }
+            from {
+                width: 0
+            }
+
+            to {
+                width: 50px
+            }
         }
 
         /* SERN Interference */
@@ -90,13 +138,25 @@
         }
 
         @keyframes interference {
-            0% { transform: skew(0deg); }
-            25% { transform: skew(2deg); }
-            75% { transform: skew(-2deg); }
-            100% { transform: skew(0deg); }
+            0% {
+                transform: skew(0deg);
+            }
+
+            25% {
+                transform: skew(2deg);
+            }
+
+            75% {
+                transform: skew(-2deg);
+            }
+
+            100% {
+                transform: skew(0deg);
+            }
         }
     </style>
 </head>
+
 <body>
     <link href="https://melonking.net/styles/flood.css" rel="stylesheet" type="text/css" media="all" />
     <div class="demo-box">
@@ -122,5 +182,7 @@
     <div class="demo-box">
         <div class="interference">SERN DETECTION ALERT</div>
     </div>
+    <script src="../prefetch.js"></script>
 </body>
+
 </html>
