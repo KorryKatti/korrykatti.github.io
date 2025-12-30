@@ -22,7 +22,7 @@
                 link.href = url;
                 document.head.appendChild(link);
                 prefetched.add(url);
-                // console.log('Prefetched:', url);
+                console.log('Prefetched:', url);
             }
         } catch (e) {
             // Invalid URL

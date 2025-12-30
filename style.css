@@ -181,6 +181,13 @@ a:hover {
     font-weight: 700;
     color: #555;
     font-family: monospace;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#last-updated:hover {
+    color: #000;
+    text-decoration: underline;
 }
 
 .toggle-btn {
@@ -722,6 +729,10 @@ body.dark-mode .collapse-content {
 
 body.dark-mode #last-updated {
     color: #bbb;
+}
+
+body.dark-mode #last-updated:hover {
+    color: #fff;
 }
 
 body.dark-mode .right-column p {

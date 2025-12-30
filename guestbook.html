@@ -5,86 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook</title>
-    <style>
-        body {
-            background: #000;
-            color: #b8b8b8;
-            font-family: 'Courier New', monospace;
-            padding: 20px;
-        }
-
-        .entry {
-            background: #0a0a0a;
-            border: 1px solid #333;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-            animation: flicker 0.15s infinite;
-        }
-
-        form {
-            margin-bottom: 20px;
-            background: #111;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #333;
-        }
-
-        input,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background: #222;
-            color: #fff;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #captchaQuestion {
-            margin: 10px 0;
-            color: #c43c3c;
-        }
-
-        /* Flicker effect */
-        @keyframes flicker {
-            0% {
-                opacity: 1;
-            }
-
-            49% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-
-            51% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="guestbook.css">
 </head>
 
 <body>
+    <div id="random-image-container"></div>
+    <div class="nav">
+        <a href="index.html">home</a> :: <a href="blog/index.html">blog</a>
+    </div>
     <h1>Guestbook</h1>
     <form id="guestbookForm">
         <input type="text" id="nameInput" placeholder="Your Name" required>
@@ -103,7 +31,6 @@
                 const entries = await response.json();
                 const entriesContainer = document.getElementById('entries');
 
-                // Basic XSS prevention
                 const escapeHTML = (str) => {
                     const div = document.createElement('div');
                     div.textContent = str;
@@ -138,10 +65,9 @@
             const messageInput = document.getElementById('messageInput');
             const userAnswer = parseInt(document.getElementById('captchaAnswer').value, 10);
 
-            // Check localStorage for submission timestamp
             const lastSubmission = localStorage.getItem('lastSubmission');
             const currentTime = Date.now();
-            const twentyDaysInMillis = 20 * 24 * 60 * 60 * 1000; // 20 days in milliseconds
+            const twentyDaysInMillis = 20 * 24 * 60 * 60 * 1000;
 
             if (lastSubmission && (currentTime - lastSubmission < twentyDaysInMillis)) {
                 alert('You can only submit once every 20 days. Please wait before trying again.');
@@ -169,7 +95,6 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // Store the current timestamp in localStorage
                     localStorage.setItem('lastSubmission', currentTime);
                     nameInput.value = '';
                     messageInput.value = '';
@@ -187,6 +112,20 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadEntries();
             generateCaptcha();
+
+            const images = [
+                'preview.png',
+                'preview(1).png',
+                'preview(3).png',
+                'preview(4).png',
+                'preview(5).png',
+                'preview(6).png'
+            ];
+            const randomImg = images[Math.floor(Math.random() * images.length)];
+            const container = document.getElementById('random-image-container');
+            if (container) {
+                container.innerHTML = `<img src="img/guestbook/${randomImg}" alt="random guestbook image">`;
+            }
         });
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);
     </script>

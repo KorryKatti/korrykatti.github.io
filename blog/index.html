@@ -3,31 +3,27 @@
 
 <head>
     <link rel="stylesheet" href="./blogindex.css">
+    <meta name="description" content="korry's blog">
+    <meta name="keywords" content="blog, korry, korrykatti">
+    <meta name="author" content="korry">
+    <meta property="og:title" content="korry's blog">
+    <meta property="og:description" content="A collection of my work and other cool stuff.">
+    <meta property="og:image" content="https://korrykatti.github.io/img/main-image.png">
+    <meta property="og:url" content="https://korrykatti.github.io">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="../img/icon.jpeg">
 </head>
 
 <body>
     <div class="container">
         <header class="header">
+            <button id="theme-toggle-btn">dark mode</button>
             <div class="lab-title">blog | <a href="../index.html">home</a></div>
-            <div class="divergence">Divergence:
-                <script>
-                    fetch('https://ipapi.co/json/')
-                        .then(response => response.json())
-                        .then(data => {
-                            document.querySelector('.divergence').textContent =
-                                `Divergence: ${data.latitude.toFixed(4)}`;
-                        })
-                        .catch(error => {
-                            document.querySelector('.divergence').textContent =
-                                'Divergence: Unknown';
-                        });
-                </script>
-            </div>
         </header>
 
         <div class="post">
             <h2 class="post-title" data-status="OPEN">Hello world</h2>
-            <div class="post-meta">lab member 001 | 03.01.2025</div>
+            <div class="post-meta">03.01.2025</div>
             <div class="post-content">
                 Testing out the blog functionality. First post to verify everything is working correctly.
             </div>
@@ -35,8 +31,17 @@
         </div>
 
         <div class="post">
+            <h2 class="post-title" data-status="OPEN">my 2025 end of year analysis</h2>
+            <div class="post-meta">30.12.2025</div>
+            <div class="post-content">
+                analyzing my year and some thought sharing
+            </div>
+            <a href="posts/30122025.html" class="read-more">READ_MORE</a>
+        </div>
+
+        <div class="post">
             <h2 class="post-title" data-status="OPEN">How not to fix a mouse</h2>
-            <div class="post-meta">lab member 001 | 06.03.2025</div>
+            <div class="post-meta">06.03.2025</div>
             <div class="post-content">
                 My mouse stopped working and I tried fixing it. Here is how it went.
             </div>
@@ -44,32 +49,18 @@
         </div>
 
         <div class="post">
-            <h2 class="post-title" data-status="OPEN">Thinking at speed of light</h2>
-            <div class="post-meta">lab member 001 | 14.03.2025</div>
-            <div class="post-content">
-                Can AI think at the speed of light? A dumb idea that might actually work.
-            </div>
-            <a href="posts/14032025.html" class="read-more">READ_MORE</a>
-        </div>
-
-        <div class="post">
             <h2 class="post-title" data-status="OPEN">Making a strategy game in one file - with cpp</h2>
-            <div class="post-meta">lab member 001 | 25.06.2025</div>
+            <div class="post-meta">25.06.2025</div>
             <div class="post-content">
                 devlog of me making a map game, in cpp (for learning purposes). consider this a devlog. progress, fails,
                 lessons — all while building a strategy game in one C++ file.
             </div>
             <a href="posts/25062025.html" class="read-more">READ_MORE</a>
         </div>
-        <div class="post" data-status="DISCARDED">
-            <h2 class="post-title" data-status="DISCARDED">Donuts, LiFi, and Time Travel</h2>
-            <div class="post-meta">lab member 001 | 03.05.2025</div>
-            <div class="post-content">
-                Watching too much Steins;Gate, hear me out.
-            </div>
-            <a href="posts/03052025.html" class="read-more">READ_MORE</a>
-        </div>
+
+
     </div>
+    <script src="./theme.js"></script>
     <script src="../prefetch.js"></script>
 </body>
 
