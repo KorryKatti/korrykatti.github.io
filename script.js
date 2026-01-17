@@ -107,10 +107,62 @@ async function getStatus() {
     }
 }
 
+// BGM / YouTube Player
+var player;
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('youtube-player', {
+        height: '0',
+        width: '0',
+        videoId: '-vdp2AVAFn0',
+        playerVars: {
+            'playsinline': 1,
+            'controls': 0
+        },
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    const playBtn = document.getElementById('play-btn');
+    let isPlaying = false;
+
+    // Load API script if not already loaded
+    if (!window.YT) {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+
+    if (playBtn) {
+        playBtn.parentElement.addEventListener('click', () => {
+            if (isPlaying) {
+                player.pauseVideo();
+                playBtn.textContent = "▶ play_bgm";
+                playBtn.style.color = "var(--acc-blood)";
+                isPlaying = false;
+            } else {
+                player.playVideo();
+                playBtn.textContent = "■ pause";
+                playBtn.style.color = "var(--acc-teal)";
+                isPlaying = true;
+            }
+        });
+    }
+}
+
 // Initialize
 window.addEventListener('load', () => {
     getLastCommit();
     getStatus();
+
+    // Inject YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 });
 
 // Paginated Tumblr loader

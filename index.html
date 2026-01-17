@@ -12,7 +12,7 @@
 
 <body>
 
-    <!-- DECORATION: Random shapes -->
+
     <div class="circle-shape" style="top: 10%; right: 10%;"></div>
     <div class="circle-shape" style="top: 40%; left: 5%; background-color: var(--acc-teal);"></div>
     <div class="circle-shape" style="bottom: 15%; right: 20%; background-color: var(--acc-purple);"></div>
@@ -109,6 +109,13 @@
     </section>
 
     <div style="height: 20vh;"></div>
+
+    <!-- Music Player Control -->
+    <div id="music-control"
+        style="position: fixed; bottom: 20px; right: 20px; z-index: 100; cursor: pointer; font-family: 'IM Fell English', serif; background: var(--bg-paper); padding: 5px 10px; border: 1px solid var(--text-faint);">
+        <span id="play-btn" style="color: var(--acc-blood);">▶ play</span>
+    </div>
+    <div id="youtube-player" style="display:none;"></div>
 
     <!-- Modal -->
     <div id="modal" class="modal">
