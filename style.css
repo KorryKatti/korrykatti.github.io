@@ -1,245 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&family=Zen+Maru+Gothic:wght@300;400;700&display=swap');
+
+:root {
+    /* Palette */
+    --bg-paper: #f4f1ea;
+    --bg-warm-gray: #e8e6e1;
+    --bg-charcoal: #1a1a1a;
+
+    --text-main: #2b2b2b;
+    --text-faint: #888888;
+    --text-light: #f4f1ea;
+
+    /* Accents */
+    --acc-blood: #8a3324;
+    --acc-purple: #7a6a8f;
+    --acc-teal: #5f8a8b;
+    --acc-yellow: #d4b483;
+
+    /* Spacing */
+    --spacing-loose: 12vh;
+    --spacing-tight: 2rem;
+}
+
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    background: linear-gradient(180deg, #2b90d9 0%, #87cefa 40%, #e0f7fa 100%);
-    background-attachment: fixed;
-    color: #333;
-    font-family: "Segoe UI", "Frutiger", "Roboto", "Helvetica Neue", Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
+    background-color: var(--bg-paper);
+    color: var(--text-main);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    line-height: 1.8;
+    font-size: 16px;
+    transition: background-color 1s ease;
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'IM Fell English', serif;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.1;
+}
+
+h1 {
+    font-size: 4rem;
+    color: var(--acc-blood);
+    letter-spacing: -2px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    color: var(--bg-charcoal);
 }
 
 a {
-    color: #005a9e;
+    color: inherit;
     text-decoration: none;
-    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
 }
 
 a:hover {
-    color: #0078d7;
-    text-decoration: underline;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid var(--acc-blood);
+    color: var(--acc-blood);
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    width: 100%;
-    padding-top: 2rem;
+/* Layout Utilities */
+.floating-section {
+    position: relative;
+    max-width: 800px;
+    /* Constraints reading width but allows free positioning */
+    margin: var(--spacing-loose) 5vw;
+    padding: 2rem;
 }
 
-.left-column {
-    width: 37%;
-    padding: 1rem;
+.floating-section:nth-child(even) {
+    margin-left: auto;
+    /* Push to right */
+    margin-right: 15vw;
+    text-align: right;
 }
 
-.right-column {
-    width: 63%;
-    padding: 1rem;
+.floating-section:nth-child(odd) {
+    margin-left: 10vw;
+    text-align: left;
 }
 
-.main-container {
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    padding: 24px;
-    box-shadow:
-        0 4px 6px rgba(0, 0, 0, 0.05),
-        0 10px 30px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-#status-container {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    padding: 12px 16px;
-    margin-bottom: 18px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.status-header {
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    color: #005a9e;
-    text-transform: uppercase;
-}
-
-.status-bar {
-    height: 1px;
-    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 90, 158, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
-    margin-bottom: 0.5rem;
-}
-
-.activities {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.status-value {
-    margin-top: 4px;
-    font-size: 0.85rem;
-    color: #555;
-}
-
-.main-image {
-    width: 100%;
-    border-radius: 16px;
-    margin: 0 0 14px 0;
-    display: block;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 4px solid rgba(255, 255, 255, 0.8);
-}
-
-.main-text {
-    flex: 1;
-}
-
-.main-text>p {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #222;
-    margin-bottom: 16px;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.links-container {
-    display: flex;
-    gap: 32px;
-    font-size: 0.9rem;
-    margin-top: 1.5rem;
-}
-
-.link-section {
-    display: flex;
-    flex-direction: column;
-}
-
-.link-section h3 {
-    font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    color: #444;
-    border-bottom: 2px solid rgba(0, 90, 158, 0.2);
-    padding-bottom: 2px;
+.offset-text {
     display: inline-block;
-    width: fit-content;
+    transform: translateY(10px);
 }
 
-.link {
-    text-decoration: none;
-    color: #0066cc;
-    margin-bottom: 4px;
-    font-weight: 500;
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    position: absolute;
+    right: -2rem;
+    top: 0;
+    font-size: 1.5rem;
+    color: var(--acc-purple);
+    opacity: 0.7;
 }
 
-.link:hover {
-    text-decoration: none;
-    color: #0099ff;
-    text-shadow: 0 0 10px rgba(0, 153, 255, 0.4);
+/* Specific Sections */
+#intro-scene {
+    margin-top: 20vh;
 }
 
-.special-link {
-    font-weight: 700;
-    color: #008000;
-}
-
-.expandable {
+.intro-text {
+    font-size: 1.4rem;
+    max-width: 500px;
     margin-top: 2rem;
 }
 
-.collapse-content {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    padding: 14px 16px;
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #444;
-    display: block;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-}
-
-#last-updated {
-    font-weight: 700;
-    color: #555;
-    font-family: monospace;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-#last-updated:hover {
-    color: #000;
-    text-decoration: underline;
-}
-
-.toggle-btn {
+.status-badge {
+    font-size: 0.9rem;
+    font-family: 'IM Fell English', serif;
+    color: var(--acc-teal);
+    border: 1px solid var(--acc-teal);
+    padding: 0.2rem 0.5rem;
     display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    border-radius: 20px;
-    background: linear-gradient(to bottom, #a9db80 0%, #96c56f 50%, #85b35d 51%, #73a44e 100%);
-    color: #fff;
-    font-weight: 700;
-    border: 1px solid #6b9d45;
-    text-decoration: none;
+    margin-bottom: 1rem;
+    transform: rotate(-2deg);
+}
+
+/* Quotes */
+.quote-container {
+    font-size: 2rem;
+    font-family: 'IM Fell English', serif;
+    color: var(--text-faint);
+    max-width: 60%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Projects */
+.project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.project-item {
+    display: block;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.project-item:hover {
+    transform: translateX(10px);
+}
+
+.project-title {
+    font-size: 2rem;
+    display: block;
+    color: var(--bg-charcoal);
+}
+
+.project-desc {
+    font-size: 1rem;
+    color: var(--acc-purple);
+    font-style: italic;
+}
+
+/* Logs */
+.log-list {
+    list-style: none;
+    padding: 0;
+}
+
+.log-item {
+    margin-bottom: 1.5rem;
+}
+
+.log-link {
+    font-size: 1.5rem;
+    color: var(--acc-blood);
+}
+
+/* Stream / Tumblr */
+#tumblr-posts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    justify-content: center;
+}
+
+.tumblr-post {
+    width: 300px;
+    background: #fff;
+    padding: 1.5rem;
+    box-shadow: 5px 5px 0px var(--acc-yellow);
+    border: 1px solid var(--text-main);
+    font-size: 0.9rem;
+    text-align: left;
+    /* Reset text align */
+}
+
+.tumblr-post img {
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+.tumblr-post:hover img {
+    filter: grayscale(0%);
+}
+
+.post-meta {
+    font-size: 0.8rem;
+    color: var(--acc-teal);
+    margin-bottom: 0.5rem;
+    font-family: monospace;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Decorations */
+.scribble {
+    position: absolute;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.scribble-1 {
+    top: -50px;
+    left: -50px;
+    width: 200px;
+}
+
+.circle-shape {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: var(--acc-yellow);
+    opacity: 0.2;
+    z-index: -1;
+    filter: blur(40px);
+}
+
+/* UI Elements */
+button {
+    background: transparent;
+    border: none;
+    font-family: 'IM Fell English', serif;
+    font-size: 1.2rem;
     cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-    transition: all 0.1s;
+    border-bottom: 2px solid var(--acc-blood);
+    padding-bottom: 2px;
 }
 
-.toggle-btn:hover {
-    background: linear-gradient(to bottom, #bcea93 0%, #a6d67f 50%, #95c46d 51%, #83b55e 100%);
-    transform: translateY(-1px);
-    box-shadow:
-        0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.toggle-btn:active {
-    transform: translateY(1px);
-    box-shadow:
-        0 1px 2px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
-.right-column {
-    color: #444;
-    padding: 24px;
-}
-
-.right-column p {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 16px;
-    padding: 20px;
-    color: #555;
-    font-size: 0.85rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-}
-
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -247,531 +275,39 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
+    background: rgba(244, 241, 234, 0.95);
     z-index: 1000;
-    align-items: center;
     justify-content: center;
-    color: #333;
+    align-items: center;
 }
 
 .modal-content {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid #fff;
-    border-radius: 20px;
-    padding: 2rem;
-    text-align: center;
-    color: #333;
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    max-width: 500px;
     width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    border: 1px solid var(--text-main);
+    background: var(--bg-paper);
+    box-shadow: 10px 10px 0 var(--acc-blood);
 }
 
-.modal-title {
-    color: #005a9e;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-shadow: 0 1px 0 #fff;
-}
-
-.close-btn {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 8px 20px;
-    border-radius: 20px;
-    background: linear-gradient(to bottom, #ffc578 0%, #fb9d23 50%, #ff9000 51%, #ff7f00 100%);
-    color: #fff;
-    font-weight: 700;
-    border: 1px solid #d46a00;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-}
-
-.close-btn:hover {
-    background: linear-gradient(to bottom, #ffdcb3 0%, #ffaf4b 50%, #ffa533 51%, #ff9933 100%);
-}
-
-.counter-container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.counter-container img {
-    max-width: 250px;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.buttons-container {
-    margin-top: 2rem;
-    display: flex;
-    gap: 1rem;
-}
-
-.main-image {
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.main-image:hover {
-    transform: scale(1.02);
-}
-
-.main-image.enlarged {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    max-width: 90vw;
-    max-height: 90vh;
-    width: auto;
-    height: auto;
-    z-index: 2000;
-    cursor: zoom-out;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
-    margin: 0;
-    border: 8px solid #fff;
-}
-
-.image-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    z-index: 1999;
-    cursor: pointer;
-}
-
-.image-overlay.active {
-    display: block;
-}
-
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
-    body {
-        padding: 0;
-        display: block;
-    }
 
-    .container {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .left-column,
-    .right-column {
-        width: 100%;
-        padding: 0;
-        margin-bottom: 1rem;
-    }
-
-    .main-container {
-        padding: 16px;
-    }
-
-    .links-container {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .link-section {
-        width: 100%;
-    }
-
-    .modal-content {
-        width: 95%;
-        max-width: 400px;
-        padding: 1.5rem;
-    }
-
-    .modal-content iframe {
-        width: 100%;
-        max-width: 350px;
-        height: 350px;
-    }
-
-    .counter-container {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .counter-container img {
+    .floating-section,
+    .floating-section:nth-child(even),
+    .floating-section:nth-child(odd) {
+        margin: 5rem 1rem;
+        text-align: left;
+        /* Reset alignment for mobile readability */
         max-width: 100%;
     }
 
-    .main-image.enlarged {
-        max-width: 95vw;
-        max-height: 85vh;
+    h1 {
+        font-size: 3rem;
     }
 
-    #status-container {
-        font-size: 0.85rem;
+    .vertical-text {
+        display: none;
+        /* Hide vertical decorations on tiny screens */
     }
-
-    .status-header {
-        font-size: 0.7rem;
-    }
-
-    .activities {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-container {
-        padding: 12px;
-    }
-
-    .main-text>p {
-        font-size: 0.85rem;
-    }
-
-    .links-container {
-        font-size: 0.85rem;
-        gap: 12px;
-    }
-
-    .link-section h3 {
-        font-size: 0.8rem;
-    }
-
-    .collapse-content {
-        padding: 12px;
-        font-size: 0.8rem;
-    }
-
-    .toggle-btn,
-    .close-btn {
-        padding: 8px 16px;
-        font-size: 0.8rem;
-    }
-
-    .modal-content {
-        padding: 1rem;
-    }
-
-    .modal-title {
-        font-size: 1.2rem;
-    }
-
-    .modal-content iframe {
-        max-width: 100%;
-        height: 300px;
-    }
-
-    .right-column p {
-        padding: 16px;
-        font-size: 0.8rem;
-    }
-}
-
-.tumblr-posts {
-    padding: 14px;
-    max-width: 520px;
-    margin: 6px auto;
-    font-family: inherit;
-}
-
-.tumblr-post {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: background 0.3s ease, border-color 0.3s ease;
-}
-
-.tumblr-post:last-child {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-.tumblr-post h4 {
-    margin: 0 0 8px;
-    font-size: 1.1rem;
-    line-height: 1.3;
-    color: #005a9e;
-}
-
-.tumblr-post h4 a {
-    color: #005a9e;
-}
-
-.tumblr-post .post-meta {
-    font-size: 0.8rem;
-    color: #777;
-    margin-bottom: 10px;
-}
-
-.tumblr-post .post-body {
-    color: #444;
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
-
-.tumblr-post .in-body-title {
-    color: #005a9e;
-    font-weight: 700;
-    margin-bottom: 6px;
-    font-size: 1.1rem;
-}
-
-.tumblr-post .in-body-title a {
-    color: #005a9e;
-    text-decoration: none;
-}
-
-.tumblr-post .in-body-title a:hover {
-    text-decoration: underline;
-}
-
-#load-more-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 24px;
-    background: linear-gradient(to bottom, #7abcff 0%, #4096ee 50%, #4096ee 51%, #7abcff 100%);
-    color: #fff;
-    border: 1px solid #1e70c9;
-    cursor: pointer;
-    border-radius: 20px;
-    font-weight: 700;
-    box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5);
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-    transition: all 0.1s;
-}
-
-#load-more-btn:hover {
-    background: linear-gradient(to bottom, #8cc6ff 0%, #5ba8f5 50%, #5ba8f5 51%, #8cc6ff 100%);
-    transform: translateY(-1px);
-}
-
-#load-more-btn[disabled] {
-    opacity: 0.6;
-    cursor: default;
-    filter: grayscale(0.8);
-}
-
-.loader {
-    width: 24px;
-    height: 24px;
-    border: 4px solid rgba(255, 255, 255, 0.4);
-    border-top-color: #005a9e;
-    border-radius: 50%;
-    margin: 10px auto;
-    animation: spin .8s linear infinite;
-    display: none;
-}
-
-.loader[aria-hidden="false"] {
-    display: block;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.right-column {
-    padding: 12px;
-}
-
-.right-column::-webkit-scrollbar {
-    width: 10px;
-}
-
-.right-column::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-}
-
-.right-column::-webkit-scrollbar-thumb {
-    background: rgba(0, 90, 158, 0.3);
-    border-radius: 5px;
-    border: 2px solid rgba(255, 255, 255, 0.5);
-}
-
-.right-column::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 90, 158, 0.5);
-}
-
-@media (max-width: 768px) {
-    .left-column {
-        position: static;
-    }
-
-    .right-column {
-        overflow-y: visible;
-        max-height: none;
-    }
-}
-
-.tumblr-post .post-body img,
-.tumblr-post .post-body picture img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 8px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.tumblr-post .post-body iframe,
-.tumblr-post .post-body video,
-.tumblr-post .post-body embed,
-.tumblr-post .post-body object {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 8px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.embed-wrap {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    margin: 8px 0;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.embed-wrap iframe,
-.embed-wrap video,
-.embed-wrap embed,
-.embed-wrap object {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-}
-
-.tumblr-post .post-body pre,
-.tumblr-post .post-body code {
-    max-width: 100%;
-    overflow: auto;
-    background: rgba(0, 0, 0, 0.05);
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-family: "Consolas", "Monaco", monospace;
-}
-
-body.dark-mode {
-    background: linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    color: #e0e0e0;
-}
-
-body.dark-mode .main-container {
-    background: rgba(0, 0, 0, 0.6);
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-body.dark-mode #status-container {
-    background: rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .status-header {
-    color: #4fc3f7;
-}
-
-body.dark-mode .status-value {
-    color: #bbb;
-}
-
-body.dark-mode .main-text>p {
-    color: #ddd;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
-}
-
-body.dark-mode .link-section h3 {
-    color: #ccc;
-    border-bottom-color: rgba(79, 195, 247, 0.3);
-}
-
-body.dark-mode .link {
-    color: #4fc3f7;
-}
-
-body.dark-mode .link:hover {
-    color: #81d4fa;
-    text-shadow: 0 0 10px rgba(79, 195, 247, 0.4);
-}
-
-body.dark-mode .collapse-content {
-    background: rgba(0, 0, 0, 0.4);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #ccc;
-}
-
-body.dark-mode #last-updated {
-    color: #bbb;
-}
-
-body.dark-mode #last-updated:hover {
-    color: #fff;
-}
-
-body.dark-mode .right-column p {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: #ccc;
-}
-
-body.dark-mode .tumblr-post {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .tumblr-post:last-child {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
-}
-
-body.dark-mode .tumblr-post h4,
-body.dark-mode .tumblr-post h4 a,
-body.dark-mode .tumblr-post .in-body-title,
-body.dark-mode .tumblr-post .in-body-title a {
-    color: #4fc3f7;
-}
-
-body.dark-mode .tumblr-post .post-body {
-    color: #ddd;
-}
-
-body.dark-mode .modal-content {
-    background: rgba(30, 30, 30, 0.9);
-    border-color: #444;
-    color: #eee;
-}
-
-body.dark-mode .modal-title {
-    color: #4fc3f7;
-    text-shadow: none;
-}
-
-body.dark-mode .image-overlay {
-    background-color: rgba(0, 0, 0, 0.85);
 }
