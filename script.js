@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     fetchQuote();
+    fetchBlogMiniStream();
     initObserver();
 });
 
@@ -51,17 +52,61 @@ function initObserver() {
     });
 }
 
+// Blog Mini Stream Fetcher
+async function fetchBlogMiniStream() {
+    try {
+        const response = await fetch('/blog/index.html');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const posts = doc.querySelectorAll('.post');
+        const container = document.getElementById('blog-mini-stream');
+
+        if (container && posts.length > 0) {
+            container.innerHTML = '';
+            // Get latest 3 posts
+            Array.from(posts).slice(0, 5).forEach(post => {
+                const title = post.querySelector('.post-title').textContent.toLowerCase();
+                const link = post.querySelector('.read-more').getAttribute('href');
+                const date = post.querySelector('.post-meta').textContent;
+
+                // Adjust link since we are in root and link is for blog/index.html
+                const fullLink = link.startsWith('http') ? link : `blog/${link.replace(/^\.\//, '')}`;
+
+                const item = document.createElement('li');
+                item.className = 'log-item';
+                item.style.marginBottom = '1.2rem';
+                item.innerHTML = `
+                    <a href="${fullLink}" style="display: block; font-size: 1.1rem; color: var(--text-main); line-height: 1.3;">${title}</a>
+                    <div style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.3rem; font-family: monospace;">${date}</div>
+                `;
+                container.appendChild(item);
+            });
+        }
+    } catch (e) {
+        const container = document.getElementById('blog-mini-stream');
+        if (container) container.innerHTML = '<div class="log-item" style="opacity: 0.5;">connection lost.</div>';
+    }
+}
+
 // Quote Fetcher
 async function fetchQuote() {
     try {
         const response = await fetch('https://yurippe.vercel.app/api/quotes?show=Steins;Gate&random=1');
         const data = await response.json();
         if (data && data.length > 0) {
-            const quoteText = data[0].quote.toLowerCase();
+            const quoteText = data[0].quote;
+
+            // If quote is too long, fetch another one
+            if (quoteText.length > 200) {
+                return fetchQuote();
+            }
+
             const character = data[0].character.toLowerCase();
             const container = document.getElementById('quote-display');
             if (container) {
-                container.innerHTML = `"${quoteText}"<br><span class="small-text" style="color: var(--text-faint);">— ${character}</span>`;
+                container.innerHTML = `"${quoteText.toLowerCase()}"<br><span class="small-text" style="color: var(--text-faint);">— ${character}</span>`;
             }
         }
     } catch (e) {

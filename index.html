@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>korry // fragments</title>
     <meta name="description" content="a personal collection of fragments">
+    <meta name="author" content="korry">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://korrykatti.github.io/">
+    <meta property="og:title" content="korry // fragments">
+    <meta property="og:description" content="a personal collection of fragments">
+    <meta property="og:image" content="https://korrykatti.github.io/img/main-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@dunkelkron">
+    <meta name="twitter:creator" content="@dunkelkron">
+    <meta name="twitter:title" content="korry // fragments">
+    <meta name="twitter:description" content="a personal collection of fragments">
+    <meta name="twitter:image" content="https://korrykatti.github.io/img/main-image.png">
+
     <link rel="icon" href="img/icon.jpeg">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -50,23 +67,45 @@
 
     <!-- SCENE 03: PROJECTS -->
     <section class="floating-section fade-in">
-        <h2 style="margin-bottom: 2rem;">artifacts<span style="color: var(--acc-teal);">.</span></h2>
+        <div
+            style="display: flex; flex-wrap: wrap; gap: 5rem; align-items: flex-start; justify-content: space-between;">
+            <div style="flex: 1; min-width: 320px;">
+                <h2 style="margin-bottom: 3rem; opacity: 0.9;">artifacts<span style="color: var(--acc-teal);">.</span>
+                </h2>
+                <div class="project-list">
+                    <a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html" class="project-item">
+                        <span class="project-title">mirage</span>
+                        <span class="project-desc">a fleeting chat application</span>
+                    </a>
 
-        <div class="project-list">
-            <a href="https://korrykatti.is-a.dev/project_sites/mirage/index.html" class="project-item">
-                <span class="project-title">mirage</span>
-                <span class="project-desc">a fleeting chat application</span>
-            </a>
+                    <a href="apps/index.html" class="project-item">
+                        <span class="project-title">smol apps</span>
+                        <span class="project-desc">tiny tools for daily use</span>
+                    </a>
 
-            <a href="apps/index.html" class="project-item">
-                <span class="project-title">smol apps</span>
-                <span class="project-desc">tiny tools for daily use</span>
-            </a>
+                    <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
+                        <span class="project-title">image_board</span>
+                        <span class="project-desc">visual memory storage</span>
+                    </a>
+                </div>
+            </div>
 
-            <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
-                <span class="project-title">image_board</span>
-                <span class="project-desc">visual memory storage</span>
-            </a>
+            <div style="max-width: 250px; padding-top: 5rem; position: relative;">
+                <!-- Subtle Vertical Guide -->
+                <div
+                    style="position: absolute; left: -2.5rem; top: 5.5rem; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--acc-purple), transparent); opacity: 0.2;">
+                </div>
+
+                <h3
+                    style="font-size: 0.7rem; margin-bottom: 1.5rem; letter-spacing: 4px; color: var(--acc-purple); text-transform: uppercase; font-weight: bold; opacity: 0.6;">
+                    recent fragments</h3>
+                <ul id="blog-mini-stream" class="log-list" style="margin-top: 0;">
+                    <li class="log-item" style="opacity: 0.5; font-size: 0.8rem;">receiving signal...</li>
+                </ul>
+                <a href="/blog/index.html"
+                    style="font-size: 0.8rem; opacity: 0.4; font-style: italic; border-bottom: none; display: inline-block; margin-top: 0.5rem; transition: opacity 0.3s;"
+                    onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">archive →</a>
+            </div>
         </div>
     </section>
 
@@ -109,6 +148,11 @@
     </section>
 
     <div style="height: 20vh;"></div>
+
+    <div style="text-align: center; margin-bottom: 2rem; opacity: 0.7;">
+        <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
+            style="height: 25%; width: 25%;">
+    </div>
 
     <!-- Music Player Control -->
     <div id="music-control"
