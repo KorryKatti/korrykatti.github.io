@@ -53,8 +53,8 @@
 
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <div class="avatar">U</div>
-                    <span class="username">Local User</span>
+                    <div class="avatar" id="user-avatar-display">U</div>
+                    <span class="username" id="username-display">Local User</span>
                 </div>
                 <button id="settings-btn" class="icon-btn" title="Settings">
                     <svg viewBox="0 0 24 24" width="20" height="20">
@@ -123,8 +123,30 @@
             </div>
             <div class="modal-body">
                 <div class="setting-item">
+                    <label>User Name</label>
+                    <input type="text" id="setting-username" placeholder="Enter your name">
+                </div>
+                <div class="setting-item">
+                    <label>Profile Picture</label>
+                    <input type="file" id="setting-avatar" accept="image/*">
+                </div>
+                <div class="setting-item">
+                    <label>System Prompt (Personality)</label>
+                    <textarea id="setting-system-prompt" rows="3"
+                        placeholder="e.g. You are a helpful assistant who speaks like a pirate."></textarea>
+                </div>
+                <div class="setting-item checkbox-setting">
+                    <label>
+                        <input type="checkbox" id="setting-include-time">
+                        Include current time in messages
+                    </label>
+                </div>
+                <div class="setting-item">
                     <label>Default Context Limit (tokens)</label>
-                    <input type="number" id="setting-context-limit" value="4096" step="512">
+                    <div class="input-with-hint">
+                        <input type="number" id="setting-context-limit" value="4096" step="512">
+                        <small>Auto-updates based on model if available</small>
+                    </div>
                 </div>
                 <div class="setting-item">
                     <label>Ollama Base URL</label>

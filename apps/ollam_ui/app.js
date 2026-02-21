@@ -23,13 +23,35 @@ class OllamaClient {
         }
     }
 
-    async chat(model, prompt, onChunk) {
+    async getModelInfo(modelName) {
+        try {
+            const response = await fetch(`${this.baseUrl}/api/show`, {
+                method: 'POST',
+                body: JSON.stringify({ name: modelName })
+            });
+            const data = await response.json();
+
+            // Try to find context limit in parameter string
+            let contextLimit = null;
+            if (data.parameters) {
+                const match = data.parameters.match(/num_ctx\s+(\d+)/);
+                if (match) contextLimit = parseInt(match[1]);
+            }
+            return { ...data, contextLimit };
+        } catch (error) {
+            console.error('Error fetching model info:', error);
+            return null;
+        }
+    }
+
+    async chat(model, prompt, systemPrompt, onChunk) {
         try {
             const response = await fetch(`${this.baseUrl}/api/generate`, {
                 method: 'POST',
                 body: JSON.stringify({
                     model: model,
                     prompt: prompt,
+                    system: systemPrompt,
                     stream: true
                 })
             });
@@ -52,7 +74,7 @@ class OllamaClient {
                         const json = JSON.parse(line);
                         onChunk(json.response, json.done);
                     } catch (e) {
-                        // Sometimes chunks are partial, ignore parse errors for partial JSON
+                        // Partial JSON
                     }
                 }
             }
@@ -70,7 +92,7 @@ class ContextManager {
     }
 
     setLimit(limit) {
-        this.limit = limit;
+        this.limit = limit || 4096;
     }
 
     estimateTokens(text) {
@@ -147,7 +169,11 @@ class SettingsManager {
         this.defaults = {
             contextLimit: 4096,
             ollamaUrl: 'http://localhost:11434',
-            theme: 'dark'
+            theme: 'dark',
+            username: 'Local User',
+            systemPrompt: '',
+            includeTime: false,
+            avatar: null
         };
         this.settings = { ...this.defaults, ...JSON.parse(localStorage.getItem(this.storageKey) || '{}') };
         this.applyTheme();
@@ -248,7 +274,13 @@ class UIController {
             clearHistoryBtn: document.getElementById('clear-history-btn'),
             settingContextLimit: document.getElementById('setting-context-limit'),
             settingOllamaUrl: document.getElementById('setting-ollama-url'),
-            settingTheme: document.getElementById('setting-theme')
+            settingTheme: document.getElementById('setting-theme'),
+            settingUsername: document.getElementById('setting-username'),
+            settingAvatar: document.getElementById('setting-avatar'),
+            settingSystemPrompt: document.getElementById('setting-system-prompt'),
+            settingIncludeTime: document.getElementById('setting-include-time'),
+            userAvatarDisplay: document.getElementById('user-avatar-display'),
+            usernameDisplay: document.getElementById('username-display')
         };
         this.selectedModel = null;
         this.init();
@@ -257,6 +289,7 @@ class UIController {
     async init() {
         this.setupEventListeners();
         this.loadSettingsToUI();
+        this.applyProfileUI();
         await this.checkOllamaStatus();
         this.autoResizeInput();
         this.renderHistory();
@@ -272,13 +305,27 @@ class UIController {
     applySettings(settings) {
         this.client.baseUrl = settings.ollamaUrl;
         this.contextManager.setLimit(settings.contextLimit);
+        this.applyProfileUI();
         this.updateContext();
     }
 
+    applyProfileUI() {
+        this.elements.usernameDisplay.textContent = this.settings.settings.username;
+        if (this.settings.settings.avatar) {
+            this.elements.userAvatarDisplay.innerHTML = `<img src="${this.settings.settings.avatar}">`;
+        } else {
+            this.elements.userAvatarDisplay.textContent = this.settings.settings.username.charAt(0).toUpperCase();
+        }
+    }
+
     loadSettingsToUI() {
-        this.elements.settingContextLimit.value = this.settings.settings.contextLimit;
-        this.elements.settingOllamaUrl.value = this.settings.settings.ollamaUrl;
-        this.elements.settingTheme.value = this.settings.settings.theme;
+        const s = this.settings.settings;
+        this.elements.settingContextLimit.value = s.contextLimit;
+        this.elements.settingOllamaUrl.value = s.ollamaUrl;
+        this.elements.settingTheme.value = s.theme;
+        this.elements.settingUsername.value = s.username;
+        this.elements.settingSystemPrompt.value = s.systemPrompt;
+        this.elements.settingIncludeTime.checked = s.includeTime;
     }
 
     setupEventListeners() {
@@ -297,10 +344,17 @@ class UIController {
 
         this.elements.sendBtn.addEventListener('click', () => this.handleSendMessage());
 
-        this.elements.modelSelect.addEventListener('change', (e) => {
+        this.elements.modelSelect.addEventListener('change', async (e) => {
             this.selectedModel = e.target.value;
             this.elements.activeModelName.textContent = this.selectedModel;
             this.updateSendButtonState();
+
+            // Try to fetch context limit for this model
+            const info = await this.client.getModelInfo(this.selectedModel);
+            if (info && info.contextLimit) {
+                this.settings.update('contextLimit', info.contextLimit);
+                this.elements.settingContextLimit.value = info.contextLimit;
+            }
         });
 
         this.elements.newChatBtn.addEventListener('click', () => this.createNewChat());
@@ -314,6 +368,19 @@ class UIController {
         this.elements.closeSettings.addEventListener('click', () => this.elements.settingsModal.classList.add('hidden'));
         this.elements.settingsModal.addEventListener('click', (e) => {
             if (e.target === this.elements.settingsModal) this.elements.settingsModal.classList.add('hidden');
+        });
+
+        this.elements.settingUsername.addEventListener('input', (e) => this.settings.update('username', e.target.value));
+        this.elements.settingSystemPrompt.addEventListener('input', (e) => this.settings.update('systemPrompt', e.target.value));
+        this.elements.settingIncludeTime.addEventListener('change', (e) => this.settings.update('includeTime', e.target.checked));
+
+        this.elements.settingAvatar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => this.settings.update('avatar', event.target.result);
+                reader.readAsDataURL(file);
+            }
         });
 
         this.elements.settingContextLimit.addEventListener('change', (e) => this.settings.update('contextLimit', parseInt(e.target.value)));
@@ -498,7 +565,14 @@ class UIController {
     async handleSendMessage() {
         const userInput = this.elements.userInput.value.trim();
         const attachmentsText = this.fileManager.attachments.map(a => `\n\n[File: ${a.name}]\n${a.text}`).join('');
-        const prompt = attachmentsText + userInput;
+
+        let prompt = attachmentsText + userInput;
+
+        // Inject time if setting is on
+        if (this.settings.settings.includeTime) {
+            const now = new Date();
+            prompt = `[Current Time: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}]\n\n` + prompt;
+        }
 
         if (!userInput || !this.selectedModel) return;
 
@@ -523,7 +597,7 @@ class UIController {
 
         try {
             let fullResponse = '';
-            await this.client.chat(this.selectedModel, prompt, (chunk, done) => {
+            await this.client.chat(this.selectedModel, prompt, this.settings.settings.systemPrompt, (chunk, done) => {
                 loadingDots.remove();
                 fullResponse += chunk;
                 aiMessageContent.innerHTML = marked.parse(fullResponse);
@@ -551,11 +625,23 @@ class UIController {
 
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
-        avatar.innerHTML = role === 'user' ? '👤' : '○';
-        avatar.style.background = role === 'user' ? '#8ab4f8' : '#3c4043';
+
+        if (role === 'user') {
+            if (this.settings.settings.avatar) {
+                avatar.innerHTML = `<img src="${this.settings.settings.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            } else {
+                avatar.textContent = this.settings.settings.username.charAt(0).toUpperCase();
+                avatar.style.background = '#8ab4f8';
+            }
+        } else {
+            avatar.innerHTML = '○';
+            avatar.style.background = '#3c4043';
+        }
+
         avatar.style.display = 'flex';
         avatar.style.alignItems = 'center';
         avatar.style.justifyContent = 'center';
+        avatar.style.flexShrink = '0';
 
         const content = document.createElement('div');
         content.className = 'message-content';
@@ -592,6 +678,6 @@ class UIController {
 }
 
 // Initialize
-const settings = new SettingsManager(); // Initialize settings first to get ollamaUrl
-const ollama = new OllamaClient(settings.settings.ollamaUrl);
-const ui = new UIController(ollama);
+const settingsManager = new SettingsManager();
+const ollamaClient = new OllamaClient(settingsManager.settings.ollamaUrl);
+const uiController = new UIController(ollamaClient);
