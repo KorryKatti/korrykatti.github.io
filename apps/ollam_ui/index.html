@@ -154,6 +154,20 @@
                         <option value="light">Light</option>
                     </select>
                 </div>
+                <div class="setting-item">
+                    <label>CONNECTION_DIAGNOSTICS (CORS/SSL)</label>
+                    <div
+                        style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02); margin-top: 5px;">
+                        If your status is BLOCKED or OFFLINE when hosted:<br><br>
+                        1. <strong>OLLAMA_ORIGINS</strong>: You must tell Ollama to allow this site. Run:<br>
+                        <code
+                            style="display:block; margin:5px 0; background:#eee; padding:3px; color:#000;">launchctl setenv OLLAMA_ORIGINS "https://korrykatti.github.io"</code>
+                        (macOS) or set as System Env Var (Win/Linux).<br>
+                        2. <strong>Restart Ollama</strong> for settings to take effect.<br>
+                        3. <strong>Mixed Content</strong>: If browser blocks https -> http, you may need to allow
+                        "Insecure Content" for this specific domain in Site Settings.
+                    </div>
+                </div>
                 <hr>
                 <div class="setting-item danger-zone">
                     <label>Data Management</label>

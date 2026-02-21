@@ -588,7 +588,14 @@ class UIController {
         } else {
             indicator.classList.remove('status-online');
             indicator.classList.add('status-offline');
-            text.textContent = 'Status: Offline';
+
+            // Helpful diagnostic for hosted/CORS environments
+            if (window.location.protocol === 'https:' && this.client.baseUrl.startsWith('http://')) {
+                text.textContent = 'Status: BLOCKED (SECURE_CONTEXT)';
+            } else {
+                text.textContent = 'Status: Offline';
+            }
+
             this.elements.modelSelect.innerHTML = '<option disabled selected>Offline</option>';
         }
     }
