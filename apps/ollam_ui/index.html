@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ollama AI - Gemini Style</title>
+    <title>Ollama Web UI</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,80 +33,75 @@
             </div>
 
             <div class="sidebar-content">
-                <div class="section-label">Models</div>
-                <select id="model-select" class="model-dropdown">
-                    <option value="" disabled selected>Loading models...</option>
-                </select>
-
-                <div class="status-indicator" id="status-indicator">
-                    <span class="status-dot"></span>
-                    <span class="status-text">Checking Ollama...</span>
-                </div>
-
-                <div class="history-section">
-                    <div class="section-label">Recent</div>
-                    <div id="chat-history" class="chat-history">
-                        <!-- History items will be injected here -->
+                <button id="new-chat-btn">New Chat</button>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-section">
+                    <h3>History</h3>
+                    <div id="chat-history">
+                        <!-- History items without icons -->
                     </div>
                 </div>
             </div>
-
+            <div class="resource-monitor">
+                <div class="stat-item">CPU: <span id="cpu-usage">--%</span></div>
+                <div class="stat-item">RAM: <span id="ram-usage">-- / -- GB</span></div>
+            </div>
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <div class="avatar" id="user-avatar-display">U</div>
-                    <span class="username" id="username-display">Local User</span>
+                    <span id="username-display">User</span>
                 </div>
-                <button id="settings-btn" class="icon-btn" title="Settings">
-                    <svg viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor"
-                            d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.07-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.07.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
-                    </svg>
-                </button>
+                <button id="settings-btn">Settings</button>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="top-bar">
-                <div class="current-model-info">
-                    <span id="active-model-name">Select a model</span>
+        <main>
+            <header>
+                <div class="model-selector">
+                    <select id="model-select">
+                        <option disabled selected>Connecting...</option>
+                    </select>
+                </div>
+                <div id="status-indicator" class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">Status: Offline</span>
                 </div>
             </header>
 
             <div id="chat-container" class="chat-container">
-                <div class="welcome-screen" id="welcome-screen">
-                    <h1>Hello, how can I help?</h1>
-                    <div class="suggestions">
-                        <div class="suggestion-card">"Explain quantum computing in simple terms"</div>
-                        <div class="suggestion-card">"Write a Python script to scrape a website"</div>
-                        <div class="suggestion-card">"Help me write a professional email"</div>
+                <div id="welcome-screen" class="welcome-screen">
+                    <h1>How can I help you today?</h1>
+                    <div class="suggestions-grid">
+                        <div class="suggestion-card">
+                            <p>"Assistance with document processing."</p>
+                        </div>
+                        <div class="suggestion-card">
+                            <p>"Standard technical query resolution."</p>
+                        </div>
+                        <div class="suggestion-card">
+                            <p>"Drafting of routine correspondence."</p>
+                        </div>
+                        <div class="suggestion-card">
+                            <p>"Verification of system data logic."</p>
+                        </div>
                     </div>
                 </div>
-                <!-- Messages will be injected here -->
             </div>
 
             <div class="input-area">
-                <div id="context-info" class="context-info">
-                    <div class="context-bar-container">
-                        <div id="context-bar" class="context-bar"></div>
+                <div class="context-info" id="context-info">
+                    <div class="context-bar-bg">
+                        <div id="context-bar"></div>
                     </div>
-                    <span id="context-text">Context: 0 / 4096 tokens</span>
                 </div>
                 <div id="attachments-container" class="attachments-container"></div>
-                <div class="input-wrapper">
-                    <button id="attach-btn" class="icon-btn" title="Upload File">
-                        <svg viewBox="0 0 24 24" width="20" height="20">
-                            <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                        </svg>
-                    </button>
-                    <input type="file" id="file-input" hidden multiple accept=".txt,.pdf,.png,.jpg,.jpeg">
-                    <textarea id="user-input" placeholder="Enter a prompt here..." rows="1"></textarea>
+                <div class="input-container">
+                    <textarea id="user-input" placeholder="Type message..."></textarea>
                     <div class="input-actions">
-                        <button id="send-btn" class="send-btn" disabled>
-                            <svg viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                            </svg>
-                        </button>
+                        <input type="file" id="file-input" multiple hidden>
+                        <button id="attach-btn">Attach</button>
+                        <button id="stop-btn">Stop</button>
+                        <button id="send-btn" disabled>Send</button>
                     </div>
                 </div>
                 <p class="disclaimer">Ollama can make mistakes. Check important info.</p>
@@ -118,8 +113,8 @@
     <div id="settings-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Settings</h2>
-                <button id="close-settings" class="icon-btn">&times;</button>
+                <h2 style="font-size: 16px; font-weight: normal;">Settings</h2>
+                <button id="close-settings">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="setting-item">

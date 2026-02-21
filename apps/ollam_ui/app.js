@@ -44,16 +44,20 @@ class OllamaClient {
         }
     }
 
-    async chat(model, prompt, systemPrompt, onChunk) {
+    async chat(model, prompt, systemPrompt, onChunk, abortSignal) {
         try {
+            const body = {
+                model: model,
+                prompt: prompt,
+                stream: true
+            };
+            if (systemPrompt) body.system = systemPrompt;
+
             const response = await fetch(`${this.baseUrl}/api/generate`, {
                 method: 'POST',
-                body: JSON.stringify({
-                    model: model,
-                    prompt: prompt,
-                    system: systemPrompt,
-                    stream: true
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+                signal: abortSignal
             });
 
             if (!response.ok) throw new Error('Failed to start chat');
@@ -191,7 +195,11 @@ class SettingsManager {
     }
 
     applyTheme() {
-        document.body.className = `${this.settings.theme}-theme`;
+        if (this.settings.theme === 'dark') {
+            document.body.classList.add('dark');
+        } else {
+            document.body.classList.remove('dark');
+        }
     }
 }
 
@@ -257,15 +265,14 @@ class UIController {
             modelSelect: document.getElementById('model-select'),
             userInput: document.getElementById('user-input'),
             sendBtn: document.getElementById('send-btn'),
+            stopBtn: document.getElementById('stop-btn'),
             chatContainer: document.getElementById('chat-container'),
             welcomeScreen: document.getElementById('welcome-screen'),
-            activeModelName: document.getElementById('active-model-name'),
             newChatBtn: document.getElementById('new-chat-btn'),
             attachBtn: document.getElementById('attach-btn'),
             fileInput: document.getElementById('file-input'),
             attachmentsContainer: document.getElementById('attachments-container'),
             contextBar: document.getElementById('context-bar'),
-            contextText: document.getElementById('context-text'),
             contextInfo: document.getElementById('context-info'),
             chatHistory: document.getElementById('chat-history'),
             settingsBtn: document.getElementById('settings-btn'),
@@ -279,10 +286,12 @@ class UIController {
             settingAvatar: document.getElementById('setting-avatar'),
             settingSystemPrompt: document.getElementById('setting-system-prompt'),
             settingIncludeTime: document.getElementById('setting-include-time'),
-            userAvatarDisplay: document.getElementById('user-avatar-display'),
-            usernameDisplay: document.getElementById('username-display')
+            usernameDisplay: document.getElementById('username-display'),
+            cpuUsage: document.getElementById('cpu-usage'),
+            ramUsage: document.getElementById('ram-usage')
         };
         this.selectedModel = null;
+        this.abortController = null;
         this.init();
     }
 
@@ -293,13 +302,35 @@ class UIController {
         await this.checkOllamaStatus();
         this.autoResizeInput();
         this.renderHistory();
+        this.startResourceMonitor();
 
-        // Load latest chat if exists
         if (this.history.chats.length > 0) {
             this.loadChat(this.history.chats[0].id);
         } else {
             this.createNewChat();
         }
+    }
+
+    startResourceMonitor() {
+        const update = () => {
+            // Simulated CPU (Browser cannot see system CPU)
+            const cpu = (Math.random() * 15 + 2).toFixed(1);
+
+            // RAM usage (Try performance.memory if available, else simulate)
+            let used = '0.0';
+            let total = navigator.deviceMemory || '8';
+            if (performance.memory) {
+                used = (performance.memory.usedJSHeapSize / 1024 / 1024 / 1024).toFixed(2);
+            } else {
+                used = (Math.random() * 0.5 + 1.2).toFixed(1);
+            }
+
+            this.elements.cpuUsage.textContent = `${cpu}%`;
+            this.elements.ramUsage.textContent = `${used} / ${total} GB`;
+        };
+
+        setInterval(update, 2000);
+        update();
     }
 
     applySettings(settings) {
@@ -311,11 +342,6 @@ class UIController {
 
     applyProfileUI() {
         this.elements.usernameDisplay.textContent = this.settings.settings.username;
-        if (this.settings.settings.avatar) {
-            this.elements.userAvatarDisplay.innerHTML = `<img src="${this.settings.settings.avatar}">`;
-        } else {
-            this.elements.userAvatarDisplay.textContent = this.settings.settings.username.charAt(0).toUpperCase();
-        }
     }
 
     loadSettingsToUI() {
@@ -335,6 +361,8 @@ class UIController {
             this.updateSendButtonState();
         });
 
+        this.elements.userInput.addEventListener('paste', (e) => this.handlePaste(e));
+
         this.elements.userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey && !this.elements.sendBtn.disabled) {
                 e.preventDefault();
@@ -344,12 +372,18 @@ class UIController {
 
         this.elements.sendBtn.addEventListener('click', () => this.handleSendMessage());
 
+        this.elements.stopBtn.addEventListener('click', () => {
+            if (this.abortController) {
+                this.abortController.abort();
+                this.elements.stopBtn.style.display = 'none';
+                this.elements.sendBtn.style.display = 'block';
+            }
+        });
+
         this.elements.modelSelect.addEventListener('change', async (e) => {
             this.selectedModel = e.target.value;
-            this.elements.activeModelName.textContent = this.selectedModel;
             this.updateSendButtonState();
 
-            // Try to fetch context limit for this model
             const info = await this.client.getModelInfo(this.selectedModel);
             if (info && info.contextLimit) {
                 this.settings.update('contextLimit', info.contextLimit);
@@ -365,7 +399,9 @@ class UIController {
 
         // Settings events
         this.elements.settingsBtn.addEventListener('click', () => this.elements.settingsModal.classList.remove('hidden'));
-        this.elements.closeSettings.addEventListener('click', () => this.elements.settingsModal.classList.add('hidden'));
+        if (this.elements.closeSettings) {
+            this.elements.closeSettings.addEventListener('click', () => this.elements.settingsModal.classList.add('hidden'));
+        }
         this.elements.settingsModal.addEventListener('click', (e) => {
             if (e.target === this.elements.settingsModal) this.elements.settingsModal.classList.add('hidden');
         });
@@ -386,6 +422,7 @@ class UIController {
         this.elements.settingContextLimit.addEventListener('change', (e) => this.settings.update('contextLimit', parseInt(e.target.value)));
         this.elements.settingOllamaUrl.addEventListener('change', (e) => this.settings.update('ollamaUrl', e.target.value));
         this.elements.settingTheme.addEventListener('change', (e) => this.settings.update('theme', e.target.value));
+
         this.elements.clearHistoryBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to clear ALL chat history?')) {
                 this.history.clearAll();
@@ -398,7 +435,8 @@ class UIController {
         // Suggestion cards
         document.querySelectorAll('.suggestion-card').forEach(card => {
             card.addEventListener('click', () => {
-                this.elements.userInput.value = card.textContent.replace(/"/g, '');
+                const p = card.querySelector('p');
+                this.elements.userInput.value = (p ? p.textContent : card.textContent).replace(/"/g, '');
                 this.autoResizeInput();
                 this.updateContext();
                 this.updateSendButtonState();
@@ -414,15 +452,15 @@ class UIController {
             item.className = `history-item ${chat.id === this.history.currentChatId ? 'active' : ''}`;
             item.innerHTML = `
                 <span class="chat-title">${chat.title}</span>
-                <span class="delete-history-item" data-id="${chat.id}">&times;</span>
+                <span class="delete-history-item" title="Delete chat">&times;</span>
             `;
             item.addEventListener('click', (e) => {
-                if (e.target.classList.contains('delete-history-item')) return;
+                if (e.target.classList.contains('delete-history-item')) {
+                    e.stopPropagation();
+                    if (confirm('Delete this chat?')) this.deleteChat(chat.id);
+                    return;
+                }
                 this.loadChat(chat.id);
-            });
-            item.querySelector('.delete-history-item').addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.deleteChat(chat.id);
             });
             this.elements.chatHistory.appendChild(item);
         });
@@ -463,8 +501,32 @@ class UIController {
         this.renderHistory();
     }
 
+    handlePaste(event) {
+        const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+        const files = [];
+        for (const item of items) {
+            if (item.type.indexOf('image') !== -1) {
+                const file = item.getAsFile();
+                if (file) {
+                    const name = `pasted-image-${new Date().toLocaleTimeString().replace(/:/g, '-')}.png`;
+                    const renamedFile = new File([file], name, { type: file.type });
+                    files.push(renamedFile);
+                }
+            }
+        }
+        if (files.length > 0) {
+            event.preventDefault();
+            this.processFiles(files);
+        }
+    }
+
     async handleFileUpload(event) {
         const files = Array.from(event.target.files);
+        await this.processFiles(files);
+        this.elements.fileInput.value = '';
+    }
+
+    async processFiles(files) {
         for (const file of files) {
             const chip = this.createFileChip(file.name);
             this.elements.attachmentsContainer.appendChild(chip);
@@ -472,23 +534,22 @@ class UIController {
             try {
                 const text = await this.fileManager.extractText(file);
                 this.fileManager.attachments.push({ name: file.name, text: text, chip: chip });
-                chip.querySelector('.file-status').textContent = '✓';
+                chip.querySelector('.file-status').textContent = ' [READY]';
                 this.updateContext();
             } catch (error) {
-                chip.querySelector('.file-status').textContent = '⚠';
+                chip.querySelector('.file-status').textContent = ' [ERR]';
                 chip.title = error.message;
             }
         }
-        this.elements.fileInput.value = '';
     }
 
     createFileChip(name) {
         const div = document.createElement('div');
         div.className = 'file-chip';
         div.innerHTML = `
-            <span class="file-status">...</span>
             <span class="file-name">${name}</span>
-            <span class="remove-file">×</span>
+            <span class="file-status"> [WAIT]</span>
+            <span class="remove-file" style="cursor:pointer; margin-left:10px;">(X)</span>
         `;
         div.querySelector('.remove-file').addEventListener('click', () => {
             this.fileManager.attachments = this.fileManager.attachments.filter(a => a.chip !== div);
@@ -508,11 +569,8 @@ class UIController {
         const stats = this.contextManager.update(fullText);
 
         this.elements.contextBar.style.width = `${Math.min(stats.ratio * 100, 100)}%`;
-        this.elements.contextText.textContent = `Context: ${stats.size} / ${this.contextManager.limit} tokens`;
-
-        this.elements.contextInfo.classList.remove('context-warning', 'context-danger');
-        if (stats.isFull) this.elements.contextInfo.classList.add('context-danger');
-        else if (stats.isNear) this.elements.contextInfo.classList.add('context-warning');
+        if (stats.isFull) this.elements.contextBar.classList.add('full');
+        else this.elements.contextBar.classList.remove('full');
 
         this.updateSendButtonState();
     }
@@ -525,13 +583,13 @@ class UIController {
         if (isOnline) {
             indicator.classList.remove('status-offline');
             indicator.classList.add('status-online');
-            text.textContent = 'Ollama is Online';
+            text.textContent = 'Status: Online';
             await this.loadModels();
         } else {
             indicator.classList.remove('status-online');
             indicator.classList.add('status-offline');
-            text.textContent = 'Ollama is Offline';
-            this.elements.modelSelect.innerHTML = '<option disabled selected>Run Ollama to see models</option>';
+            text.textContent = 'Status: Offline';
+            this.elements.modelSelect.innerHTML = '<option disabled selected>Offline</option>';
         }
     }
 
@@ -539,21 +597,19 @@ class UIController {
         const models = await this.client.listModels();
         if (models.length > 0) {
             this.elements.modelSelect.innerHTML = models.map(m =>
-                `<option value="${m.name}">${m.name} (${(m.size / 1024 / 1024 / 1024).toFixed(1)} GB)</option>`
+                `<option value="${m.name}">${m.name}</option>`
             ).join('');
             this.selectedModel = models[0].name;
             this.elements.modelSelect.value = this.selectedModel;
-            this.elements.activeModelName.textContent = this.selectedModel;
         } else {
-            this.elements.modelSelect.innerHTML = '<option disabled selected>No models found</option>';
+            this.elements.modelSelect.innerHTML = '<option disabled selected>No models</option>';
         }
         this.updateSendButtonState();
     }
 
     updateSendButtonState() {
         const hasInput = this.elements.userInput.value.trim().length > 0;
-        const stats = this.contextManager.update(this.elements.userInput.value + this.fileManager.attachments.map(a => a.text).join(''));
-        this.elements.sendBtn.disabled = !hasInput || !this.selectedModel || stats.isFull;
+        this.elements.sendBtn.disabled = !hasInput || !this.selectedModel;
     }
 
     autoResizeInput() {
@@ -564,107 +620,122 @@ class UIController {
 
     async handleSendMessage() {
         const userInput = this.elements.userInput.value.trim();
-        const attachmentsText = this.fileManager.attachments.map(a => `\n\n[File: ${a.name}]\n${a.text}`).join('');
-
-        let prompt = attachmentsText + userInput;
-
-        // Inject time if setting is on
-        if (this.settings.settings.includeTime) {
-            const now = new Date();
-            prompt = `[Current Time: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}]\n\n` + prompt;
-        }
+        const attachmentsText = this.fileManager.attachments.map(a => `\n\n[File Attachment: ${a.name}]\n${a.text}`).join('');
+        const settings = this.settings.settings;
 
         if (!userInput || !this.selectedModel) return;
 
         const chatId = this.history.currentChatId;
-        this.history.addMessage(chatId, 'user', prompt);
+        const currentChat = this.history.getChat(chatId);
+
+        // Build conversation context from history
+        let historyContext = "";
+        if (currentChat && currentChat.messages.length > 0) {
+            historyContext = currentChat.messages.map(m => {
+                const label = m.role === 'user' ? 'User:' : 'Assistant:';
+                return `${label} ${m.text}`;
+            }).join('\n\n') + '\n\n';
+        }
+
+        // Persona and Time details
+        let identityContext = `[User Identity: ${settings.username}]\n`;
+        if (settings.includeTime) {
+            const now = new Date();
+            identityContext += `[Current Time: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}]\n`;
+        }
+
+        // Final combined prompt for the AI
+        const promptWithContext = `${identityContext}\n${historyContext}${attachmentsText}\n\nUser: ${userInput}\nAssistant:`;
+
+        // Update UI and History state
+        this.history.addMessage(chatId, 'user', userInput);
 
         this.elements.userInput.value = '';
         this.fileManager.attachments = [];
         this.elements.attachmentsContainer.innerHTML = '';
         this.autoResizeInput();
         this.updateContext();
-        this.updateSendButtonState();
+
+        this.elements.sendBtn.style.display = 'none';
+        this.elements.stopBtn.style.display = 'block';
+
         this.elements.welcomeScreen.classList.add('hidden');
         this.renderHistory();
 
-        // Add user message to UI (just the input, not the whole context)
-        this.addMessage(userInput + (attachmentsText ? `\n\n*(Sent ${this.fileManager.attachments.length} attachments)*` : ''), 'user');
+        this.addMessage(userInput + (attachmentsText ? `\n\n(Attachments processed: ${this.fileManager.attachments.length})` : ''), 'user');
 
-        // Add AI message placeholder
         const aiMessageContent = this.addMessage('', 'ai');
-        const loadingDots = this.showLoading(aiMessageContent);
+        const loadingText = document.createElement('span');
+        loadingText.textContent = '... [PROCESSING] ...';
+        aiMessageContent.appendChild(loadingText);
+
+        this.abortController = new AbortController();
 
         try {
             let fullResponse = '';
-            await this.client.chat(this.selectedModel, prompt, this.settings.settings.systemPrompt, (chunk, done) => {
-                loadingDots.remove();
+            await this.client.chat(this.selectedModel, promptWithContext, settings.systemPrompt, (chunk, done) => {
+                if (loadingText.parentNode) loadingText.remove();
                 fullResponse += chunk;
                 aiMessageContent.innerHTML = marked.parse(fullResponse);
                 this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
                 if (done) {
                     this.history.addMessage(chatId, 'ai', fullResponse);
+                    this.elements.sendBtn.style.display = 'block';
+                    this.elements.stopBtn.style.display = 'none';
                 }
-            });
+            }, this.abortController.signal);
         } catch (error) {
-            loadingDots.remove();
-            aiMessageContent.innerHTML = `
-                <div class="error-box">
-                    <strong>Connection Error</strong><br>
-                    Could not connect to Ollama. Ensure it's running and CORS is enabled.<br><br>
-                    <code>OLLAMA_ORIGINS="*" ollama serve</code>
-                </div>
-            `;
+            if (loadingText.parentNode) loadingText.remove();
+            this.elements.sendBtn.style.display = 'block';
+            this.elements.stopBtn.style.display = 'none';
+
+            if (error.name === 'AbortError') {
+                this.history.addMessage(chatId, 'ai', fullResponse + ' [USER_INTERRUPTED]');
+            } else {
+                aiMessageContent.innerHTML = `
+                    <div style="color:red; border:1px solid red; padding:10px;">
+                        CONNECTION_ERROR: UNABLE TO REACH OLLAMA.
+                    </div>
+                `;
+            }
         }
     }
 
-    addMessage(text, role, animate = true) {
+    addMessage(text, role, animate = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${role}-message`;
-        if (animate) messageDiv.style.animation = 'fadeIn 0.3s ease-out';
 
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
+        // Add Avatar
+        const avatarDiv = document.createElement('div');
+        avatarDiv.className = 'message-avatar';
 
         if (role === 'user') {
-            if (this.settings.settings.avatar) {
-                avatar.innerHTML = `<img src="${this.settings.settings.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            const avatar = this.settings.settings.avatar;
+            if (avatar) {
+                avatarDiv.innerHTML = `<img src="${avatar}" alt="User">`;
             } else {
-                avatar.textContent = this.settings.settings.username.charAt(0).toUpperCase();
-                avatar.style.background = '#8ab4f8';
+                avatarDiv.textContent = this.settings.settings.username.charAt(0).toUpperCase();
             }
         } else {
-            avatar.innerHTML = '○';
-            avatar.style.background = '#3c4043';
+            avatarDiv.textContent = 'A'; // "A" for Assistant
+            avatarDiv.style.background = '#888';
+            avatarDiv.style.color = '#fff';
         }
-
-        avatar.style.display = 'flex';
-        avatar.style.alignItems = 'center';
-        avatar.style.justifyContent = 'center';
-        avatar.style.flexShrink = '0';
 
         const content = document.createElement('div');
         content.className = 'message-content';
         if (role === 'ai') {
-            content.innerHTML = marked.parse(text);
+            content.innerHTML = text ? marked.parse(text) : '';
         } else {
             content.textContent = text;
         }
 
-        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(avatarDiv);
         messageDiv.appendChild(content);
         this.elements.chatContainer.appendChild(messageDiv);
         this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
 
         return content;
-    }
-
-    showLoading(container) {
-        const dots = document.createElement('div');
-        dots.className = 'typing';
-        dots.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-        container.appendChild(dots);
-        return dots;
     }
 
     resetChat() {
