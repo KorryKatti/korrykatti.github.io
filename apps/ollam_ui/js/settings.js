@@ -10,8 +10,11 @@ export class SettingsManager {
             systemPrompt: '',
             includeTime: false,
             avatar: null,
+            aiName: 'Assistant',
+            aiAvatar: null,
             unsplashKey: '',
-            safeSearch: true
+            safeSearch: true,
+            disableTokenLimit: false
         };
         this.settings = { ...this.defaults, ...JSON.parse(localStorage.getItem(this.storageKey) || '{}') };
         this.applyTheme();

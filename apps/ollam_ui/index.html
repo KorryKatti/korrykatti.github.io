@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ollama Web UI</title>
+    <title>Ollama AI Nexus</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +37,7 @@
             </div>
 
             <div class="sidebar-content">
-                <button id="new-chat-btn">New Chat</button>
+                <!-- New chat triggered by the + button in sidebar header -->
             </div>
             <div class="sidebar-nav">
                 <div class="nav-section">
@@ -112,6 +115,11 @@
                                     <option value="graph">Graph Plotter</option>
                                 </select>
                             </div>
+                            <div class="deep-think-config">
+                                <input type="checkbox" id="deep-think-toggle">
+                                <label for="deep-think-toggle">Deep Think</label>
+                                <input type="number" id="deep-think-iterations" value="1" min="1" max="5">
+                            </div>
                         </div>
                         <div class="input-actions-right">
                             <button id="stop-btn" class="stop-btn">Stop</button>
@@ -132,81 +140,100 @@
                 <button id="close-settings">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="setting-item">
-                    <label>User Name</label>
-                    <input type="text" id="setting-username" placeholder="Enter your name">
-                </div>
-                <div class="setting-item">
-                    <label>Profile Picture</label>
-                    <input type="file" id="setting-avatar" accept="image/*">
-                </div>
-                <div class="setting-item">
-                    <label>System Prompt (Personality)</label>
-                    <textarea id="setting-system-prompt" rows="3"
-                        placeholder="e.g. You are a helpful assistant who speaks like a pirate."></textarea>
-                </div>
-                <div class="setting-item checkbox-setting">
-                    <label>
-                        <input type="checkbox" id="setting-include-time">
-                        Include current time in messages
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <label>Default Context Limit (tokens)</label>
-                    <div class="input-with-hint">
-                        <input type="number" id="setting-context-limit" value="4096" step="512">
-                        <small>Auto-updates based on model if available</small>
+                <!-- Section: User Profile -->
+                <div class="setting-section">
+                    <h3>User Profile</h3>
+                    <div class="setting-grid">
+                        <div class="setting-item">
+                            <label>Display Name</label>
+                            <input type="text" id="setting-username" placeholder="Enter your name">
+                        </div>
+                        <div class="setting-item">
+                            <label>Profile Picture</label>
+                            <input type="file" id="setting-avatar" accept="image/*">
+                        </div>
                     </div>
                 </div>
-                <div class="setting-item">
-                    <label>Ollama Base URL</label>
-                    <input type="text" id="setting-ollama-url" value="http://localhost:11434">
-                </div>
-                <div class="setting-item">
-                    <label>Theme</label>
-                    <select id="setting-theme">
-                        <option value="dark">Dark</option>
-                        <option value="light">Light</option>
-                    </select>
-                </div>
-                <div class="setting-item">
-                    <label>Unsplash Access Key</label>
-                    <input type="password" id="setting-unsplash-key" placeholder="Enter your Access Key (Optional)">
-                    <small style="color:var(--text-secondary); display:block; margin-top:4px;">Enables high-quality
-                        global image results.</small>
-                </div>
-                <div class="setting-item checkbox-setting">
-                    <label>
-                        <input type="checkbox" id="setting-safe-search">
-                        Safe Search (Filter explicit content)
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <label>Image Providers (Anime)</label>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px; opacity: 0.8;">
-                        <img src="https://nekosapi.com/branding/logo/logo-with-wordmark.png" alt="NekosAPI"
-                            style="height: 24px;">
-                        <span style="font-size: 11px; color: var(--text-secondary);">Powered by NekosAPI and
-                            Nekosia</span>
+
+                <!-- Section: AI Appearance & Behavior -->
+                <div class="setting-section">
+                    <h3>AI Appearance & Behavior</h3>
+                    <div class="setting-grid">
+                        <div class="setting-item">
+                            <label>AI Name</label>
+                            <input type="text" id="setting-ai-name" placeholder="e.g. Assistant, Jarvis">
+                        </div>
+                        <div class="setting-item">
+                            <label>AI Profile Picture</label>
+                            <input type="file" id="setting-ai-avatar" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>System Prompt (Personality)</label>
+                        <textarea id="setting-system-prompt" rows="3"
+                            placeholder="e.g. You are a helpful assistant who speaks like a pirate."></textarea>
                     </div>
                 </div>
-                <div class="setting-item">
-                    <label>CONNECTION_DIAGNOSTICS (CORS/SSL)</label>
-                    <div
-                        style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02); margin-top: 5px;">
-                        If your status is BLOCKED or OFFLINE when hosted:<br><br>
-                        1. <strong>OLLAMA_ORIGINS</strong>: You must tell Ollama to allow this site. Run:<br>
-                        <code
-                            style="display:block; margin:5px 0; background:#eee; padding:3px; color:#000;">launchctl setenv OLLAMA_ORIGINS "https://korrykatti.github.io"</code>
-                        (macOS) or set as System Env Var (Win/Linux).<br>
-                        2. <strong>Restart Ollama</strong> for settings to take effect.<br>
-                        3. <strong>Mixed Content</strong>: If browser blocks https -> http, you may need to allow
-                        "Insecure Content" for this specific domain in Site Settings.
+
+                <!-- Section: System Configuration -->
+                <div class="setting-section">
+                    <h3>System Configuration</h3>
+                    <div class="setting-grid">
+                        <div class="setting-item">
+                            <label>Ollama Base URL</label>
+                            <input type="text" id="setting-ollama-url" value="http://localhost:11434">
+                        </div>
+                        <div class="setting-item">
+                            <label>Theme</label>
+                            <select id="setting-theme">
+                                <option value="dark">Dark</option>
+                                <option value="light">Light</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Context Limit (tokens)</label>
+                            <input type="number" id="setting-context-limit" value="4096" step="512">
+                        </div>
+                        <div class="setting-item">
+                            <label>External Image Key (Unsplash)</label>
+                            <input type="password" id="setting-unsplash-key" placeholder="Access Key">
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <div class="setting-item checkbox-setting">
+                            <label>
+                                <input type="checkbox" id="setting-include-time">
+                                Include current time in messages
+                            </label>
+                        </div>
+                        <div class="setting-item checkbox-setting">
+                            <label>
+                                <input type="checkbox" id="setting-safe-search">
+                                Safe Search (Filter explicit content)
+                            </label>
+                        </div>
+                        <div class="setting-item checkbox-setting">
+                            <label>
+                                <input type="checkbox" id="setting-disable-token-limit">
+                                Disable History Limit (Use Full Context)
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <div class="setting-item danger-zone">
-                    <label>Data Management</label>
+
+                <!-- Section: Advanced Information -->
+                <div class="setting-section">
+                    <h3>Connection Diagnostics</h3>
+                    <div class="diagnostics-box"
+                        style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02);">
+                        If status is BLOCKED: Run
+                        <code>launchctl setenv OLLAMA_ORIGINS "https://korrykatti.github.io"</code> and restart Ollama.
+                    </div>
+                </div>
+
+                <div class="setting-section danger-zone">
+                    <h3>Danger Zone</h3>
                     <button id="clear-history-btn" class="danger-btn">Clear All Chat History</button>
                 </div>
             </div>

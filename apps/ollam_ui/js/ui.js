@@ -45,6 +45,9 @@ export class UIController {
             settingIncludeTime: document.getElementById('setting-include-time'),
             settingUnsplashKey: document.getElementById('setting-unsplash-key'),
             settingSafeSearch: document.getElementById('setting-safe-search'),
+            settingAiName: document.getElementById('setting-ai-name'),
+            settingAiAvatar: document.getElementById('setting-ai-avatar'),
+            settingDisableTokenLimit: document.getElementById('setting-disable-token-limit'),
             usernameDisplay: document.getElementById('username-display'),
             cpuUsage: document.getElementById('cpu-usage'),
             ramUsage: document.getElementById('ram-usage'),
@@ -52,7 +55,10 @@ export class UIController {
             previewModal: document.getElementById('preview-modal'),
             previewTitle: document.getElementById('preview-title'),
             previewBody: document.getElementById('preview-body'),
-            closePreview: document.getElementById('close-preview')
+            closePreview: document.getElementById('close-preview'),
+            toolSelect: document.getElementById('tool-select'),
+            deepThinkToggle: document.getElementById('deep-think-toggle'),
+            deepThinkIterations: document.getElementById('deep-think-iterations')
         };
         this.selectedModel = null;
         this.abortController = null;
@@ -119,6 +125,12 @@ export class UIController {
         this.elements.settingUnsplashKey.value = s.unsplashKey || '';
         if (this.elements.settingSafeSearch) {
             this.elements.settingSafeSearch.checked = s.safeSearch;
+        }
+        if (this.elements.settingAiName) {
+            this.elements.settingAiName.value = s.aiName || 'Assistant';
+        }
+        if (this.elements.settingDisableTokenLimit) {
+            this.elements.settingDisableTokenLimit.checked = s.disableTokenLimit;
         }
     }
 
@@ -195,6 +207,25 @@ export class UIController {
         this.elements.settingContextLimit.addEventListener('change', (e) => this.settings.update('contextLimit', parseInt(e.target.value)));
         this.elements.settingOllamaUrl.addEventListener('change', (e) => this.settings.update('ollamaUrl', e.target.value));
         this.elements.settingTheme.addEventListener('change', (e) => this.settings.update('theme', e.target.value));
+
+        if (this.elements.settingAiName) {
+            this.elements.settingAiName.addEventListener('input', (e) => this.settings.update('aiName', e.target.value));
+        }
+
+        if (this.elements.settingDisableTokenLimit) {
+            this.elements.settingDisableTokenLimit.addEventListener('change', (e) => this.settings.update('disableTokenLimit', e.target.checked));
+        }
+
+        if (this.elements.settingAiAvatar) {
+            this.elements.settingAiAvatar.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => this.settings.update('aiAvatar', event.target.result);
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
         this.elements.clearHistoryBtn.addEventListener('click', () => {
             if (confirm('Are you sure you want to clear ALL chat history?')) {
@@ -463,6 +494,7 @@ export class UIController {
         const settings = this.settings.settings;
         const isWebSearch = this.elements.searchWebToggle.checked;
         const safeSearch = settings.safeSearch;
+        const selectedTool = this.elements.toolSelect.value;
 
         if (!userInput || !this.selectedModel) return;
 
@@ -547,9 +579,16 @@ export class UIController {
         // Build conversation context from history
         let historyContext = "";
         if (currentChat && currentChat.messages.length > 0) {
-            historyContext = currentChat.messages.map(m => {
-                const label = m.role === 'user' ? 'User:' : 'Assistant:';
-                return `${label} ${m.text}`;
+            // Respect the 'Disable History Limit' setting
+            const messagesToInclude = settings.disableTokenLimit ?
+                currentChat.messages :
+                currentChat.messages.slice(-15); // Default focus window
+
+            historyContext = messagesToInclude.map(m => {
+                const label = m.role === 'user' ? (settings.username || 'User') : (settings.aiName || 'Assistant');
+                // Clean up text by removing internal tags for context
+                const cleanText = m.text.replace(/<chart>[\s\S]*?<\/chart>/gi, '').trim();
+                return `${label}: ${cleanText}`;
             }).join('\n\n') + '\n\n';
         }
 
@@ -565,6 +604,22 @@ export class UIController {
         if (foundImage) {
             systemNote = `\n[CRITICAL_SYSTEM_NOTE: An image result has already been displayed to the user: ${foundImage.url}. Briefly acknowledge that you are showing them the image they requested. DO NOT hallucinate or summarize unrelated websites unless specifically instructed.]\n`;
         }
+
+        let toolInstructions = "";
+        if (selectedTool === 'graph') {
+            toolInstructions = `\n[GRAPH_TOOL_ACTIVE]\nA chart will be automatically rendered from data for the user. Your job in this response is ONLY to provide a brief 2-3 sentence text summary of the data/answer. DO NOT write any code (no Python, no JavaScript, no pseudocode). DO NOT suggest how to plot anything. DO NOT show implementation steps. The graph is handled automatically.`;
+        }
+
+        const thinkingInstruction = `
+[INSTRUCTION: INTERNAL_MONOLOGUE]
+You MUST start your response with a <think> block containing your step-by-step reasoning.
+Your actual response to the user must follow the closing </think> tag.`;
+
+        const combinedSystemPrompt = `${settings.systemPrompt}\n${thinkingInstruction}\n${toolInstructions}\n[User Context: Identity=${settings.username}]`.trim();
+
+        // 3. Deep Thinking / Multi-Step Reasoning
+        const isDeepThink = this.elements.deepThinkToggle.checked;
+        const iterations = parseInt(this.elements.deepThinkIterations.value) || 1;
 
         const promptWithContext = `${searchContext}${systemNote}${identityContext}\n${historyContext}${attachmentsText}\n\nUser: ${userInput}\nAssistant:`;
 
@@ -599,22 +654,151 @@ export class UIController {
                 aiMessageContent.appendChild(textBody);
             }
 
-            await this.client.chat(this.selectedModel, promptWithContext, settings.systemPrompt, (chunk, done) => {
-                if (loadingText.parentNode) loadingText.remove();
-                fullResponse += chunk;
-                textBody.innerHTML = marked.parse(fullResponse);
-                this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+            let currentPrompt = promptWithContext;
+            let finalFullResponse = '';
 
-                // Save incrementally for data safety on reloads
-                if (fullResponse.length % 50 === 0 || done) {
-                    this.history.updateMessage(chatId, aiMessageIndex, fullResponse);
-                }
+            for (let i = 0; i < iterations; i++) {
+                let loopResponse = '';
+                const iterLabel = iterations > 1 ? ` [ITERATION ${i + 1}/${iterations}]` : '';
+                loadingText.textContent = `... [GENERATING_RESPONSE${iterLabel}] ...`;
 
-                if (done) {
-                    this.elements.sendBtn.style.display = 'block';
-                    this.elements.stopBtn.style.display = 'none';
+                await this.client.chat(this.selectedModel, currentPrompt, combinedSystemPrompt, (chunk, done) => {
+                    loopResponse += chunk;
+
+                    // In multi-step, we only show intermediate results in thinking blocks or as a preview
+                    if (iterations === 1) {
+                        if (loadingText.parentNode) loadingText.remove();
+                        const processedContent = this.parseThinkingAndMarkdown(loopResponse);
+                        textBody.innerHTML = processedContent;
+                        this.detectAndRenderGraphs(textBody, loopResponse);
+                    }
+
+                    this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+                }, this.abortController.signal);
+
+                if (iterations > 1) {
+                    // Update context for next iteration: Original Prompt + Previous Response + Self-Critique Instruction
+                    currentPrompt += `\n\nAssistant: ${loopResponse}\n\nUser: [INTERNAL_CRITIQUE: Consider your previous response. Refine it, check for errors, and provide a ${i === iterations - 1 ? 'FINAL' : 'BETTER'} answer.]\nAssistant:`;
+                    finalFullResponse = loopResponse; // The last one is the "best" one
+                } else {
+                    finalFullResponse = loopResponse;
                 }
-            }, this.abortController.signal);
+            }
+
+            if (loadingText.parentNode) loadingText.remove();
+            const finalProcessed = this.parseThinkingAndMarkdown(finalFullResponse);
+            textBody.innerHTML = finalProcessed;
+            this.detectAndRenderGraphs(textBody, finalFullResponse);
+
+            this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
+
+            // 4. Separate Tool Call for Graphs — ask for SIMPLE data, build Chart.js config ourselves
+            if (selectedTool === 'graph' && !this.abortController.signal.aborted) {
+                loadingText.textContent = `... [GENERATING_GRAPH_DATA] ...`;
+                aiMessageContent.appendChild(loadingText);
+
+                const graphSystem = `You are a data serializer. Output ONLY a single-line compact valid JSON object. Absolutely forbidden: // comments, /* comments */, ~ tilde, ... ellipsis, placeholder text like "L1" or "Series1", markdown, prose, code blocks. Every number in every data array must be a real numeric value.`;
+
+                const graphPrompt = `For the question: "${userInput}"
+
+Output a single compact JSON object using this EXACT schema (replace values with real data):
+{"title":"India vs China Population","chartType":"line","labels":["2019","2020","2021","2022","2023"],"series":[{"name":"India","data":[1366,1380,1393,1406,1428]},{"name":"China","data":[1402,1411,1412,1412,1409]}]}
+
+STRICT RULES — violating any of these will break the app:
+- NO // comments inside JSON
+- NO ~ before numbers (forbidden: ~15, use 15)
+- NO ... or placeholder values (every array element must be a real number)
+- NO markdown, no code fences, no prose
+- "labels" and every "data" array MUST have the same length
+- "name" values must be real names (e.g. "India", "GDP", "Temperature") NOT "Series1"
+- "chartType" must be exactly: line, bar, or pie
+- Output ONLY the JSON, starting with { and ending with }`;
+
+
+                const COLORS = [
+                    { border: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
+                    { border: '#f43f5e', bg: 'rgba(244,63,94,0.12)' },
+                    { border: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+                    { border: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+                    { border: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
+                ];
+
+                let graphJsonPart = '';
+                await this.client.chat(this.selectedModel, graphPrompt, graphSystem, (chunk, done) => {
+                    graphJsonPart += chunk;
+                    if (done) {
+                        console.log('[UIController] Raw graph response:', graphJsonPart);
+                        try {
+                            // Strip <think> blocks, code fences, and surrounding prose
+                            let jsonStr = graphJsonPart.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+                            const fence = jsonStr.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+                            if (fence) jsonStr = fence[1];
+                            const first = jsonStr.indexOf('{');
+                            const last = jsonStr.lastIndexOf('}');
+                            if (first !== -1 && last !== -1) jsonStr = jsonStr.substring(first, last + 1);
+                            jsonStr = this.repairJson(jsonStr);
+
+                            const parsed = JSON.parse(jsonStr);
+                            if (!parsed.labels || !parsed.series) throw new Error('Missing labels or series');
+
+                            const datasets = (parsed.series || []).map((s, i) => ({
+                                label: s.name || `Series ${i + 1}`,
+                                data: s.data,
+                                borderColor: COLORS[i % COLORS.length].border,
+                                backgroundColor: COLORS[i % COLORS.length].bg,
+                                fill: (parsed.chartType === 'line') ? false : true,
+                                tension: 0.4,
+                                borderWidth: 2.5,
+                                pointRadius: 5,
+                                pointHoverRadius: 8,
+                            }));
+
+                            const chartConfig = {
+                                type: parsed.chartType || 'line',
+                                data: { labels: parsed.labels, datasets },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: { position: 'top', labels: { font: { family: 'Inter, sans-serif' } } },
+                                        title: { display: true, text: parsed.title || userInput, font: { size: 15, family: 'Inter, sans-serif' } },
+                                    },
+                                    scales: parsed.chartType === 'pie' ? undefined : {
+                                        y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.06)' } },
+                                        x: { grid: { display: false } },
+                                    },
+                                },
+                            };
+
+                            const jsonHash = this.hashCode(jsonStr);
+                            if (!textBody.querySelector(`[data-graph-hash="${jsonHash}"]`)) {
+                                const wrap = document.createElement('div');
+                                wrap.className = 'graph-container';
+                                wrap.style.cssText = 'background:#fff;padding:24px;border-radius:16px;margin:20px 0;height:340px;box-shadow:0 4px 20px rgba(0,0,0,.1);';
+                                wrap.setAttribute('data-graph-hash', jsonHash);
+                                const canvas = document.createElement('canvas');
+                                wrap.appendChild(canvas);
+                                textBody.appendChild(wrap);
+                                new Chart(canvas, chartConfig);
+                                console.log('[UIController] ✅ Chart rendered!');
+                            }
+
+                            if (loadingText.parentNode) loadingText.remove();
+                            const persistentResponse = finalFullResponse + `\n\n<chart>${jsonStr}</chart>`;
+                            this.history.updateMessage(chatId, aiMessageIndex, persistentResponse);
+
+                        } catch (e) {
+                            console.error('[UIController] Graph build failed:', e, 'Raw:', graphJsonPart);
+                            if (loadingText.parentNode) loadingText.remove();
+                        }
+                    }
+                }, this.abortController.signal);
+            }
+
+
+            this.elements.sendBtn.style.display = 'block';
+            this.elements.stopBtn.style.display = 'none';
+
         } catch (error) {
             if (loadingText.parentNode) loadingText.remove();
             this.elements.sendBtn.style.display = 'block';
@@ -655,12 +839,17 @@ export class UIController {
             if (avatar) {
                 avatarDiv.innerHTML = `<img src="${avatar}" alt="User">`;
             } else {
-                avatarDiv.textContent = this.settings.settings.username.charAt(0).toUpperCase();
+                avatarDiv.textContent = (this.settings.settings.username || 'U').charAt(0).toUpperCase();
             }
         } else {
-            avatarDiv.textContent = 'A'; // "A" for Assistant
-            avatarDiv.style.background = '#888';
-            avatarDiv.style.color = '#fff';
+            const aiAvatar = this.settings.settings.aiAvatar;
+            if (aiAvatar) {
+                avatarDiv.innerHTML = `<img src="${aiAvatar}" alt="${this.settings.settings.aiName}">`;
+            } else {
+                avatarDiv.textContent = (this.settings.settings.aiName || 'A').charAt(0).toUpperCase();
+                avatarDiv.style.background = 'var(--accent)';
+                avatarDiv.style.color = '#fff';
+            }
         }
 
         const content = document.createElement('div');
@@ -674,8 +863,11 @@ export class UIController {
         if (role === 'ai') {
             const textBody = document.createElement('div');
             textBody.className = 'text-body';
-            textBody.innerHTML = text ? marked.parse(text) : '';
+            textBody.innerHTML = text ? this.parseThinkingAndMarkdown(text) : '';
             content.appendChild(textBody);
+
+            // Trigger graph detection for history/loaded messages
+            if (text) this.detectAndRenderGraphs(textBody, text);
         } else {
             content.textContent = text;
         }
@@ -695,27 +887,21 @@ export class UIController {
             return;
         }
         const imgContainer = document.createElement('div');
-        imgContainer.style.margin = '10px 0';
-        imgContainer.style.border = '1px solid var(--border-color)';
-        imgContainer.style.padding = '5px';
-        imgContainer.style.background = '#fff';
+        imgContainer.className = 'chat-image-container';
 
         const img = document.createElement('img');
         img.src = imageData.url;
-        img.style.maxWidth = '100%';
-        img.style.display = 'block';
-        img.style.cursor = 'zoom-in';
+        img.className = 'chat-image';
+        img.title = 'Click to expand';
         img.addEventListener('click', () => this.showPreview({
             name: imageData.title || 'Image Result',
             type: 'image/png',
             dataUrl: imageData.url,
-            text: 'External resource referenced by assistant.'
+            text: `Resource provided by: ${imageData.provider || 'Global Search'}`
         }));
 
         const caption = document.createElement('div');
-        caption.style.fontSize = '10px';
-        caption.style.color = 'var(--text-secondary)';
-        caption.style.marginTop = '5px';
+        caption.className = 'chat-image-caption';
 
         let captionText = `Source: ${imageData.provider || 'Global Search'}`;
         if (imageData.artist && imageData.artist !== 'Unknown') {
@@ -725,8 +911,7 @@ export class UIController {
 
         imgContainer.appendChild(img);
         imgContainer.appendChild(caption);
-        // Prepend so it appears ABOVE the text body
-        container.prepend(imgContainer);
+        container.appendChild(imgContainer);
     }
 
     resetChat() {
@@ -736,5 +921,152 @@ export class UIController {
         this.elements.userInput.value = '';
         this.autoResizeInput();
         this.updateSendButtonState();
+    }
+
+    parseThinkingAndMarkdown(text) {
+        let thinkingHtml = "";
+        let mainContent = text;
+
+        // Extract <think> content
+        const thinkMatch = text.match(/<think>([\s\S]*?)(?:<\/think>|$)/);
+        if (thinkMatch) {
+            const thinkingText = thinkMatch[1].trim();
+            if (thinkingText) {
+                thinkingHtml = `
+                    <details class="thinking-block" ${!text.includes('</think>') ? 'open' : ''}>
+                        <summary>Thinking Process...</summary>
+                        <div class="thinking-content">${marked.parse(thinkingText)}</div>
+                    </details>
+                `;
+            }
+            mainContent = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/, '').trim();
+        }
+
+        // Remove <chart> tags and legacy chart JSON blocks from the rendered text
+        mainContent = mainContent.replace(/<chart>[\s\S]*?<\/chart>/g, '');
+        mainContent = mainContent.replace(/```json\s*\{[\s\S]*?"type"\s*:\s*"chart"[\s\S]*?\}\s*```/g, '');
+
+        return thinkingHtml + marked.parse(mainContent);
+    }
+
+    detectAndRenderGraphs(container, text) {
+        if (!window.Chart) {
+            console.error('[UIController] Chart.js not loaded!');
+            return;
+        }
+
+        const COLORS = [
+            { border: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
+            { border: '#f43f5e', bg: 'rgba(244,63,94,0.12)' },
+            { border: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+            { border: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
+            { border: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
+        ];
+
+        const regex = /<chart>\s*(\{[\s\S]*?})\s*<\/chart>/g;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+            try {
+                const repairedJson = this.repairJson(match[1]);
+                const parsed = JSON.parse(repairedJson);
+                const jsonHash = this.hashCode(repairedJson);
+
+                if (container.querySelector(`[data-graph-hash="${jsonHash}"]`)) continue;
+
+                let chartConfig;
+
+                if (parsed.series && parsed.labels) {
+                    // NEW simple schema: {title, chartType, labels, series:[{name,data}]}
+                    const datasets = parsed.series.map((s, i) => ({
+                        label: s.name || `Series ${i + 1}`,
+                        data: s.data,
+                        borderColor: COLORS[i % COLORS.length].border,
+                        backgroundColor: COLORS[i % COLORS.length].bg,
+                        fill: parsed.chartType === 'line' ? false : true,
+                        tension: 0.4,
+                        borderWidth: 2.5,
+                        pointRadius: 5,
+                        pointHoverRadius: 8,
+                    }));
+                    chartConfig = {
+                        type: parsed.chartType || 'line',
+                        data: { labels: parsed.labels, datasets },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'top', labels: { font: { family: 'Inter, sans-serif' } } },
+                                title: { display: true, text: parsed.title || '', font: { size: 15, family: 'Inter, sans-serif' } },
+                            },
+                            scales: parsed.chartType === 'pie' ? undefined : {
+                                y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.06)' } },
+                                x: { grid: { display: false } },
+                            },
+                        },
+                    };
+                } else if (parsed.config) {
+                    // LEGACY schema: {type:"chart", config:{...chartjs config}}
+                    chartConfig = parsed.config;
+                    if (!chartConfig.options) chartConfig.options = {};
+                    chartConfig.options.responsive = true;
+                    chartConfig.options.maintainAspectRatio = false;
+                } else {
+                    console.warn('[UIController] Unrecognised graph schema:', parsed);
+                    continue;
+                }
+
+                const wrap = document.createElement('div');
+                wrap.className = 'graph-container';
+                wrap.style.cssText = 'background:#fff;padding:24px;border-radius:16px;margin:20px 0;height:340px;box-shadow:0 4px 20px rgba(0,0,0,.1);';
+                wrap.setAttribute('data-graph-hash', jsonHash);
+                const canvas = document.createElement('canvas');
+                wrap.appendChild(canvas);
+                container.appendChild(wrap);
+                new Chart(canvas, chartConfig);
+                console.log('[UIController] ✅ Chart rendered from history (schema:', parsed.series ? 'simple' : 'legacy', ')');
+
+            } catch (e) {
+                console.error('[UIController] Graph render error:', e);
+            }
+        }
+    }
+
+
+    hashCode(s) {
+        return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+    }
+
+    repairJson(json) {
+        if (!json) return json;
+        let r = json.trim();
+
+        // 1. Strip JS/C++ style single-line comments (// ...)
+        r = r.replace(/\/\/[^\n\r"]*/g, '');
+
+        // 2. Strip JS block comments (/* ... */)
+        r = r.replace(/\/\*[\s\S]*?\*\//g, '');
+
+        // 3. Remove tilde ~ approximation prefix on numbers: ~15 -> 15
+        r = r.replace(/~(\d)/g, '$1');
+
+        // 4. Remove ellipsis placeholders: [..., ...] or "..." values
+        // Remove bare ... tokens in arrays/values
+        r = r.replace(/,\s*\.\.\.\s*/g, '');
+        r = r.replace(/\.\.\.\s*,/g, '');
+        r = r.replace(/:\s*\.\.\./g, ': null');
+
+        // 5. Remove trailing commas before ] or }
+        r = r.replace(/,\s*([}\]])/g, '$1');
+
+        // 6. Fix unquoted keys: { key: "val" } -> { "key": "val" }
+        r = r.replace(/([{,\n])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1 "$2":');
+
+        // 7. Fix single-quoted keys: { 'key': } -> { "key": }
+        r = r.replace(/([{,\n])\s*'([a-zA-Z0-9_]+)'\s*:/g, '$1 "$2":');
+
+        // 8. Remove any lines that become empty objects from comment stripping
+        r = r.replace(/,\s*,/g, ',');
+
+        return r;
     }
 }
