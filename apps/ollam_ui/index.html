@@ -168,6 +168,21 @@
                     <small style="color:var(--text-secondary); display:block; margin-top:4px;">Enables high-quality
                         global image results.</small>
                 </div>
+                <div class="setting-item checkbox-setting">
+                    <label>
+                        <input type="checkbox" id="setting-safe-search">
+                        Safe Search (Filter explicit content)
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>Image Providers (Anime)</label>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px; opacity: 0.8;">
+                        <img src="https://nekosapi.com/branding/logo/logo-with-wordmark.png" alt="NekosAPI"
+                            style="height: 24px;">
+                        <span style="font-size: 11px; color: var(--text-secondary);">Powered by NekosAPI and
+                            Nekosia</span>
+                    </div>
+                </div>
                 <div class="setting-item">
                     <label>CONNECTION_DIAGNOSTICS (CORS/SSL)</label>
                     <div
@@ -203,7 +218,7 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js" type="module"></script>
 </body>
 
 </html>
