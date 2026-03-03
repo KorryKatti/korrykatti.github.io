@@ -14,6 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="dark-theme">
@@ -104,6 +105,12 @@
                             <div class="search-toggle">
                                 <input type="checkbox" id="search-web-toggle">
                                 <label for="search-web-toggle">Web Search</label>
+                            </div>
+                            <div class="tool-selector">
+                                <select id="tool-select">
+                                    <option value="none">No Tool</option>
+                                    <option value="graph">Graph Plotter</option>
+                                </select>
                             </div>
                         </div>
                         <div class="input-actions-right">
