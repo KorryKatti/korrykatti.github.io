@@ -98,10 +98,18 @@
                 <div class="input-container">
                     <textarea id="user-input" placeholder="Type message..."></textarea>
                     <div class="input-actions">
-                        <input type="file" id="file-input" multiple hidden>
-                        <button id="attach-btn">Attach</button>
-                        <button id="stop-btn">Stop</button>
-                        <button id="send-btn" disabled>Send</button>
+                        <div class="input-actions-left">
+                            <input type="file" id="file-input" multiple hidden>
+                            <button id="attach-btn" class="secondary-btn">Attach</button>
+                            <div class="search-toggle">
+                                <input type="checkbox" id="search-web-toggle">
+                                <label for="search-web-toggle">Web Search</label>
+                            </div>
+                        </div>
+                        <div class="input-actions-right">
+                            <button id="stop-btn" class="stop-btn">Stop</button>
+                            <button id="send-btn" disabled>Send</button>
+                        </div>
                     </div>
                 </div>
                 <p class="disclaimer">Ollama can make mistakes. Check important info.</p>
@@ -155,6 +163,12 @@
                     </select>
                 </div>
                 <div class="setting-item">
+                    <label>Unsplash Access Key</label>
+                    <input type="password" id="setting-unsplash-key" placeholder="Enter your Access Key (Optional)">
+                    <small style="color:var(--text-secondary); display:block; margin-top:4px;">Enables high-quality
+                        global image results.</small>
+                </div>
+                <div class="setting-item">
                     <label>CONNECTION_DIAGNOSTICS (CORS/SSL)</label>
                     <div
                         style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02); margin-top: 5px;">
@@ -173,6 +187,18 @@
                     <label>Data Management</label>
                     <button id="clear-history-btn" class="danger-btn">Clear All Chat History</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- File Preview Modal -->
+    <div id="preview-modal" class="modal-overlay hidden">
+        <div class="modal-content preview-modal-content">
+            <div class="modal-header">
+                <h2 id="preview-title" style="font-size: 16px; font-weight: normal;">File Preview</h2>
+                <button id="close-preview">&times;</button>
+            </div>
+            <div id="preview-body" class="modal-body preview-body">
+                <!-- Content will be injected here -->
             </div>
         </div>
     </div>
