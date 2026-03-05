@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Mode</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f6f3ee;
+            --surface: #ede9e2;
+            --ink: #1c1a17;
+            --muted: #7c7670;
+            --ghost: #b0a898;
+            --accent: #5c4a36;
+            --accent-h: #3d3020;
+            --border: #d4cec5;
+            --danger: #c0392b;
+        }
+
+        body.dark {
+            --bg: #1a1815;
+            --surface: #242220;
+            --ink: #e8e2d8;
+            --muted: #7a7268;
+            --ghost: #4e4840;
+            --accent: #c9a96e;
+            --accent-h: #e0c080;
+            --border: #302c28;
+            --danger: #e05050;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ── SIDEBAR ── */
+        #sidebar {
+            width: 220px;
+            min-width: 220px;
+            border-right: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+            overflow: hidden;
+        }
+
+        #sidebar-top {
+            padding: 0 14px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .app-name {
+            font-family: 'Lora', serif;
+            font-size: 15px;
+            color: var(--accent);
+            letter-spacing: 0.01em;
+            margin-bottom: 10px;
+        }
+
+        #new-story-btn {
+            width: 100%;
+            padding: 8px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        #new-story-btn:hover {
+            background: var(--accent-h);
+        }
+
+        #story-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .story-item {
+            padding: 9px 14px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            border-radius: 6px;
+            margin: 2px 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .story-item:hover,
+        .story-item.active {
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .story-item-del {
+            opacity: 0;
+            font-size: 15px;
+            line-height: 1;
+            color: var(--danger);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 2px;
+            flex-shrink: 0;
+        }
+
+        .story-item:hover .story-item-del {
+            opacity: 1;
+        }
+
+        /* ── MAIN ── */
+        #main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* ── TOOLBAR ── */
+        #toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 28px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            flex-shrink: 0;
+        }
+
+        #story-title {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            font-family: 'Lora', serif;
+            font-size: 17px;
+            color: var(--ink);
+        }
+
+        #story-title::placeholder {
+            color: var(--muted);
+        }
+
+        select,
+        .tb-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 12.5px;
+            padding: 6px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .tb-btn {
+            transition: background 0.15s;
+        }
+
+        .tb-btn:hover {
+            background: var(--surface);
+        }
+
+        .tb-btn.danger {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .tb-btn.danger:hover {
+            background: var(--danger);
+            color: var(--bg);
+        }
+
+        #tone-select option {
+            background: var(--bg);
+        }
+
+        /* ── EDITOR ── */
+        #editor-wrap {
+            flex: 1;
+            overflow-y: auto;
+            padding: 48px max(28px, calc(50% - 380px));
+        }
+
+        #editor {
+            min-height: 60vh;
+            font-family: 'Lora', serif;
+            font-size: 19px;
+            line-height: 1.9;
+            color: var(--ink);
+            outline: none;
+            white-space: pre-wrap;
+            word-break: break-word;
+            caret-color: var(--accent);
+        }
+
+        #editor:empty::before {
+            content: attr(placeholder);
+            color: var(--ghost);
+            pointer-events: none;
+        }
+
+        .ghost-text {
+            color: var(--ghost);
+            font-style: italic;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* ── STATUSBAR ── */
+        #statusbar {
+            padding: 7px 28px;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        #statusbar .left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #stop-btn {
+            display: none;
+        }
+
+        kbd {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-family: inherit;
+            font-size: 11px;
+        }
+
+        /* ── PANEL ── */
+        #panel {
+            width: 0;
+            overflow: hidden;
+            border-left: 1px solid var(--border);
+            background: var(--surface);
+            transition: width 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #panel.open {
+            width: 280px;
+        }
+
+        #panel-inner {
+            width: 280px;
+            padding: 20px 18px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #panel h4 {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin: 0 0 10px;
+            font-weight: 600;
+        }
+
+        .panel-block {
+            margin-bottom: 24px;
+        }
+
+        /* tone chips */
+        .tone-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tone-chip {
+            padding: 5px 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--muted);
+            background: var(--bg);
+            transition: all 0.15s;
+        }
+
+        .tone-chip:hover {
+            color: var(--ink);
+            border-color: var(--muted);
+        }
+
+        .tone-chip.on {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        /* music */
+        #yt-input {
+            display: flex;
+            gap: 6px;
+        }
+
+        #yt-url {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: 12.5px;
+        }
+
+        #yt-url:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        #yt-load {
+            padding: 7px 11px;
+            border: none;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        #yt-frame-wrap {
+            display: none;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #yt-frame-wrap iframe {
+            display: block;
+            width: 100%;
+            height: 160px;
+            border: none;
+        }
+
+        #music-ctrl {
+            display: none;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 12px;
+        }
+
+        #music-ctrl button {
+            padding: 4px 10px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            color: var(--ink);
+        }
+
+        #vol {
+            flex: 1;
+            accent-color: var(--accent);
+        }
+    </style>
+    <link id="favicon" rel="icon" type="image/png" href="">
+</head>
+
+<body>
+    <!-- sidebar -->
+    <nav id="sidebar">
+        <div id="sidebar-top">
+            <div class="app-name">✦ Story Mode</div>
+            <button id="new-story-btn">+ New Story</button>
+            <a href="index.html"
+                style="display:block; margin-top:10px; font-size:12px; color:var(--muted); text-decoration:none; text-align:center;">←
+                Back to Chat</a>
+        </div>
+        <div id="story-list"></div>
+    </nav>
+
+    <!-- main area -->
+    <div id="main">
+        <div id="toolbar">
+            <input id="story-title" placeholder="Untitled story…" autocomplete="off">
+            <select id="model-select"></select>
+            <button class="tb-btn danger" id="delete-story-btn" title="Delete current story">🗑</button>
+            <button class="tb-btn" id="settings-toggle">Settings</button>
+        </div>
+
+        <div id="editor-wrap">
+            <div id="editor" contenteditable="true" placeholder="The page is yours…"></div>
+        </div>
+
+        <div id="statusbar">
+            <div class="left">
+                <span id="status-text">Ready</span>
+                <button class="tb-btn danger" id="stop-btn">■ Stop</button>
+            </div>
+            <div>
+                <kbd>Tab</kbd> accept &nbsp;
+                <kbd>Esc</kbd> dismiss &nbsp;
+                <span id="wpm-display" style="margin-right:8px;">0 wpm</span>
+                <span id="word-count">0 words</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- settings panel -->
+    <aside id="panel">
+        <div id="panel-inner">
+            <div class="panel-block">
+                <h4>Tone</h4>
+                <div class="tone-row" id="tone-row">
+                    <span class="tone-chip on" data-tone="neutral">Neutral</span>
+                    <span class="tone-chip" data-tone="optimistic">Optimistic</span>
+                    <span class="tone-chip" data-tone="pessimistic">Pessimistic</span>
+                    <span class="tone-chip" data-tone="dramatic">Dramatic</span>
+                    <span class="tone-chip" data-tone="humorous">Humorous</span>
+                    <span class="tone-chip" data-tone="dark">Dark</span>
+                    <span class="tone-chip" data-tone="romantic">Romantic</span>
+                    <span class="tone-chip" data-tone="mysterious">Mysterious</span>
+                    <span class="tone-chip" data-tone="whimsical">Whimsical</span>
+                    <span class="tone-chip" data-tone="melancholic">Melancholic</span>
+                    <span class="tone-chip" data-tone="tense">Tense</span>
+                    <span class="tone-chip" data-tone="philosophical">Philosophical</span>
+                </div>
+            </div>
+
+            <div class="panel-block">
+                <h4>Background Music</h4>
+                <div id="yt-input">
+                    <input id="yt-url" type="text" placeholder="YouTube URL or playlist…">
+                    <button id="yt-load">▶</button>
+                </div>
+                <div id="yt-frame-wrap">
+                    <iframe id="yt-iframe" allowfullscreen allow="autoplay"></iframe>
+                </div>
+                <div id="music-ctrl">
+                    <button id="music-toggle">⏸ Pause</button>
+                    <input id="vol" type="range" min="0" max="100" value="60">
+                    <span id="vol-val">60%</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <script type="module" src="js/story.js"></script>
+</body>
+
+</html>

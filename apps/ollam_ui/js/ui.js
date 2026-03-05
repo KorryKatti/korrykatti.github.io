@@ -57,6 +57,7 @@ export class UIController {
             previewBody: document.getElementById('preview-body'),
             closePreview: document.getElementById('close-preview'),
             toolSelect: document.getElementById('tool-select'),
+            launchStoryBtn: document.getElementById('launch-story-btn'),
             deepThinkToggle: document.getElementById('deep-think-toggle'),
             deepThinkIterations: document.getElementById('deep-think-iterations')
         };
@@ -148,6 +149,18 @@ export class UIController {
                 e.preventDefault();
                 this.handleSendMessage();
             }
+        });
+
+        this.elements.toolSelect.addEventListener('change', () => {
+            if (this.elements.toolSelect.value === 'story') {
+                this.elements.launchStoryBtn.classList.remove('hidden');
+            } else {
+                this.elements.launchStoryBtn.classList.add('hidden');
+            }
+        });
+
+        this.elements.launchStoryBtn.addEventListener('click', () => {
+            window.open('story.html', '_blank');
         });
 
         this.elements.sendBtn.addEventListener('click', () => this.handleSendMessage());
