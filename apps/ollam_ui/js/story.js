@@ -51,8 +51,14 @@ class StoryEditor {
             storyList: document.getElementById('story-list'),
             newStoryBtn: document.getElementById('new-story-btn'),
             deleteStoryBtn: document.getElementById('delete-story-btn'),
+            exportBtn: document.getElementById('export-btn'),
+            notesToggle: document.getElementById('notes-toggle'),
+            notesSidebar: document.getElementById('notes-sidebar'),
+            notesEditor: document.getElementById('notes-editor'),
             settingsToggle: document.getElementById('settings-toggle'),
             panel: document.getElementById('panel'),
+            aiToggle: document.getElementById('ai-toggle'),
+            themeSelect: document.getElementById('theme-select'),
             toneRow: document.getElementById('tone-row'),
             ytUrl: document.getElementById('yt-url'),
             ytLoad: document.getElementById('yt-load'),
@@ -71,6 +77,7 @@ class StoryEditor {
         this.timer = null;
         this.generating = false;
         this.musicPaused = false;
+        this.aiEnabled = true;
 
         // WPM tracking — rolling window of word-timestamps
         this._wpmBuffer = [];   // array of { words, ts }
@@ -87,6 +94,7 @@ class StoryEditor {
         this.bindSettings();
         this.bindMusic();
         this.renderList();
+        this.applyTheme();
         this.setFavicon();
         this.startWpmClock();
 
@@ -100,6 +108,19 @@ class StoryEditor {
 
     // ─── THEME & FAVICON ─────────────────────────────────────────────────
 
+    applyTheme() {
+        // First try to load a saved story-specific theme, otherwise fallback to app
+        const savedTheme = localStorage.getItem('story_mode_theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (this.el.themeSelect) this.el.themeSelect.value = savedTheme;
+        } else {
+            const cfg = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+            const defaultTheme = cfg.theme === 'light' ? 'warm' : 'midnight';
+            document.documentElement.setAttribute('data-theme', defaultTheme);
+            if (this.el.themeSelect) this.el.themeSelect.value = defaultTheme;
+        }
+    }
     setFavicon() {
         const cfg = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
         const avatar = cfg.aiAvatar || cfg.avatar || null;
@@ -144,7 +165,7 @@ class StoryEditor {
 
     createStory() {
         const id = Date.now().toString();
-        const story = { id, title: 'Untitled', content: '', created: id };
+        const story = { id, title: 'Untitled', content: '', notes: '', created: id };
         this.stories.unshift(story);
         saveStories(this.stories);
         this.renderList();
@@ -158,6 +179,7 @@ class StoryEditor {
         if (!s) return;
         this.el.titleInput.value = s.title;
         this.el.editor.innerHTML = s.content || '';
+        if (this.el.notesEditor) this.el.notesEditor.value = s.notes || '';
         this.renderList();
         this.updateWordCount();
         this.el.editor.focus();
@@ -181,6 +203,7 @@ class StoryEditor {
         if (!s) return;
         s.content = this.el.editor.innerHTML;
         s.title = this.el.titleInput.value.trim() || 'Untitled';
+        if (this.el.notesEditor) s.notes = this.el.notesEditor.value;
         saveStories(this.stories);
     }
 
@@ -235,6 +258,9 @@ class StoryEditor {
         });
 
         this.el.titleInput.addEventListener('input', () => this.autosaveCurrent());
+        if (this.el.notesEditor) {
+            this.el.notesEditor.addEventListener('input', () => this.autosaveCurrent());
+        }
 
         this.el.stopBtn.addEventListener('click', () => this.stopGen());
     }
@@ -248,6 +274,16 @@ class StoryEditor {
                 this.deleteStory(this.activeId);
             }
         });
+
+        if (this.el.notesToggle && this.el.notesSidebar) {
+            this.el.notesToggle.addEventListener('click', () => {
+                this.el.notesSidebar.classList.toggle('open');
+            });
+        }
+
+        if (this.el.exportBtn) {
+            this.el.exportBtn.addEventListener('click', () => this.exportCurrentStory());
+        }
     }
 
     // ─── SETTINGS BINDINGS ───────────────────────────────────────────────
@@ -264,6 +300,24 @@ class StoryEditor {
             chip.classList.add('on');
             this.tone = chip.dataset.tone;
         });
+
+        if (this.el.aiToggle) {
+            this.el.aiToggle.addEventListener('change', e => {
+                this.aiEnabled = e.target.checked;
+                if (!this.aiEnabled) {
+                    this.stopGen();
+                    this.dismissGhost();
+                }
+            });
+        }
+
+        if (this.el.themeSelect) {
+            this.el.themeSelect.addEventListener('change', e => {
+                const theme = e.target.value;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('story_mode_theme', theme);
+            });
+        }
     }
 
     // ─── MUSIC BINDINGS ──────────────────────────────────────────────────
@@ -316,7 +370,7 @@ class StoryEditor {
     }
 
     async generate() {
-        if (this.generating || !this.model) return;
+        if (!this.aiEnabled || this.generating || !this.model) return;
         const rawText = this.el.editor.innerText.trim();
         if (rawText.length < 8) return;
 
@@ -412,6 +466,31 @@ class StoryEditor {
     }
 
     setStatus(msg) { this.el.statusText.textContent = msg; }
+
+    exportCurrentStory() {
+        const s = this.stories.find(s => s.id === this.activeId);
+        if (!s) return;
+
+        // Convert HTML content to plain text with basic formatting
+        let text = s.title + '\n\n';
+
+        // Very rough html-to-text just for export, preserving newlines
+        let tempDiv = document.createElement('div');
+        tempDiv.innerHTML = s.content;
+        text += tempDiv.innerText;
+
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        // sanitize title for filename
+        const safeTitle = s.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        a.download = `story_${safeTitle || 'untitled'}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
 }
 
 window.addEventListener('DOMContentLoaded', () => new StoryEditor());

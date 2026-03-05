@@ -17,28 +17,84 @@
             padding: 0;
         }
 
-        :root {
+        /* ── THEMES ── */
+        :root,
+        [data-theme="warm"] {
             --bg: #f6f3ee;
             --surface: #ede9e2;
             --ink: #1c1a17;
             --muted: #7c7670;
-            --ghost: #b0a898;
+            --ghost: #bab0a4;
             --accent: #5c4a36;
             --accent-h: #3d3020;
             --border: #d4cec5;
-            --danger: #c0392b;
+            --danger: #b83232;
         }
 
-        body.dark {
-            --bg: #1a1815;
-            --surface: #242220;
-            --ink: #e8e2d8;
-            --muted: #7a7268;
-            --ghost: #4e4840;
-            --accent: #c9a96e;
-            --accent-h: #e0c080;
-            --border: #302c28;
-            --danger: #e05050;
+        /* Deep blue-black — a late-night writing desk */
+        [data-theme="midnight"] {
+            --bg: #0d0f18;
+            --surface: #14172a;
+            --ink: #c8d0e8;
+            --muted: #4e5570;
+            --ghost: #2a2e48;
+            --accent: #7c84f0;
+            --accent-h: #a0a8ff;
+            --border: #1e2240;
+            --danger: #e05555;
+        }
+
+        /* Foggy overcast — a light theme with cool grey tones */
+        [data-theme="fog"] {
+            --bg: #f0f1f3;
+            --surface: #e4e6ea;
+            --ink: #222428;
+            --muted: #7a7e88;
+            --ghost: #a8acb8;
+            --accent: #4155a0;
+            --accent-h: #2c3b7a;
+            --border: #cdd0d8;
+            --danger: #b83232;
+        }
+
+        /* Forest floor — dark greens, organic */
+        [data-theme="forest"] {
+            --bg: #111a13;
+            --surface: #182218;
+            --ink: #d4e0c8;
+            --muted: #5a7055;
+            --ghost: #2c3e28;
+            --accent: #7aad60;
+            --accent-h: #9ec880;
+            --border: #243020;
+            --danger: #e07070;
+        }
+
+        /* Sepia — classic amber reading lamp */
+        [data-theme="sepia"] {
+            --bg: #f5ead0;
+            --surface: #ede0bc;
+            --ink: #3b2a10;
+            --muted: #9a7a50;
+            --ghost: #c8aa80;
+            --accent: #8b5e1a;
+            --accent-h: #5e3c0a;
+            --border: #d8c898;
+            --danger: #b83232;
+        }
+
+        /* Obsidian — Pure black glassmorphism */
+        [data-theme="obsidian"] {
+            --bg: #000000;
+            --surface: rgba(25, 25, 25, 0.55);
+            --ink: #e0e0e0;
+            --muted: #808080;
+            --ghost: #404040;
+            --accent: #ffffff;
+            --accent-h: #cccccc;
+            --border: rgba(255, 255, 255, 0.1);
+            --danger: #ff5555;
+            --glass-blur: blur(16px);
         }
 
         body {
@@ -56,6 +112,8 @@
             min-width: 220px;
             border-right: 1px solid var(--border);
             background: var(--surface);
+            backdrop-filter: var(--glass-blur, none);
+            -webkit-backdrop-filter: var(--glass-blur, none);
             display: flex;
             flex-direction: column;
             padding: 16px 0;
@@ -151,6 +209,8 @@
             padding: 10px 28px;
             border-bottom: 1px solid var(--border);
             background: var(--surface);
+            backdrop-filter: var(--glass-blur, none);
+            -webkit-backdrop-filter: var(--glass-blur, none);
             flex-shrink: 0;
         }
 
@@ -239,6 +299,8 @@
             padding: 7px 28px;
             border-top: 1px solid var(--border);
             background: var(--surface);
+            backdrop-filter: var(--glass-blur, none);
+            -webkit-backdrop-filter: var(--glass-blur, none);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -272,6 +334,8 @@
             overflow: hidden;
             border-left: 1px solid var(--border);
             background: var(--surface);
+            backdrop-filter: var(--glass-blur, none);
+            -webkit-backdrop-filter: var(--glass-blur, none);
             transition: width 0.3s ease;
             flex-shrink: 0;
             display: flex;
@@ -400,6 +464,14 @@
             flex: 1;
             accent-color: var(--accent);
         }
+
+        #notes-sidebar.open {
+            width: 260px !important;
+        }
+
+        #notes-editor::placeholder {
+            color: var(--muted);
+        }
     </style>
     <link id="favicon" rel="icon" type="image/png" href="">
 </head>
@@ -422,12 +494,26 @@
         <div id="toolbar">
             <input id="story-title" placeholder="Untitled story…" autocomplete="off">
             <select id="model-select"></select>
+            <button class="tb-btn" id="export-btn" title="Download as .txt">💾 Export</button>
             <button class="tb-btn danger" id="delete-story-btn" title="Delete current story">🗑</button>
-            <button class="tb-btn" id="settings-toggle">Settings</button>
+            <button class="tb-btn" id="notes-toggle" title="Toggle Story Notes">📝 Notes</button>
+            <button class="tb-btn" id="settings-toggle">⚙ Settings</button>
         </div>
 
-        <div id="editor-wrap">
-            <div id="editor" contenteditable="true" placeholder="The page is yours…"></div>
+        <div style="display:flex; flex:1; min-height:0;">
+            <div id="editor-wrap">
+                <div id="editor" contenteditable="true" placeholder="The page is yours…"></div>
+            </div>
+
+            <!-- Notes Sidebar -->
+            <aside id="notes-sidebar"
+                style="width:0; overflow:hidden; border-left:1px solid var(--border); transition:width 0.3s ease; display:flex; flex-direction:column; background:var(--surface);">
+                <div
+                    style="padding:16px; border-bottom:1px solid var(--border); font-family:'Inter',sans-serif; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--accent);">
+                    Story Notes</div>
+                <textarea id="notes-editor" placeholder="Jot down plot points, character arcs, worldbuilding rules..."
+                    style="flex:1; width:260px; padding:16px; border:none; background:none; outline:none; resize:none; font-family:'Inter',sans-serif; font-size:13px; line-height:1.6; color:var(--ink);"></textarea>
+            </aside>
         </div>
 
         <div id="statusbar">
@@ -447,6 +533,28 @@
     <!-- settings panel -->
     <aside id="panel">
         <div id="panel-inner">
+            <div class="panel-block">
+                <h4>Assistant</h4>
+                <label
+                    style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink); cursor:pointer;">
+                    <input type="checkbox" id="ai-toggle" checked style="accent-color:var(--accent);">
+                    Enable AI Autocomplete
+                </label>
+            </div>
+
+            <div class="panel-block">
+                <h4>Theme</h4>
+                <select id="theme-select"
+                    style="width:100%; padding:6px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--ink);">
+                    <option value="warm">Warm (Light)</option>
+                    <option value="fog">Fog (Cool Light)</option>
+                    <option value="sepia">Sepia (Yellow/Amber)</option>
+                    <option value="midnight">Midnight (Dark Blue)</option>
+                    <option value="forest">Forest (Dark Green)</option>
+                    <option value="obsidian">Obsidian (Black Glass)</option>
+                </select>
+            </div>
+
             <div class="panel-block">
                 <h4>Tone</h4>
                 <div class="tone-row" id="tone-row">
