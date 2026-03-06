@@ -24,18 +24,82 @@
     <meta name="twitter:image" content="https://korrykatti.github.io/img/main-image.png">
 
     <link rel="icon" href="img/icon.jpeg">
-    <link rel="stylesheet" href="style.css">
+    
+</head>
+
+
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+            color: #eeeeee;
+        }
+        .video-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            background: #000;
+        }
+        .video-background iframe {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 100vw; height: 56.25vw;
+            min-height: 100vh; min-width: 177.77vh;
+            transform: translate(-50%, -50%);
+        }
+        .glass-container {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 85%;
+            max-width: 900px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .content-section {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 40px;
+        }
+        .content-section:last-of-type {
+            border-bottom: none;
+        }
+        .glass-container::-webkit-scrollbar { width: 8px; }
+        .glass-container::-webkit-scrollbar-track { background: transparent; }
+        .glass-container::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
+        a { color: #88ccff; text-decoration: none; }
+        a:hover { color: #ffffff; text-decoration: underline; }
+        h1, h2, h3 { margin-top: 0; color: #fff; font-weight: normal; }
+        ul { list-style: none; padding: 0; }
+        ul li { margin-bottom: 10px; }
+    </style>
 </head>
 
 <body>
+    <div class="video-background" id="video-bg"></div>
+    <div class="glass-container">
 
 
-    <div class="circle-shape" style="top: 10%; right: 10%;"></div>
-    <div class="circle-shape" style="top: 40%; left: 5%; background-color: var(--acc-teal);"></div>
-    <div class="circle-shape" style="bottom: 15%; right: 20%; background-color: var(--acc-purple);"></div>
+
+    
+    
+    
 
     <!-- SCENE 01: INTRO -->
-    <section id="intro-scene" class="floating-section fade-in">
+    <section class="content-section" id="intro-scene">
         <svg class="scribble scribble-1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
             <path fill="none" stroke="var(--acc-blood)" stroke-width="2"
                 d="M20,100 C50,0 150,0 180,100 S80,200 20,100" />
@@ -59,38 +123,38 @@
     </section>
 
     <!-- SCENE 02: THOUGHT -->
-    <section class="floating-section fade-in" style="text-align: center;">
+    <section class="content-section" style="text-align: center;">
         <div id="quote-display" class="quote-container">
             <!-- Populated by JS -->
         </div>
     </section>
 
     <!-- SCENE 03: PROJECTS -->
-    <section class="floating-section fade-in">
+    <section class="content-section">
         <div
-            style="display: flex; flex-wrap: wrap; gap: 5rem; align-items: flex-start; justify-content: space-between;">
+            style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start; justify-content: space-between;">
             <div style="flex: 1; min-width: 320px;">
-                <h2 style="margin-bottom: 3rem; opacity: 0.9;">artifacts<span style="color: var(--acc-teal);">.</span>
+                <h2 style="margin-bottom: 1rem; opacity: 0.9;">artifacts<span style="color: var(--acc-teal);">.</span>
                 </h2>
                 <div class="project-list">
-                    <a href="https://korrykatti.github.io/project_sites/mirage/index.html" class="project-item">
-                        <span class="project-title">mirage</span>
-                        <span class="project-desc">a fleeting chat application</span>
+                    <a href="https://korrykatti.github.io/project_sites/mirage/index.html" class="project-item" style="display:block; margin-bottom:10px; padding:10px; border-left:2px solid #555; text-decoration:none;">
+                        <span class="project-title" style="display:block; font-weight:bold; color:#fff;">mirage</span>
+                        <span class="project-desc" style="display:block; font-size:0.8em; color:#aaa;">a fleeting chat application</span>
                     </a>
 
-                    <a href="apps/index.html" class="project-item">
-                        <span class="project-title">smol apps</span>
-                        <span class="project-desc">tiny tools for daily use</span>
+                    <a href="apps/index.html" class="project-item" style="display:block; margin-bottom:10px; padding:10px; border-left:2px solid #555; text-decoration:none;">
+                        <span class="project-title" style="display:block; font-weight:bold; color:#fff;">smol apps</span>
+                        <span class="project-desc" style="display:block; font-size:0.8em; color:#aaa;">tiny tools for daily use</span>
                     </a>
 
-                    <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
-                        <span class="project-title">image_board</span>
-                        <span class="project-desc">visual memory storage</span>
+                    <a href="https://korrykatti.pythonanywhere.com/" class="project-item" style="display:block; margin-bottom:10px; padding:10px; border-left:2px solid #555; text-decoration:none;">
+                        <span class="project-title" style="display:block; font-weight:bold; color:#fff;">image_board</span>
+                        <span class="project-desc" style="display:block; font-size:0.8em; color:#aaa;">visual memory storage</span>
                     </a>
                 </div>
             </div>
 
-            <div style="max-width: 250px; padding-top: 5rem; position: relative;">
+            <div style="max-width: 250px; padding-top: 2rem; position: relative;">
                 <!-- Subtle Vertical Guide -->
                 <div
                     style="position: absolute; left: -2.5rem; top: 5.5rem; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--acc-purple), transparent); opacity: 0.2;">
@@ -110,8 +174,8 @@
     </section>
 
     <!-- SCENE 04: LOGS & CONNECT -->
-    <section class="floating-section fade-in">
-        <div style="display: flex; flex-wrap: wrap; gap: 4rem; justify-content: space-between;">
+    <section class="content-section">
+        <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: space-between;">
             <div>
                 <h3>logs</h3>
                 <ul class="log-list">
@@ -133,21 +197,21 @@
     </section>
 
     <!-- SCENE 05: STREAM -->
-    <section class="floating-section fade-in" style="max-width: 1000px; margin: 15vh auto; text-align: left;">
-        <h2 style="margin-bottom: 3rem;">stream<span style="font-size: 1rem; margin-left:1rem; opacity: 0.5;">(of
+    <section class="content-section" style="max-width: 1000px; margin: 0 auto; text-align: left;">
+        <h2 style="margin-bottom: 1rem;">stream<span style="font-size: 1rem; margin-left:1rem; opacity: 0.5;">(of
                 consciousness)</span></h2>
 
         <div id="tumblr-posts">
             <!-- Tumblr content -->
         </div>
 
-        <div style="text-align: center; margin-top: 4rem;">
+        <div style="text-align: center; margin-top: 1rem;">
             <button id="load-more-btn">more...</button>
         </div>
         <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0;">seeking...</div>
     </section>
 
-    <div style="height: 20vh;"></div>
+    
 
     <div style="text-align: center; margin-bottom: 2rem; opacity: 0.7;">
         <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
@@ -157,18 +221,11 @@
     <!-- Desktop Mode Control -->
     <div id="desktop-mode-control"
         style="position: fixed; bottom: 60px; right: 20px; z-index: 100; cursor: pointer; font-family: 'IM Fell English', serif; background: var(--bg-paper); padding: 5px 10px; border: 1px solid var(--text-faint);">
-        <a href="#" onclick="confirmDesktopMode(event)" style="text-decoration: none; color: inherit;">[ plain mode
+        <a href="index.html" style="text-decoration: none; color: inherit;">[ plain mode
             ]</a>
     </div>
 
-    <script>
-        function confirmDesktopMode(e) {
-            e.preventDefault();
-            if (confirm("This mode is made especially for desktop. Do you wish to proceed?")) {
-                window.location.href = "desktopindex.html?autoplay=1";
-            }
-        }
-    </script>
+    
 
     <!-- Music Player Control -->
     <div id="music-control"
@@ -178,8 +235,8 @@
     <div id="youtube-player" style="display:none;"></div>
 
     <!-- Modal -->
-    <div id="modal" class="modal">
-        <div class="modal-content">
+    <div id="modal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:999; justify-content:center; align-items:center;">
+        <div class="modal-content" style="background:#111; padding:20px; border-radius:10px; border:1px solid #333; width:80%; max-width:500px;">
             <h3>direct_line</h3>
             <p style="margin-bottom: 1rem; color: var(--acc-purple);">leave a message after the beep.</p>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="300" frameBorder="0"
@@ -192,6 +249,36 @@
 
     <script src="prefetch.js"></script>
     <script src="script.js"></script>
-</body>
 
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hour = new Date().getHours();
+            let videoId = '';
+            
+            // Time logic
+            if (hour >= 6 && hour < 11) { // morning
+                videoId = 'h0vrvXBLoCU';
+            } else if (hour >= 11 && hour < 14) { // pre after noon
+                videoId = 'zCoCOHOYd28';
+            } else if (hour >= 14 && hour < 17) { // after after noon
+                videoId = 'zCoCOHOYd28';
+            } else if (hour >= 17 && hour < 21) { // evening
+                videoId = 'eCE4hYw8AAI';
+            } else { // night
+                videoId = '5hcd2VNOqTQ';
+            }
+            
+            // Handle autoplay from URL
+            const params = new URLSearchParams(window.location.search);
+            const autoplayStr = params.has('autoplay') ? '&autoplay=1' : '&autoplay=1'; 
+
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?loop=1&playlist=${videoId}&mute=1&controls=0&showinfo=0&rel=0${autoplayStr}`;
+            iframe.frameBorder = "0";
+            iframe.allow = "autoplay; fullscreen";
+            document.getElementById('video-bg').appendChild(iframe);
+        });
+    </script>
+</body>
 </html>

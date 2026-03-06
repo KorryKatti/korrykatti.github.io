@@ -155,13 +155,15 @@ async function getStatus() {
 // BGM / YouTube Player
 var player;
 function onYouTubeIframeAPIReady() {
+    const isDesktop = window.location.pathname.includes('desktopindex');
     player = new YT.Player('youtube-player', {
         height: '0',
         width: '0',
-        videoId: '-vdp2AVAFn0',
+        videoId: isDesktop ? 'cVeu_189HwM' : '-vdp2AVAFn0',
         playerVars: {
             'playsinline': 1,
-            'controls': 0
+            'controls': 0,
+            'start': isDesktop ? 3287 : 0
         },
         events: {
             'onReady': onPlayerReady
