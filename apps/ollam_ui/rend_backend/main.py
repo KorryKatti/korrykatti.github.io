@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from schemas import CodeRequest, CodeResponse
 from executor import run_code
 import uvicorn
@@ -21,9 +22,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"status": "ok", "message": "Nix Code Executor API is running"}
+    return """
+    <html>
+        <head>
+            <title>Nix Code Executor API</title>
+            <style>
+                body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f2f5; }
+                .container { display: inline-block; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+                h1 { color: #2d3748; }
+                p { color: #4a5568; }
+                .status { padding: 8px 16px; border-radius: 20px; background: #c6f6d5; color: #22543d; font-weight: bold; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🗺️ Nix Execution Service</h1>
+                <p>Hello! The API is running and ready for Ollama.</p>
+                <div style="margin-top: 20px;">
+                    <span class="status">⚡ Status: Operational</span>
+                </div>
+            </div>
+        </body>
+    </html>
+    """
 
 @app.post("/run", response_model=CodeResponse)
 async def execute_code(request: CodeRequest):

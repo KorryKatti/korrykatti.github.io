@@ -5,8 +5,8 @@ WORKDIR /app
 # Update nix channel
 RUN nix-channel --update
 
-# Install Python (only what you need)
-RUN nix-env -iA nixpkgs.python3
+# Install Python and Pip
+RUN nix-env -iA nixpkgs.python3 nixpkgs.python3Packages.pip nixpkgs.bash nixpkgs.coreutils
 
 # Copy app
 COPY . .
