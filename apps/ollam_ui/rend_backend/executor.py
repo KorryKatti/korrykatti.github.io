@@ -35,9 +35,9 @@ async def run_code(code: str, language: str = "python") -> Tuple[str, str, int, 
             # nix-shell --run "python script.py"
             # Render doesn't have Docker spawning, so we just run subprocess.
             
-            # Using asyncio to run subprocess is better within FastAPI
+            # Use timeout 30s (Nix-shell can be slow on first run/Render cold starts)
             process = await asyncio.create_subprocess_shell(
-                f"timeout 5s nix-shell {shell_path} --run 'python3 {script_path}'",
+                f"timeout 30s nix-shell {shell_path} --run 'python3 {script_path}'",
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=temp_dir

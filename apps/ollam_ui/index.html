@@ -70,6 +70,10 @@
                     <div class="status-dot"></div>
                     <span class="status-text">Status: Offline</span>
                 </div>
+                <div id="nix-status-indicator" class="status-indicator" style="margin-left: 15px;">
+                    <div class="status-dot" style="background-color: var(--text-secondary);"></div>
+                    <span class="status-text">Nix: Sleeping...</span>
+                </div>
             </header>
 
             <div id="chat-container" class="chat-container">
@@ -114,6 +118,7 @@
                                     <option value="none">No Tool</option>
                                     <option value="graph">Graph Plotter</option>
                                     <option value="story">Story Mode</option>
+                                    <option value="code">Code Interpreter</option>
                                 </select>
                                 <button id="launch-story-btn" class="secondary-btn hidden"
                                     style="margin-left: 10px; border-color: var(--accent); color: var(--accent);">Launch

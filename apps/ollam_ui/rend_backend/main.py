@@ -12,6 +12,7 @@ origins = [
     "http://korrykatti.github.io",
     "http://localhost:5173",
     "http://localhost:3000",
+    "*",
 ]
 
 app.add_middleware(
@@ -47,6 +48,10 @@ async def root():
         </body>
     </html>
     """
+
+@app.get("/ping")
+async def ping():
+    return {"status": "pong"}
 
 @app.post("/run", response_model=CodeResponse)
 async def execute_code(request: CodeRequest):

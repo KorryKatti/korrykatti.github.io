@@ -5,6 +5,7 @@ import { SettingsManager } from './settings.js';
 import { FileManager } from './file.js';
 import { SearchService } from './search.js';
 import { ImageService, GeneralImageService } from './image.js';
+import { NixService } from './nix.js';
 
 export class UIController {
     constructor(client) {
@@ -15,6 +16,7 @@ export class UIController {
         this.searchService = new SearchService();
         this.imageService = new ImageService();
         this.generalImageService = new GeneralImageService();
+        this.nixService = new NixService();
         this.contextManager = new ContextManager(this.settings.settings.contextLimit);
 
         this.elements = {
@@ -59,7 +61,8 @@ export class UIController {
             toolSelect: document.getElementById('tool-select'),
             launchStoryBtn: document.getElementById('launch-story-btn'),
             deepThinkToggle: document.getElementById('deep-think-toggle'),
-            deepThinkIterations: document.getElementById('deep-think-iterations')
+            deepThinkIterations: document.getElementById('deep-think-iterations'),
+            nixStatusIndicator: document.getElementById('nix-status-indicator')
         };
         this.selectedModel = null;
         this.abortController = null;
@@ -74,6 +77,21 @@ export class UIController {
         this.autoResizeInput();
         this.renderHistory();
         this.startResourceMonitor();
+
+        // Start waking up the Nix backend on Render
+        this.nixService.startPinging((status) => {
+            if (this.elements.nixStatusIndicator) {
+                const dot = this.elements.nixStatusIndicator.querySelector('.status-dot');
+                const text = this.elements.nixStatusIndicator.querySelector('.status-text');
+                if (status === 'online') {
+                    dot.style.backgroundColor = '#10b981';
+                    text.textContent = 'Nix: Online';
+                } else {
+                    dot.style.backgroundColor = '#f59e0b';
+                    text.textContent = 'Nix: Waking...';
+                }
+            }
+        });
 
         if (this.history.chats.length > 0) {
             this.loadChat(this.history.chats[0].id);
@@ -621,6 +639,11 @@ export class UIController {
         let toolInstructions = "";
         if (selectedTool === 'graph') {
             toolInstructions = `\n[GRAPH_TOOL_ACTIVE]\nA chart will be automatically rendered from data for the user. Your job in this response is ONLY to provide a brief 2-3 sentence text summary of the data/answer. DO NOT write any code (no Python, no JavaScript, no pseudocode). DO NOT suggest how to plot anything. DO NOT show implementation steps. The graph is handled automatically.`;
+        } else if (selectedTool === 'code') {
+            toolInstructions = `\n[CODE_INTERPRETER_ACTIVE]\nYou have access to a Python execution environment (Nix-based). 
+If you need to calculate something or run logic, write a Python code block: \`\`\`python\nprint(2+2)\n\`\`\`. 
+The system will capture your code, execute it, and provide the output in a follow-up turn. 
+IMPORTANT: Your first response should ONLY contain the code block you want to run. After you get the output, you can provide the final analysis.`;
         }
 
         const thinkingInstruction = `
@@ -704,6 +727,59 @@ Your actual response to the user must follow the closing </think> tag.`;
             this.detectAndRenderGraphs(textBody, finalFullResponse);
 
             this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
+
+            // 4. Code Execution Tool
+            if (selectedTool === 'code' && !this.abortController.signal.aborted) {
+                const codeMatch = finalFullResponse.match(/```python\s*([\s\S]*?)```/);
+                if (codeMatch) {
+                    const code = codeMatch[1].trim();
+                    const loadingMsg = document.createElement('div');
+                    loadingMsg.className = 'status-msg';
+                    loadingMsg.style.cssText = 'color: var(--accent); font-style: italic; margin-top: 10px; font-size: 13px; font-family: Outfit;';
+                    loadingMsg.textContent = '... [EXECUTING_CODE_ON_NIX] ...';
+                    textBody.appendChild(loadingMsg);
+
+                    try {
+                        const result = await this.nixService.run(code);
+                        loadingMsg.remove();
+                        const outputMsg = `\n\n[Python Console]:\n${result.stdout || 'No stdout output'}${result.stderr ? `\n\n[Errors]:\n${result.stderr}` : ''}\n\n[System]: Exit Code ${result.exit_code}`;
+
+                        // Display the output clearly
+                        const outputDisplay = document.createElement('div');
+                        outputDisplay.style.cssText = 'background: rgba(0,0,0,0.05); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent); margin-top: 15px; font-family: monospace; white-space: pre-wrap; font-size: 13px;';
+                        outputDisplay.textContent = outputMsg;
+                        textBody.appendChild(outputDisplay);
+
+                        // Capture combined state
+                        let combinedForHistory = finalFullResponse + outputMsg;
+
+                        // Second turn for analysis
+                        const analysisLoading = document.createElement('div');
+                        analysisLoading.className = 'status-msg';
+                        analysisLoading.style.cssText = 'color: var(--accent); font-style: italic; margin-top: 10px; font-size: 13px; font-family: Outfit;';
+                        analysisLoading.textContent = '... [INTERPRETING_RESULTS] ...';
+                        textBody.appendChild(analysisLoading);
+
+                        const finalPrompt = currentPrompt + `\n\nAssistant: ${finalFullResponse}\n\nUser: [RESULTS_FROM_PYTHON_EXECUTION]\n${outputMsg}\n\nAssistant: [FINAL_ANALYSIS]`;
+
+                        let finalAnalysis = '';
+                        await this.client.chat(this.selectedModel, finalPrompt, combinedSystemPrompt, (chunk, done) => {
+                            finalAnalysis += chunk;
+                            // Prepend everything because we want to see the thinking of the final analysis too if it exists
+                            const currentFull = finalFullResponse + "\n\n--- Code Execution ---\n" + outputMsg + "\n\n--- Final Analysis ---\n" + finalAnalysis;
+                            textBody.innerHTML = this.parseThinkingAndMarkdown(currentFull);
+                            this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+                        }, this.abortController.signal);
+
+                        if (analysisLoading.parentNode) analysisLoading.remove();
+                        finalFullResponse = finalFullResponse + "\n\n--- Code Execution Results ---\n" + outputMsg + "\n\n--- Final Analysis ---\n" + finalAnalysis;
+                        this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
+                    } catch (e) {
+                        if (loadingMsg.parentNode) loadingMsg.remove();
+                        textBody.innerHTML += `<div style="color:var(--error); margin-top:10px;">Execution Failed: ${e.message}</div>`;
+                    }
+                }
+            }
 
             // 4. Separate Tool Call for Graphs — ask for SIMPLE data, build Chart.js config ourselves
             if (selectedTool === 'graph' && !this.abortController.signal.aborted) {
