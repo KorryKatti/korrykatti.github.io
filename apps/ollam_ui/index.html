@@ -66,9 +66,18 @@
                         <option disabled selected>Connecting...</option>
                     </select>
                 </div>
-                <div id="status-indicator" class="status-indicator">
-                    <div class="status-dot"></div>
-                    <span class="status-text">Status: Offline</span>
+                <div id="status-container" style="display: flex; align-items: center; gap: 18px;">
+                    <a href="features.html" target="_blank"
+                        style="text-decoration: none; font-size: 11px; font-weight: 600; color: var(--accent); opacity: 0.8; transition: opacity 0.2s; margin-right: 5px;"
+                        onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">System Features</a>
+                    <button id="artifact-toggle-btn" title="Toggle Artifact Panel"
+                        style="background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                        ⬡ Artifacts
+                    </button>
+                    <div id="status-indicator" class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span class="status-text">Status: Offline</span>
+                    </div>
                 </div>
                 <div id="nix-status-indicator" class="status-indicator" style="margin-left: 15px;">
                     <div class="status-dot" style="background-color: var(--text-secondary);"></div>
@@ -139,6 +148,21 @@
                 <p class="disclaimer">Ollama can make mistakes. Check important info.</p>
             </div>
         </main>
+
+        <!-- Artifact Panel -->
+        <aside id="artifact-panel" class="artifact-panel hidden">
+            <div class="artifact-panel-header">
+                <span>Artifacts</span>
+                <button id="artifact-panel-close" title="Close panel">&times;</button>
+            </div>
+            <div id="artifact-panel-body" class="artifact-panel-body">
+                <div class="artifact-empty-state">
+                    <div class="artifact-empty-icon">⬡</div>
+                    <p>No artifacts yet.</p>
+                    <p style="font-size:11px; opacity:0.6;">Charts &amp; code results will appear here.</p>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <!-- Settings Modal -->
@@ -228,6 +252,20 @@
                                 Disable History Limit (Use Full Context)
                             </label>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Section: Code Interpretation -->
+                <div class="setting-section">
+                    <h3>Code Interpretation (Experimental)</h3>
+                    <div class="diagnostics-box"
+                        style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02);">
+                        <strong>🌐 Nix Execution Service</strong><br>
+                        Status: <span id="settings-nix-status"
+                            style="font-weight: bold; color: var(--accent);">Connecting...</span><br>
+                        Endpoint: <code>https://ollamas-ahh.onrender.com</code><br>
+                        <p style="margin-top: 5px; opacity: 0.8;">Secure Nix-based Python sandbox with a 30s timeout and
+                            a 5000 character output limit.</p>
                     </div>
                 </div>
 

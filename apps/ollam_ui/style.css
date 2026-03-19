@@ -5,6 +5,7 @@
     --text-primary: #2d3436;
     --text-secondary: #636e72;
     --accent: #6c5ce7;
+    --accent-soft: rgba(108, 92, 231, 0.1);
     --border-color: #e2e8f0;
     --input-border: #cbd5e0;
     --link-blue: #0984e3;
@@ -1003,9 +1004,236 @@ body.dark .file-chip {
     cursor: zoom-in;
 }
 
+/* Code Interpretation UI */
+.code-result-container {
+    margin: 15px 0;
+}
+
+.code-execution-details {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.code-execution-details summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--accent);
+    list-style: none;
+    display: flex;
+    align-items: center;
+    background: var(--accent-soft);
+    font-family: 'Outfit';
+}
+
+.code-execution-details summary::before {
+    content: '↓';
+    margin-right: 10px;
+    transition: transform 0.2s;
+    font-family: monospace;
+}
+
+.code-execution-details[open] summary::before {
+    transform: rotate(180deg);
+}
+
+.code-output-wrapper {
+    padding: 16px;
+    background: var(--bg-main);
+    border-top: 1px solid var(--border-color);
+}
+
+.code-output {
+    background: #1e1e1e !important;
+    color: #4ade80 !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    font-family: 'Fira Code', 'Courier New', monospace !important;
+    font-size: 13px !important;
+    margin: 0 0 12px 0 !important;
+    border-left: 4px solid var(--accent) !important;
+    white-space: pre-wrap !important;
+    overflow-x: auto !important;
+}
+
+.nix-config-details {
+    margin-top: 10px;
+    font-size: 11px;
+}
+
+.nix-config-details summary {
+    background: transparent !important;
+    padding: 5px 0 !important;
+    font-weight: normal !important;
+    opacity: 0.7 !important;
+    color: var(--text-secondary) !important;
+}
+
+.nix-config-details summary::before {
+    display: none !important;
+}
+
+.nix-config {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 10px;
+    margin-top: 5px;
+    font-family: monospace;
+    color: var(--text-secondary);
+}
+
+body.dark .nix-config {
+    background: rgba(255, 255, 255, 0.03);
+}
+
 .chat-image-caption {
     font-size: 11px;
     color: var(--text-secondary);
     margin-top: 8px;
     font-style: italic;
+}
+
+/* =========================================================
+   ARTIFACT PANEL
+   ========================================================= */
+.artifact-panel {
+    width: 360px;
+    min-width: 320px;
+    background: var(--bg-sidebar);
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 50;
+}
+
+.artifact-panel.hidden {
+    width: 0;
+    min-width: 0;
+    border-left: none;
+    overflow: hidden;
+}
+
+.artifact-panel-header {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+.artifact-panel-header button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: var(--text-secondary);
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.artifact-panel-header button:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.artifact-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.artifact-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 100%;
+    color: var(--text-secondary);
+    text-align: center;
+    font-size: 13px;
+    padding: 40px 20px;
+}
+
+.artifact-empty-icon {
+    font-size: 36px;
+    opacity: 0.25;
+    margin-bottom: 8px;
+}
+
+.artifact-card {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: artifact-in 0.25s ease;
+}
+
+@keyframes artifact-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.artifact-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'Outfit', sans-serif;
+}
+
+.artifact-card-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.artifact-card-body {
+    padding: 12px;
+}
+
+.artifact-card-body canvas {
+    max-height: 220px;
+    width: 100% !important;
+}
+
+.artifact-card-body pre {
+    font-size: 11px;
+    background: var(--bg-sidebar);
+    border-radius: 6px;
+    padding: 10px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    color: var(--text-primary);
+    max-height: 180px;
+    overflow-y: auto;
+    margin: 0;
 }

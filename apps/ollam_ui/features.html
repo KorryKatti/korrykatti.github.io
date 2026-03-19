@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Interface - Documentation</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background-color: #fff;
+        }
+
+        header {
+            border-bottom: 2px solid #eee;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            margin-bottom: 0px;
+            font-weight: 600;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            margin-top: 40px;
+            border-bottom: 1px solid #eee;
+            font-weight: 500;
+        }
+
+        h3 {
+            margin-top: 25px;
+            font-weight: 500;
+            font-size: 1.25em;
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        ul,
+        ol {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background-color: #f6f8fa;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+        }
+
+        .note {
+            background-color: #fffbdd;
+            padding: 15px;
+            border-left: 5px solid #d4a017;
+            margin: 20px 0;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>System Documentation</h1>
+        <p>A technical guide to the Ollama AI Nexus capabilities and tools.</p>
+    </header>
+
+    <h2>1. Code Interpreter (Nix)</h2>
+    <p>The system provides an isolated Python execution environment. All code is run within a temporary Nix-shell
+        sandbox to ensure security and dependency management.</p>
+    <ul>
+        <li><strong>Runtime:</strong> Python 3.x</li>
+        <li><strong>Isolation:</strong> Subprocess sandbox via Nix flakes.</li>
+        <li><strong>Timeout:</strong> Processes are limited to 30 seconds of execution time.</li>
+        <li><strong>Automated Repair:</strong> If a script encounters a runtime error, the system will attempt to fix
+            the code and retry the execution once automatically.</li>
+    </ul>
+
+    <h2>2. Data Visualization (Graphing)</h2>
+    <p>The graphing tool allows for the conversion of numerical data into visual charts. When active, it parses
+        JSON-formatted data into interactive canvases using Chart.js.</p>
+    <ul>
+        <li><strong>Supported Types:</strong> Line charts, Bar charts, Pie charts.</li>
+        <li><strong>Schema:</strong> The model generates a serialized JSON structure containing labels and datasets.
+        </li>
+        <li><strong>Interactive:</strong> Hover over data points to see specific values and tooltips.</li>
+    </ul>
+
+    <h2>3. Web Search and Intel</h2>
+    <p>The interface can bridge the model to the live internet using external search providers. This allows the AI to
+        reference up-to-date information, news, and image data.</p>
+    <ul>
+        <li><strong>Text Search:</strong> Pulls headlines and snippets from global search results.</li>
+        <li><strong>Image Integration:</strong> Can retrieve and display relevant images (Anime-focused or general
+            stock) alongside text responses.</li>
+    </ul>
+
+    <h2>4. Vision and Document Processing</h2>
+    <p>The system supports local processing of uploaded assets. This includes Optical Character Recognition (OCR) for
+        images and text extraction for PDF/Word documents.</p>
+    <ul>
+        <li><strong>OCR:</strong> Uses Tesseract logic to read text from pasted screenshots or uploaded photos.</li>
+        <li><strong>Client-Side:</strong> Processing is performed locally within the browser context wherever possible.
+        </li>
+    </ul>
+
+    <h2>5. Advanced Thinking Models</h2>
+    <p>For complex tasks, users can enable "Deep Thinking" mode, which forces the model through multiple self-critique
+        cycles before finalizing its answer.</p>
+
+    <div class="footer">
+        Ollama AI Nexus v1.2 | Local Environment
+    </div>
+</body>
+
+</html>

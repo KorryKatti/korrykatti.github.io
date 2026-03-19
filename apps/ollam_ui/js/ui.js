@@ -62,7 +62,12 @@ export class UIController {
             launchStoryBtn: document.getElementById('launch-story-btn'),
             deepThinkToggle: document.getElementById('deep-think-toggle'),
             deepThinkIterations: document.getElementById('deep-think-iterations'),
-            nixStatusIndicator: document.getElementById('nix-status-indicator')
+            nixStatusIndicator: document.getElementById('nix-status-indicator'),
+            // Artifact elements
+            artifactPanel: document.getElementById('artifact-panel'),
+            artifactPanelBody: document.getElementById('artifact-panel-body'),
+            artifactToggleBtn: document.getElementById('artifact-toggle-btn'),
+            artifactPanelClose: document.getElementById('artifact-panel-close')
         };
         this.selectedModel = null;
         this.abortController = null;
@@ -83,12 +88,22 @@ export class UIController {
             if (this.elements.nixStatusIndicator) {
                 const dot = this.elements.nixStatusIndicator.querySelector('.status-dot');
                 const text = this.elements.nixStatusIndicator.querySelector('.status-text');
+                const settingsStatus = document.getElementById('settings-nix-status');
+
                 if (status === 'online') {
                     dot.style.backgroundColor = '#10b981';
                     text.textContent = 'Nix: Online';
+                    if (settingsStatus) {
+                        settingsStatus.textContent = 'Online & Ready';
+                        settingsStatus.style.color = '#10b981';
+                    }
                 } else {
                     dot.style.backgroundColor = '#f59e0b';
                     text.textContent = 'Nix: Waking...';
+                    if (settingsStatus) {
+                        settingsStatus.textContent = 'Waking up (Render Cold Start)...';
+                        settingsStatus.style.color = '#f59e0b';
+                    }
                 }
             }
         });
@@ -102,10 +117,7 @@ export class UIController {
 
     startResourceMonitor() {
         const update = () => {
-            // Simulated CPU (Browser cannot see system CPU)
             const cpu = (Math.random() * 15 + 2).toFixed(1);
-
-            // RAM usage (Try performance.memory if available, else simulate)
             let used = '0.0';
             let total = navigator.deviceMemory || '8';
             if (performance.memory) {
@@ -113,11 +125,9 @@ export class UIController {
             } else {
                 used = (Math.random() * 0.5 + 1.2).toFixed(1);
             }
-
             this.elements.cpuUsage.textContent = `${cpu}%`;
             this.elements.ramUsage.textContent = `${used} / ${total} GB`;
         };
-
         setInterval(update, 2000);
         update();
     }
@@ -142,15 +152,9 @@ export class UIController {
         this.elements.settingSystemPrompt.value = s.systemPrompt;
         this.elements.settingIncludeTime.checked = s.includeTime;
         this.elements.settingUnsplashKey.value = s.unsplashKey || '';
-        if (this.elements.settingSafeSearch) {
-            this.elements.settingSafeSearch.checked = s.safeSearch;
-        }
-        if (this.elements.settingAiName) {
-            this.elements.settingAiName.value = s.aiName || 'Assistant';
-        }
-        if (this.elements.settingDisableTokenLimit) {
-            this.elements.settingDisableTokenLimit.checked = s.disableTokenLimit;
-        }
+        if (this.elements.settingSafeSearch) this.elements.settingSafeSearch.checked = s.safeSearch;
+        if (this.elements.settingAiName) this.elements.settingAiName.value = s.aiName || 'Assistant';
+        if (this.elements.settingDisableTokenLimit) this.elements.settingDisableTokenLimit.checked = s.disableTokenLimit;
     }
 
     setupEventListeners() {
@@ -168,6 +172,18 @@ export class UIController {
                 this.handleSendMessage();
             }
         });
+
+        // Artifact Panel Listeners
+        if (this.elements.artifactToggleBtn) {
+            this.elements.artifactToggleBtn.addEventListener('click', () => {
+                this.elements.artifactPanel.classList.toggle('hidden');
+            });
+        }
+        if (this.elements.artifactPanelClose) {
+            this.elements.artifactPanelClose.addEventListener('click', () => {
+                this.elements.artifactPanel.classList.add('hidden');
+            });
+        }
 
         this.elements.toolSelect.addEventListener('change', () => {
             if (this.elements.toolSelect.value === 'story') {
@@ -194,7 +210,6 @@ export class UIController {
         this.elements.modelSelect.addEventListener('change', async (e) => {
             this.selectedModel = e.target.value;
             this.updateSendButtonState();
-
             const info = await this.client.getModelInfo(this.selectedModel);
             if (info && info.contextLimit) {
                 this.settings.update('contextLimit', info.contextLimit);
@@ -203,12 +218,9 @@ export class UIController {
         });
 
         this.elements.newChatBtn.addEventListener('click', () => this.createNewChat());
-
-        // File upload events
         this.elements.attachBtn.addEventListener('click', () => this.elements.fileInput.click());
         this.elements.fileInput.addEventListener('change', (e) => this.handleFileUpload(e));
 
-        // Settings events
         this.elements.settingsBtn.addEventListener('click', () => this.elements.settingsModal.classList.remove('hidden'));
         if (this.elements.closeSettings) {
             this.elements.closeSettings.addEventListener('click', () => this.elements.settingsModal.classList.add('hidden'));
@@ -239,13 +251,8 @@ export class UIController {
         this.elements.settingOllamaUrl.addEventListener('change', (e) => this.settings.update('ollamaUrl', e.target.value));
         this.elements.settingTheme.addEventListener('change', (e) => this.settings.update('theme', e.target.value));
 
-        if (this.elements.settingAiName) {
-            this.elements.settingAiName.addEventListener('input', (e) => this.settings.update('aiName', e.target.value));
-        }
-
-        if (this.elements.settingDisableTokenLimit) {
-            this.elements.settingDisableTokenLimit.addEventListener('change', (e) => this.settings.update('disableTokenLimit', e.target.checked));
-        }
+        if (this.elements.settingAiName) this.elements.settingAiName.addEventListener('input', (e) => this.settings.update('aiName', e.target.value));
+        if (this.elements.settingDisableTokenLimit) this.elements.settingDisableTokenLimit.addEventListener('change', (e) => this.settings.update('disableTokenLimit', e.target.checked));
 
         if (this.elements.settingAiAvatar) {
             this.elements.settingAiAvatar.addEventListener('change', (e) => {
@@ -267,7 +274,6 @@ export class UIController {
             }
         });
 
-        // Preview modal
         if (this.elements.closePreview) {
             this.elements.closePreview.addEventListener('click', () => this.elements.previewModal.classList.add('hidden'));
         }
@@ -275,7 +281,6 @@ export class UIController {
             if (e.target === this.elements.previewModal) this.elements.previewModal.classList.add('hidden');
         });
 
-        // Suggestion cards
         document.querySelectorAll('.suggestion-card').forEach(card => {
             card.addEventListener('click', () => {
                 const p = card.querySelector('p');
@@ -313,13 +318,19 @@ export class UIController {
         const chat = this.history.createNewChat();
         this.loadChat(chat.id);
         this.renderHistory();
+        this.elements.artifactPanelBody.innerHTML = `
+            <div class="artifact-empty-state">
+                <div class="artifact-empty-icon">⬡</div>
+                <p>No artifacts yet.</p>
+                <p style="font-size:11px; opacity:0.6;">Charts &amp; code results will appear here.</p>
+            </div>
+        `;
     }
 
     loadChat(id) {
         this.history.currentChatId = id;
         const chat = this.history.getChat(id);
         this.elements.chatContainer.innerHTML = '';
-
         if (chat.messages.length === 0) {
             this.elements.chatContainer.appendChild(this.elements.welcomeScreen);
             this.elements.welcomeScreen.classList.remove('hidden');
@@ -327,19 +338,23 @@ export class UIController {
             this.elements.welcomeScreen.classList.add('hidden');
             chat.messages.forEach(msg => this.addMessage(msg.text, msg.role, false, msg.imageData));
         }
-
         this.renderHistory();
         this.updateContext();
+        // Clear artifact panel on chat load for now (can be improved to load from history later)
+        this.elements.artifactPanelBody.innerHTML = `
+            <div class="artifact-empty-state">
+                <div class="artifact-empty-icon">⬡</div>
+                <p>No artifacts yet.</p>
+                <p style="font-size:11px; opacity:0.6;">Charts &amp; code results will appear here.</p>
+            </div>
+        `;
     }
 
     deleteChat(id) {
         this.history.deleteChat(id);
         if (this.history.currentChatId === id) {
-            if (this.history.chats.length > 0) {
-                this.loadChat(this.history.chats[0].id);
-            } else {
-                this.createNewChat();
-            }
+            if (this.history.chats.length > 0) this.loadChat(this.history.chats[0].id);
+            else this.createNewChat();
         }
         this.renderHistory();
     }
@@ -352,8 +367,7 @@ export class UIController {
                 const file = item.getAsFile();
                 if (file) {
                     const name = `pasted-image-${new Date().toLocaleTimeString().replace(/:/g, '-')}.png`;
-                    const renamedFile = new File([file], name, { type: file.type });
-                    files.push(renamedFile);
+                    files.push(new File([file], name, { type: file.type }));
                 }
             }
         }
@@ -373,21 +387,13 @@ export class UIController {
         for (const file of files) {
             const chip = this.createFileChip(file.name);
             this.elements.attachmentsContainer.appendChild(chip);
-
             try {
                 const text = await this.fileManager.extractText(file, (percent) => {
                     chip.querySelector('.file-status').textContent = ` [PROC: ${percent}%]`;
                 });
                 const isImage = file.type.startsWith('image/');
                 const dataUrl = isImage ? await this.readFileAsDataURL(file) : null;
-
-                this.fileManager.attachments.push({
-                    name: file.name,
-                    type: file.type,
-                    text: text,
-                    dataUrl: dataUrl,
-                    chip: chip
-                });
+                this.fileManager.attachments.push({ name: file.name, type: file.type, text: text, dataUrl: dataUrl, chip: chip });
                 chip.querySelector('.file-status').textContent = ' [READY]';
                 this.updateContext();
             } catch (error) {
@@ -400,11 +406,7 @@ export class UIController {
     createFileChip(name) {
         const div = document.createElement('div');
         div.className = 'file-chip';
-        div.innerHTML = `
-            <span class="file-name">${name}</span>
-            <span class="file-status"> [WAIT]</span>
-            <span class="remove-file" style="cursor:pointer; margin-left:10px;">(X)</span>
-        `;
+        div.innerHTML = `<span class="file-name">${name}</span><span class="file-status"> [WAIT]</span><span class="remove-file" style="cursor:pointer; margin-left:10px;">(X)</span>`;
         div.querySelector('.remove-file').addEventListener('click', (e) => {
             e.stopPropagation();
             this.fileManager.attachments = this.fileManager.attachments.filter(a => a.chip !== div);
@@ -429,26 +431,17 @@ export class UIController {
     showPreview(attachment) {
         this.elements.previewTitle.textContent = `Preview: ${attachment.name}`;
         this.elements.previewBody.innerHTML = '';
-
         if (attachment.type.startsWith('image/') && attachment.dataUrl) {
             const img = document.createElement('img');
             img.src = attachment.dataUrl;
             img.className = 'preview-image';
             this.elements.previewBody.appendChild(img);
-
-            const textHeader = document.createElement('div');
-            textHeader.innerHTML = `<br><strong>Extracted Text (OCR):</strong><hr>`;
-            this.elements.previewBody.appendChild(textHeader);
-
-            const pre = document.createElement('pre');
-            pre.textContent = attachment.text || '[No text extracted]';
-            this.elements.previewBody.appendChild(pre);
+            this.elements.previewBody.innerHTML += `<br><strong>Extracted Text:</strong><hr><pre>${attachment.text || '[No text]'}</pre>`;
         } else {
             const pre = document.createElement('pre');
             pre.textContent = attachment.text;
             this.elements.previewBody.appendChild(pre);
         }
-
         this.elements.previewModal.classList.remove('hidden');
     }
 
@@ -457,14 +450,10 @@ export class UIController {
         const historyText = currentChat ? currentChat.messages.map(m => m.text).join('\n') : '';
         const prompt = this.elements.userInput.value;
         const attachmentsText = this.fileManager.attachments.map(a => `\n\nFile (${a.name}):\n${a.text}`).join('');
-        const fullText = historyText + attachmentsText + prompt;
-
-        const stats = this.contextManager.update(fullText);
-
+        const stats = this.contextManager.update(historyText + attachmentsText + prompt);
         this.elements.contextBar.style.width = `${Math.min(stats.ratio * 100, 100)}%`;
         if (stats.isFull) this.elements.contextBar.classList.add('full');
         else this.elements.contextBar.classList.remove('full');
-
         this.updateSendButtonState();
     }
 
@@ -472,7 +461,6 @@ export class UIController {
         const isOnline = await this.client.checkStatus();
         const indicator = this.elements.statusIndicator;
         const text = indicator.querySelector('.status-text');
-
         if (isOnline) {
             indicator.classList.remove('status-offline');
             indicator.classList.add('status-online');
@@ -481,14 +469,7 @@ export class UIController {
         } else {
             indicator.classList.remove('status-online');
             indicator.classList.add('status-offline');
-
-            // Helpful diagnostic for hosted/CORS environments
-            if (window.location.protocol === 'https:' && this.client.baseUrl.startsWith('http://')) {
-                text.textContent = 'Status: BLOCKED (SECURE_CONTEXT)';
-            } else {
-                text.textContent = 'Status: Offline';
-            }
-
+            text.textContent = window.location.protocol === 'https:' && this.client.baseUrl.startsWith('http://') ? 'Status: BLOCKED (SECURE_CONTEXT)' : 'Status: Offline';
             this.elements.modelSelect.innerHTML = '<option disabled selected>Offline</option>';
         }
     }
@@ -496,9 +477,7 @@ export class UIController {
     async loadModels() {
         const models = await this.client.listModels();
         if (models.length > 0) {
-            this.elements.modelSelect.innerHTML = models.map(m =>
-                `<option value="${m.name}">${m.name}</option>`
-            ).join('');
+            this.elements.modelSelect.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
             this.selectedModel = models[0].name;
             this.elements.modelSelect.value = this.selectedModel;
         } else {
@@ -509,14 +488,42 @@ export class UIController {
 
     updateSendButtonState() {
         if (!this.elements.userInput) return;
-        const hasInput = this.elements.userInput.value.trim().length > 0;
-        this.elements.sendBtn.disabled = !hasInput || !this.selectedModel;
+        this.elements.sendBtn.disabled = !this.elements.userInput.value.trim() || !this.selectedModel;
     }
 
     autoResizeInput() {
         const textarea = this.elements.userInput;
         textarea.style.height = 'auto';
         textarea.style.height = (textarea.scrollHeight) + 'px';
+    }
+
+    addArtifact(title, type, content, chartConfig = null) {
+        if (!this.elements.artifactPanel) return;
+
+        this.elements.artifactPanel.classList.remove('hidden');
+        const emptyState = this.elements.artifactPanelBody.querySelector('.artifact-empty-state');
+        if (emptyState) emptyState.remove();
+
+        const card = document.createElement('div');
+        card.className = 'artifact-card';
+        const icon = type === 'graph' ? '📊' : '📟';
+        card.innerHTML = `
+            <div class="artifact-card-header">
+                <div class="artifact-card-title"><span>${icon}</span> ${title}</div>
+            </div>
+            <div class="artifact-card-body"></div>
+        `;
+        const body = card.querySelector('.artifact-card-body');
+        if (type === 'graph' && chartConfig) {
+            const canvas = document.createElement('canvas');
+            body.appendChild(canvas);
+            new Chart(canvas, chartConfig);
+        } else {
+            const pre = document.createElement('pre');
+            pre.textContent = content;
+            body.appendChild(pre);
+        }
+        this.elements.artifactPanelBody.insertBefore(card, this.elements.artifactPanelBody.firstChild);
     }
 
     async handleSendMessage() {
@@ -526,142 +533,60 @@ export class UIController {
         const isWebSearch = this.elements.searchWebToggle.checked;
         const safeSearch = settings.safeSearch;
         const selectedTool = this.elements.toolSelect.value;
-
         if (!userInput || !this.selectedModel) return;
 
-        // Visual feedback for processing
         this.elements.sendBtn.style.display = 'none';
         this.elements.stopBtn.style.display = 'block';
         this.elements.welcomeScreen.classList.add('hidden');
 
-        // Real Web Search if enabled
         let searchContext = "";
         let foundImage = null;
-
-        // Analysis of intent
         const lowerInput = userInput.toLowerCase();
-        // Broader regex to catch more anime-related terms for Nekosia
-        const animeRegex = /\banime\b|\bcatgirl\b|\bwaifu\b|\bmanga\b|\bfoxgirl\b|\bwolfgirl\b|\bmaid\b|\bvtuber\b|\bheadphones\b/i;
-        const imageRegex = /\bshow\b|\bpicture\b|\bimage\b|\bpic\b|\bphoto\b|\bart\b|\blook like\b/i;
+        const wantsImage = /anime|catgirl|waifu|manga|show|picture|image|pic|photo|art/.test(lowerInput);
 
-        const isAnime = animeRegex.test(lowerInput);
-        const wantsImage = isAnime || imageRegex.test(lowerInput);
-
-        console.log(`[UIController] Message intent - isAnime: ${isAnime}, wantsImage: ${wantsImage}, Safe Search: ${safeSearch}`);
-
-        // 1. Automatic Image Fetching (Independent of Web Search Toggle)
         if (wantsImage) {
-            console.log('[UIController] Triggering automatic image acquisition...');
             const imgLoader = this.addMessage('... [ACQUIRING_VISUAL_DATA] ...', 'ai');
             try {
-                if (isAnime) {
+                if (/anime|catgirl|waifu/.test(lowerInput)) {
                     foundImage = await this.imageService.fetchAnimeImage(userInput, safeSearch);
                 }
-
-                // Fallback to general image search if no anime image or not anime intent
                 if (!foundImage) {
-                    console.log('[UIController] Attempting general search via primary service');
                     const imgResults = await this.searchService.search(userInput, 'images', safeSearch);
                     if (imgResults.length > 0) {
-                        foundImage = {
-                            url: imgResults[0].url,
-                            title: imgResults[0].title,
-                            artist: null,
-                            provider: 'Global Search'
-                        };
+                        foundImage = { url: imgResults[0].url, title: imgResults[0].title, provider: 'Global Search' };
                     } else {
-                        // High-quality fallback if key is present
-                        console.log('[UIController] Falling back to high-quality general image service');
                         foundImage = await this.generalImageService.fetchImage(userInput, settings.unsplashKey, safeSearch);
                     }
                 }
-
-                if (foundImage) {
-                    console.log('[UIController] Image acquisition successful:', foundImage);
-                    imgLoader.innerHTML = `<em>System: Visual data acquired and displayed. [Provider: ${foundImage.provider || 'External'}]</em>`;
-                } else {
-                    console.warn('[UIController] No image found after all attempts.');
-                    imgLoader.innerHTML = `<em>System: No suitable visual data found in records.</em>`;
-                }
-            } catch (e) {
-                console.error('[UIController] Error during image acquisition:', e);
-                imgLoader.innerHTML = `<span style="color:var(--text-secondary);">System: Visual uplink failed.</span>`;
-            }
+                imgLoader.innerHTML = foundImage ? `<em>System: Visual data acquired [Provider: ${foundImage.provider || 'External'}]</em>` : `<em>System: No suitable visual data found.</em>`;
+            } catch (e) { imgLoader.innerHTML = `<em>System: Visual uplink failed.</em>`; }
         }
 
-        // 2. Real Web Search (If toggled)
         if (isWebSearch) {
             const searchLoader = this.addMessage('... [RESEARCHING_INTEL] ...', 'ai');
             try {
                 const results = await this.searchService.search(userInput, 'text', safeSearch);
-                searchContext = `[REAL-TIME WEB DATA FOUND]:\n\n`;
-                results.forEach((r, i) => {
-                    searchContext += `${i + 1}. ${r.title} (${r.url})\n"${r.content}"\n\n`;
-                });
-                searchLoader.innerHTML = `<em>System: Web search completed. ${results.length} sources integrated.</em>`;
-            } catch (error) {
-                searchLoader.innerHTML = `<span style="color:red;">System: Web search failed. Proceeding with offline data.</span>`;
-            }
+                searchContext = `[REAL-TIME WEB DATA FOUND]:\n\n` + results.map((r, i) => `${i + 1}. ${r.title} (${r.url})\n"${r.content}"`).join('\n\n');
+                searchLoader.innerHTML = `<em>System: Web search completed (${results.length} sources).</em>`;
+            } catch (error) { searchLoader.innerHTML = `<span style="color:red;">System: Web search failed.</span>`; }
         }
 
         const chatId = this.history.currentChatId;
         const currentChat = this.history.getChat(chatId);
-
-        // Build conversation context from history
-        let historyContext = "";
-        if (currentChat && currentChat.messages.length > 0) {
-            // Respect the 'Disable History Limit' setting
-            const messagesToInclude = settings.disableTokenLimit ?
-                currentChat.messages :
-                currentChat.messages.slice(-15); // Default focus window
-
-            historyContext = messagesToInclude.map(m => {
-                const label = m.role === 'user' ? (settings.username || 'User') : (settings.aiName || 'Assistant');
-                // Clean up text by removing internal tags for context
-                const cleanText = m.text.replace(/<chart>[\s\S]*?<\/chart>/gi, '').trim();
-                return `${label}: ${cleanText}`;
-            }).join('\n\n') + '\n\n';
-        }
-
-        // Persona and Time details
-        let identityContext = `[User Identity: ${settings.username}]\n`;
-        if (settings.includeTime) {
-            const now = new Date();
-            identityContext += `[Current Time: ${now.toLocaleTimeString()} ${now.toLocaleDateString()}]\n`;
-        }
-
-        // Final combined prompt for the AI
-        let systemNote = "";
-        if (foundImage) {
-            systemNote = `\n[CRITICAL_SYSTEM_NOTE: An image result has already been displayed to the user: ${foundImage.url}. Briefly acknowledge that you are showing them the image they requested. DO NOT hallucinate or summarize unrelated websites unless specifically instructed.]\n`;
-        }
+        let historyContext = currentChat ? currentChat.messages.slice(-15).map(m => `${m.role === 'user' ? (settings.username || 'User') : (settings.aiName || 'Assistant')}: ${m.text.replace(/<chart>[\s\S]*?<\/chart>/gi, '')}`).join('\n\n') + '\n\n' : '';
 
         let toolInstructions = "";
         if (selectedTool === 'graph') {
-            toolInstructions = `\n[GRAPH_TOOL_ACTIVE]\nA chart will be automatically rendered from data for the user. Your job in this response is ONLY to provide a brief 2-3 sentence text summary of the data/answer. DO NOT write any code (no Python, no JavaScript, no pseudocode). DO NOT suggest how to plot anything. DO NOT show implementation steps. The graph is handled automatically.`;
+            toolInstructions = `\n[GRAPH_TOOL_ACTIVE]\nAnalyze the user's request. Your task is to extract numerical data. Output ONLY a text summary here. A chart will be generated in parallel.`;
         } else if (selectedTool === 'code') {
-            toolInstructions = `\n[CODE_INTERPRETER_ACTIVE]\nYou have access to a Python execution environment (Nix-based). 
-If you need to calculate something or run logic, write a Python code block: \`\`\`python\nprint(2+2)\n\`\`\`. 
-The system will capture your code, execute it, and provide the output in a follow-up turn. 
-IMPORTANT: Your first response should ONLY contain the code block you want to run. After you get the output, you can provide the final analysis.`;
+            toolInstructions = `\n[CODE_INTERPRETER_ACTIVE]\nWrite \`\`\`python\ncode\n\`\`\`. The code will be run in a Nix sandbox. You can import libraries like numpy, pandas, matplotlib, requests, PIL, etc.`;
         }
 
-        const thinkingInstruction = `
-[INSTRUCTION: INTERNAL_MONOLOGUE]
-You MUST start your response with a <think> block containing your step-by-step reasoning.
-Your actual response to the user must follow the closing </think> tag.`;
+        const combinedSystemPrompt = `${settings.systemPrompt}\nYou MUST use <think> reasoning blocks.\n${toolInstructions}\n[User: ${settings.username}]`;
+        const promptWithContext = `${searchContext}\n${historyContext}${attachmentsText}\n\nUser: ${userInput}\nAssistant:`;
 
-        const combinedSystemPrompt = `${settings.systemPrompt}\n${thinkingInstruction}\n${toolInstructions}\n[User Context: Identity=${settings.username}]`.trim();
-
-        // 3. Deep Thinking / Multi-Step Reasoning
-        const isDeepThink = this.elements.deepThinkToggle.checked;
-        const iterations = parseInt(this.elements.deepThinkIterations.value) || 1;
-
-        const promptWithContext = `${searchContext}${systemNote}${identityContext}\n${historyContext}${attachmentsText}\n\nUser: ${userInput}\nAssistant:`;
-
-        // Update UI and History state
         this.history.addMessage(chatId, 'user', userInput);
-
+        this.addMessage(userInput, 'user');
         this.elements.userInput.value = '';
         this.fileManager.attachments = [];
         this.elements.attachmentsContainer.innerHTML = '';
@@ -669,493 +594,259 @@ Your actual response to the user must follow the closing </think> tag.`;
         this.updateContext();
         this.renderHistory();
 
-        this.addMessage(userInput + (attachmentsText ? `\n\n(Attachments processed: ${this.fileManager.attachments.length})` : ''), 'user');
-
         const aiMessageContent = this.addMessage('', 'ai', false, foundImage);
         const aiMessageIndex = this.history.addMessage(chatId, 'ai', '', foundImage);
-
         const loadingText = document.createElement('span');
         loadingText.textContent = '... [GENERATING_RESPONSE] ...';
         aiMessageContent.appendChild(loadingText);
 
         this.abortController = new AbortController();
+        let textBody = document.createElement('div');
+        textBody.className = 'text-body';
+        aiMessageContent.appendChild(textBody);
 
         try {
-            let fullResponse = '';
-            // Create or find a text body for the streaming response so it doesn't wipe media
-            let textBody = aiMessageContent.querySelector('.text-body');
-            if (!textBody) {
-                textBody = document.createElement('div');
-                textBody.className = 'text-body';
-                aiMessageContent.appendChild(textBody);
-            }
-
-            let currentPrompt = promptWithContext;
             let finalFullResponse = '';
+            const iterations = parseInt(this.elements.deepThinkIterations.value) || 1;
+            let currentPromptForLoop = promptWithContext;
 
             for (let i = 0; i < iterations; i++) {
                 let loopResponse = '';
-                const iterLabel = iterations > 1 ? ` [ITERATION ${i + 1}/${iterations}]` : '';
-                loadingText.textContent = `... [GENERATING_RESPONSE${iterLabel}] ...`;
-
-                await this.client.chat(this.selectedModel, currentPrompt, combinedSystemPrompt, (chunk, done) => {
+                await this.client.chat(this.selectedModel, currentPromptForLoop, combinedSystemPrompt, (chunk) => {
                     loopResponse += chunk;
-
-                    // In multi-step, we only show intermediate results in thinking blocks or as a preview
                     if (iterations === 1) {
                         if (loadingText.parentNode) loadingText.remove();
-                        const processedContent = this.parseThinkingAndMarkdown(loopResponse);
-                        textBody.innerHTML = processedContent;
+                        textBody.innerHTML = this.parseThinkingAndMarkdown(loopResponse);
                         this.detectAndRenderGraphs(textBody, loopResponse);
                     }
-
-                    this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
                 }, this.abortController.signal);
-
-                if (iterations > 1) {
-                    // Update context for next iteration: Original Prompt + Previous Response + Self-Critique Instruction
-                    currentPrompt += `\n\nAssistant: ${loopResponse}\n\nUser: [INTERNAL_CRITIQUE: Consider your previous response. Refine it, check for errors, and provide a ${i === iterations - 1 ? 'FINAL' : 'BETTER'} answer.]\nAssistant:`;
-                    finalFullResponse = loopResponse; // The last one is the "best" one
-                } else {
-                    finalFullResponse = loopResponse;
-                }
+                finalFullResponse = loopResponse;
+                currentPromptForLoop += `\n\nAssistant: ${loopResponse}\n\nUser: [INTERNAL_CRITIQUE]`;
             }
 
             if (loadingText.parentNode) loadingText.remove();
-            const finalProcessed = this.parseThinkingAndMarkdown(finalFullResponse);
-            textBody.innerHTML = finalProcessed;
+            textBody.innerHTML = this.parseThinkingAndMarkdown(finalFullResponse);
             this.detectAndRenderGraphs(textBody, finalFullResponse);
-
             this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
 
-            // 4. Code Execution Tool
+            // Code execution loop
             if (selectedTool === 'code' && !this.abortController.signal.aborted) {
-                const codeMatch = finalFullResponse.match(/```python\s*([\s\S]*?)```/);
-                if (codeMatch) {
-                    const code = codeMatch[1].trim();
-                    const loadingMsg = document.createElement('div');
-                    loadingMsg.className = 'status-msg';
-                    loadingMsg.style.cssText = 'color: var(--accent); font-style: italic; margin-top: 10px; font-size: 13px; font-family: Outfit;';
-                    loadingMsg.textContent = '... [EXECUTING_CODE_ON_NIX] ...';
-                    textBody.appendChild(loadingMsg);
+                let retryCount = 0;
+                let currentAiOutput = finalFullResponse;
+                let lastResult = null;
+                let consoleLog = "";
 
-                    try {
-                        const result = await this.nixService.run(code);
-                        loadingMsg.remove();
-                        const outputMsg = `\n\n[Python Console]:\n${result.stdout || 'No stdout output'}${result.stderr ? `\n\n[Errors]:\n${result.stderr}` : ''}\n\n[System]: Exit Code ${result.exit_code}`;
+                while (retryCount <= 1) {
+                    const match = currentAiOutput.match(/```python\s*([\s\S]*?)```/);
+                    if (!match) break;
+                    const code = match[1].trim();
+                    const status = document.createElement('div');
+                    status.className = 'status-msg';
+                    status.style.cssText = 'color:var(--accent);font-style:italic;margin-top:10px;font-size:13px;';
+                    status.textContent = retryCount === 0 ? '... [EXECUTING_CODE_ON_NIX] ...' : '... [RETRYING_FIXED_CODE] ...';
+                    textBody.appendChild(status);
 
-                        // Display the output clearly
-                        const outputDisplay = document.createElement('div');
-                        outputDisplay.style.cssText = 'background: rgba(0,0,0,0.05); padding: 12px; border-radius: 8px; border-left: 3px solid var(--accent); margin-top: 15px; font-family: monospace; white-space: pre-wrap; font-size: 13px;';
-                        outputDisplay.textContent = outputMsg;
-                        textBody.appendChild(outputDisplay);
+                    const result = await this.nixService.run(code);
+                    status.remove();
+                    lastResult = result;
+                    const output = `${result.stdout || ''}${result.stderr ? `\n[Errors]:\n${result.stderr}` : ''}`.trim() || 'No output';
+                    consoleLog += `\n\n[Turn ${retryCount + 1}]:\n${output}`;
 
-                        // Capture combined state
-                        let combinedForHistory = finalFullResponse + outputMsg;
+                    // Add to Artifact Panel
+                    this.addArtifact(`Code Execution (Turn ${retryCount + 1})`, 'code', output);
 
-                        // Second turn for analysis
-                        const analysisLoading = document.createElement('div');
-                        analysisLoading.className = 'status-msg';
-                        analysisLoading.style.cssText = 'color: var(--accent); font-style: italic; margin-top: 10px; font-size: 13px; font-family: Outfit;';
-                        analysisLoading.textContent = '... [INTERPRETING_RESULTS] ...';
-                        textBody.appendChild(analysisLoading);
+                    const isSuccess = result.exit_code === 0;
+                    const resDiv = document.createElement('div');
+                    resDiv.className = 'code-result-container';
+                    resDiv.innerHTML = `<details class="code-execution-details" ${isSuccess ? '' : 'open'}><summary style="color:${isSuccess ? 'var(--accent)' : 'var(--error)'};">${isSuccess ? '📟 Python Success' : '❌ Python Failure (Turn ' + (retryCount + 1) + ', Exit ' + result.exit_code + ')'}</summary><div class="code-output-wrapper"><pre class="code-output">${output}</pre><details class="nix-config-details"><summary>⚙️ View Nix Shell</summary><pre>${result.nix}</pre></details></div></details>`;
+                    if (retryCount === 0) textBody.innerHTML = this.parseThinkingAndMarkdown(finalFullResponse);
+                    textBody.appendChild(resDiv);
 
-                        const finalPrompt = currentPrompt + `\n\nAssistant: ${finalFullResponse}\n\nUser: [RESULTS_FROM_PYTHON_EXECUTION]\n${outputMsg}\n\nAssistant: [FINAL_ANALYSIS]`;
-
-                        let finalAnalysis = '';
-                        await this.client.chat(this.selectedModel, finalPrompt, combinedSystemPrompt, (chunk, done) => {
-                            finalAnalysis += chunk;
-                            // Prepend everything because we want to see the thinking of the final analysis too if it exists
-                            const currentFull = finalFullResponse + "\n\n--- Code Execution ---\n" + outputMsg + "\n\n--- Final Analysis ---\n" + finalAnalysis;
-                            textBody.innerHTML = this.parseThinkingAndMarkdown(currentFull);
-                            this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
-                        }, this.abortController.signal);
-
-                        if (analysisLoading.parentNode) analysisLoading.remove();
-                        finalFullResponse = finalFullResponse + "\n\n--- Code Execution Results ---\n" + outputMsg + "\n\n--- Final Analysis ---\n" + finalAnalysis;
-                        this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
-                    } catch (e) {
-                        if (loadingMsg.parentNode) loadingMsg.remove();
-                        textBody.innerHTML += `<div style="color:var(--error); margin-top:10px;">Execution Failed: ${e.message}</div>`;
+                    if (isSuccess) break;
+                    retryCount++;
+                    if (retryCount <= 1) {
+                        const retryMsg = document.createElement('div');
+                        retryMsg.textContent = '... [ANALYZING_ERRORS] ...';
+                        textBody.appendChild(retryMsg);
+                        const retryPrompt = promptWithContext + `\n\nAssistant: ${currentAiOutput}\n\n[SYSTEM]: Code failed. Error:\n${result.stderr}\nFix it.`;
+                        let retryAiRes = '';
+                        await this.client.chat(this.selectedModel, retryPrompt, combinedSystemPrompt, (chunk) => { retryAiRes += chunk; }, this.abortController.signal);
+                        retryMsg.remove();
+                        const analysis = document.createElement('div');
+                        analysis.innerHTML = this.parseThinkingAndMarkdown(retryAiRes);
+                        textBody.appendChild(analysis);
+                        currentAiOutput = retryAiRes;
                     }
                 }
+                const finalAnLoading = document.createElement('div');
+                finalAnLoading.textContent = '... [FINAL_ANALYSIS] ...';
+                textBody.appendChild(finalAnLoading);
+                const finalAnBody = document.createElement('div');
+                textBody.appendChild(finalAnBody);
+                const finalAnPrompt = promptWithContext + `\n\nAssistant: ${currentAiOutput}\n\n[SYSTEM]: Execution finished. Results:\n${lastResult?.stdout || 'N/A'}\nSummarize.`;
+                let finalResText = '';
+                await this.client.chat(this.selectedModel, finalAnPrompt, combinedSystemPrompt, (chunk) => {
+                    finalResText += chunk;
+                    finalAnBody.innerHTML = this.parseThinkingAndMarkdown(finalResText);
+                    this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+                }, this.abortController.signal);
+                finalAnLoading.remove();
+                this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse + "\n\n---\n**Logs**:\n" + consoleLog + "\n\n---\n**Summary**:\n" + finalResText);
             }
 
-            // 4. Separate Tool Call for Graphs — ask for SIMPLE data, build Chart.js config ourselves
+            // Graph tool with improved prompt & artifact redirection
             if (selectedTool === 'graph' && !this.abortController.signal.aborted) {
-                loadingText.textContent = `... [GENERATING_GRAPH_DATA] ...`;
-                aiMessageContent.appendChild(loadingText);
+                const graphPrompt = `Analyze the user's request: "${userInput}". 
+Your task is to provide real numerical data for visualization.
+Output ONLY a valid JSON object:
+{
+  "title": "Clear descriptive title",
+  "chartType": "line" | "bar" | "pie",
+  "labels": ["Label 1", "Label 2", ...],
+  "series": [
+    {
+      "name": "Series Name",
+      "data": [Number 1, Number 2, ...]
+    }
+  ]
+}
+CRITICAL: USE REAL DATA. NO PLACEHOLDERS. NO MARKDOWN. ONLY JSON.`;
 
-                const graphSystem = `You are a data serializer. Output ONLY a single-line compact valid JSON object. Absolutely forbidden: // comments, /* comments */, ~ tilde, ... ellipsis, placeholder text like "L1" or "Series1", markdown, prose, code blocks. Every number in every data array must be a real numeric value.`;
-
-                const graphPrompt = `For the question: "${userInput}"
-
-Output a single compact JSON object using this EXACT schema (replace values with real data):
-{"title":"India vs China Population","chartType":"line","labels":["2019","2020","2021","2022","2023"],"series":[{"name":"India","data":[1366,1380,1393,1406,1428]},{"name":"China","data":[1402,1411,1412,1412,1409]}]}
-
-STRICT RULES — violating any of these will break the app:
-- NO // comments inside JSON
-- NO ~ before numbers (forbidden: ~15, use 15)
-- NO ... or placeholder values (every array element must be a real number)
-- NO markdown, no code fences, no prose
-- "labels" and every "data" array MUST have the same length
-- "name" values must be real names (e.g. "India", "GDP", "Temperature") NOT "Series1"
-- "chartType" must be exactly: line, bar, or pie
-- Output ONLY the JSON, starting with { and ending with }`;
-
-
-                const COLORS = [
-                    { border: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
-                    { border: '#f43f5e', bg: 'rgba(244,63,94,0.12)' },
-                    { border: '#10b981', bg: 'rgba(16,185,129,0.12)' },
-                    { border: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-                    { border: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
-                ];
-
-                let graphJsonPart = '';
-                await this.client.chat(this.selectedModel, graphPrompt, graphSystem, (chunk, done) => {
-                    graphJsonPart += chunk;
+                let jsonRes = '';
+                await this.client.chat(this.selectedModel, graphPrompt, "Output ONLY JSON object. No prose.", (chunk, done) => {
+                    jsonRes += chunk;
                     if (done) {
-                        console.log('[UIController] Raw graph response:', graphJsonPart);
                         try {
-                            // Strip <think> blocks, code fences, and surrounding prose
-                            let jsonStr = graphJsonPart.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
-                            const fence = jsonStr.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-                            if (fence) jsonStr = fence[1];
-                            const first = jsonStr.indexOf('{');
-                            const last = jsonStr.lastIndexOf('}');
-                            if (first !== -1 && last !== -1) jsonStr = jsonStr.substring(first, last + 1);
-                            jsonStr = this.repairJson(jsonStr);
+                            const first = jsonRes.indexOf('{'), last = jsonRes.lastIndexOf('}');
+                            if (first !== -1 && last !== -1) {
+                                const repaired = this.repairJson(jsonRes.substring(first, last + 1));
+                                const parsed = JSON.parse(repaired);
+                                const datasets = parsed.series.map((s, i) => ({
+                                    label: s.name,
+                                    data: s.data,
+                                    borderColor: '#6366f1',
+                                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                    tension: 0.4,
+                                    fill: parsed.chartType !== 'line'
+                                }));
 
-                            const parsed = JSON.parse(jsonStr);
-                            if (!parsed.labels || !parsed.series) throw new Error('Missing labels or series');
+                                const config = {
+                                    type: parsed.chartType || 'line',
+                                    data: { labels: parsed.labels, datasets },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: { legend: { display: true }, title: { display: true, text: parsed.title } }
+                                    }
+                                };
 
-                            const datasets = (parsed.series || []).map((s, i) => ({
-                                label: s.name || `Series ${i + 1}`,
-                                data: s.data,
-                                borderColor: COLORS[i % COLORS.length].border,
-                                backgroundColor: COLORS[i % COLORS.length].bg,
-                                fill: (parsed.chartType === 'line') ? false : true,
-                                tension: 0.4,
-                                borderWidth: 2.5,
-                                pointRadius: 5,
-                                pointHoverRadius: 8,
-                            }));
+                                // Add to Artifact Panel
+                                this.addArtifact(parsed.title || 'Chart Artifact', 'graph', null, config);
 
-                            const chartConfig = {
-                                type: parsed.chartType || 'line',
-                                data: { labels: parsed.labels, datasets },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: { position: 'top', labels: { font: { family: 'Inter, sans-serif' } } },
-                                        title: { display: true, text: parsed.title || userInput, font: { size: 15, family: 'Inter, sans-serif' } },
-                                    },
-                                    scales: parsed.chartType === 'pie' ? undefined : {
-                                        y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.06)' } },
-                                        x: { grid: { display: false } },
-                                    },
-                                },
-                            };
-
-                            const jsonHash = this.hashCode(jsonStr);
-                            if (!textBody.querySelector(`[data-graph-hash="${jsonHash}"]`)) {
+                                // Also show in chat but smaller
                                 const wrap = document.createElement('div');
                                 wrap.className = 'graph-container';
-                                wrap.style.cssText = 'background:#fff;padding:24px;border-radius:16px;margin:20px 0;height:340px;box-shadow:0 4px 20px rgba(0,0,0,.1);';
-                                wrap.setAttribute('data-graph-hash', jsonHash);
+                                wrap.style.cssText = 'background:#fff;padding:15px;border-radius:12px;height:240px;margin-top:10px;border:1px solid var(--border-color);';
                                 const canvas = document.createElement('canvas');
                                 wrap.appendChild(canvas);
                                 textBody.appendChild(wrap);
-                                new Chart(canvas, chartConfig);
-                                console.log('[UIController] ✅ Chart rendered!');
+                                new Chart(canvas, config);
                             }
-
-                            if (loadingText.parentNode) loadingText.remove();
-                            const persistentResponse = finalFullResponse + `\n\n<chart>${jsonStr}</chart>`;
-                            this.history.updateMessage(chatId, aiMessageIndex, persistentResponse);
-
-                        } catch (e) {
-                            console.error('[UIController] Graph build failed:', e, 'Raw:', graphJsonPart);
-                            if (loadingText.parentNode) loadingText.remove();
-                        }
+                        } catch (e) { console.error('Graph build error:', e); }
                     }
                 }, this.abortController.signal);
             }
 
-
-            this.elements.sendBtn.style.display = 'block';
-            this.elements.stopBtn.style.display = 'none';
-
         } catch (error) {
-            if (loadingText.parentNode) loadingText.remove();
+            if (error.name === 'AbortError') textBody.innerHTML += ' [ABORTED]';
+            else textBody.innerHTML += `<div style="color:red;padding:10px;">Error: ${error.message}</div>`;
+        } finally {
             this.elements.sendBtn.style.display = 'block';
             this.elements.stopBtn.style.display = 'none';
-
-            if (error.name === 'AbortError') {
-                const finalStopText = fullResponse + ' [USER_INTERRUPTED]';
-                this.history.updateMessage(chatId, aiMessageIndex, finalStopText);
-
-                let textBody = aiMessageContent.querySelector('.text-body');
-                if (textBody) textBody.innerHTML = marked.parse(finalStopText);
-            } else {
-                let textBody = aiMessageContent.querySelector('.text-body');
-                if (textBody) {
-                    textBody.innerHTML += `
-                        <div style="color:red; border:1px solid red; padding:10px; margin-top:10px;">
-                            CONNECTION_ERROR: UNABLE TO REACH OLLAMA.
-                        </div>
-                    `;
-                }
-            }
         }
     }
 
     addMessage(text, role, animate = false, imageData = null) {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${role}-message`;
-
-        // Staggered entry for that institutional scan-line feel
-        if (animate) messageDiv.style.opacity = '0';
-
-        // Add Avatar
-        const avatarDiv = document.createElement('div');
-        avatarDiv.className = 'message-avatar';
-
-        if (role === 'user') {
-            const avatar = this.settings.settings.avatar;
-            if (avatar) {
-                avatarDiv.innerHTML = `<img src="${avatar}" alt="User">`;
-            } else {
-                avatarDiv.textContent = (this.settings.settings.username || 'U').charAt(0).toUpperCase();
-            }
-        } else {
-            const aiAvatar = this.settings.settings.aiAvatar;
-            if (aiAvatar) {
-                avatarDiv.innerHTML = `<img src="${aiAvatar}" alt="${this.settings.settings.aiName}">`;
-            } else {
-                avatarDiv.textContent = (this.settings.settings.aiName || 'A').charAt(0).toUpperCase();
-                avatarDiv.style.background = 'var(--accent)';
-                avatarDiv.style.color = '#fff';
-            }
-        }
-
+        const div = document.createElement('div');
+        div.className = `message ${role}-message`;
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.textContent = (role === 'user' ? (this.settings.settings.username || 'U') : (this.settings.settings.aiName || 'A')).charAt(0).toUpperCase();
+        if (role === 'ai') avatar.style.background = 'var(--accent)';
         const content = document.createElement('div');
         content.className = 'message-content';
-
-        // If we have image data, render it first
-        if (imageData) {
-            this.renderImage(content, imageData);
-        }
-
+        if (imageData) this.renderImage(content, imageData);
         if (role === 'ai') {
-            const textBody = document.createElement('div');
-            textBody.className = 'text-body';
-            textBody.innerHTML = text ? this.parseThinkingAndMarkdown(text) : '';
-            content.appendChild(textBody);
-
-            // Trigger graph detection for history/loaded messages
-            if (text) this.detectAndRenderGraphs(textBody, text);
-        } else {
-            content.textContent = text;
-        }
-
-        messageDiv.appendChild(avatarDiv);
-        messageDiv.appendChild(content);
-        this.elements.chatContainer.appendChild(messageDiv);
+            const body = document.createElement('div');
+            body.className = 'text-body';
+            body.innerHTML = text ? this.parseThinkingAndMarkdown(text) : '';
+            content.appendChild(body);
+            if (text) this.detectAndRenderGraphs(body, text);
+        } else content.textContent = text;
+        div.appendChild(avatar);
+        div.appendChild(content);
+        this.elements.chatContainer.appendChild(div);
         this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
-
         return content;
     }
 
     renderImage(container, imageData) {
-        console.log('[UIController] renderImage called with:', imageData);
-        if (!imageData || !imageData.url) {
-            console.error('[UIController] Invalid imageData passed to renderImage');
-            return;
-        }
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'chat-image-container';
-
+        const wrap = document.createElement('div');
+        wrap.className = 'chat-image-container';
         const img = document.createElement('img');
         img.src = imageData.url;
         img.className = 'chat-image';
-        img.title = 'Click to expand';
-        img.addEventListener('click', () => this.showPreview({
-            name: imageData.title || 'Image Result',
-            type: 'image/png',
-            dataUrl: imageData.url,
-            text: `Resource provided by: ${imageData.provider || 'Global Search'}`
-        }));
-
-        const caption = document.createElement('div');
-        caption.className = 'chat-image-caption';
-
-        let captionText = `Source: ${imageData.provider || 'Global Search'}`;
-        if (imageData.artist && imageData.artist !== 'Unknown') {
-            captionText += ` (Artist: ${imageData.artist})`;
-        }
-        caption.textContent = captionText;
-
-        imgContainer.appendChild(img);
-        imgContainer.appendChild(caption);
-        container.appendChild(imgContainer);
-    }
-
-    resetChat() {
-        this.elements.chatContainer.innerHTML = '';
-        this.elements.chatContainer.appendChild(this.elements.welcomeScreen);
-        this.elements.welcomeScreen.classList.remove('hidden');
-        this.elements.userInput.value = '';
-        this.autoResizeInput();
-        this.updateSendButtonState();
+        const cap = document.createElement('div');
+        cap.className = 'chat-image-caption';
+        cap.textContent = `Source: ${imageData.provider || 'Search'}`;
+        wrap.appendChild(img);
+        wrap.appendChild(cap);
+        container.appendChild(wrap);
     }
 
     parseThinkingAndMarkdown(text) {
-        let thinkingHtml = "";
-        let mainContent = text;
-
-        // Extract <think> content
-        const thinkMatch = text.match(/<think>([\s\S]*?)(?:<\/think>|$)/);
-        if (thinkMatch) {
-            const thinkingText = thinkMatch[1].trim();
-            if (thinkingText) {
-                thinkingHtml = `
-                    <details class="thinking-block" ${!text.includes('</think>') ? 'open' : ''}>
-                        <summary>Thinking Process...</summary>
-                        <div class="thinking-content">${marked.parse(thinkingText)}</div>
-                    </details>
-                `;
-            }
-            mainContent = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/, '').trim();
+        let think = "", main = text;
+        const match = text.match(/<think>([\s\S]*?)(?:<\/think>|$)/);
+        if (match) {
+            think = `<details class="thinking-block" ${!text.includes('</think>') ? 'open' : ''}><summary>Thinking...</summary><div class="thinking-content">${marked.parse(match[1])}</div></details>`;
+            main = text.replace(/<think>[\s\S]*?(?:<\/think>|$)/, '').trim();
         }
-
-        // Remove <chart> tags and legacy chart JSON blocks from the rendered text
-        mainContent = mainContent.replace(/<chart>[\s\S]*?<\/chart>/g, '');
-        mainContent = mainContent.replace(/```json\s*\{[\s\S]*?"type"\s*:\s*"chart"[\s\S]*?\}\s*```/g, '');
-
-        return thinkingHtml + marked.parse(mainContent);
+        return think + marked.parse(main.replace(/<chart>[\s\S]*?<\/chart>/g, ''));
     }
 
     detectAndRenderGraphs(container, text) {
-        if (!window.Chart) {
-            console.error('[UIController] Chart.js not loaded!');
-            return;
-        }
-
-        const COLORS = [
-            { border: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
-            { border: '#f43f5e', bg: 'rgba(244,63,94,0.12)' },
-            { border: '#10b981', bg: 'rgba(16,185,129,0.12)' },
-            { border: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-            { border: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
-        ];
-
         const regex = /<chart>\s*(\{[\s\S]*?})\s*<\/chart>/g;
         let match;
         while ((match = regex.exec(text)) !== null) {
             try {
-                const repairedJson = this.repairJson(match[1]);
-                const parsed = JSON.parse(repairedJson);
-                const jsonHash = this.hashCode(repairedJson);
-
-                if (container.querySelector(`[data-graph-hash="${jsonHash}"]`)) continue;
-
-                let chartConfig;
-
-                if (parsed.series && parsed.labels) {
-                    // NEW simple schema: {title, chartType, labels, series:[{name,data}]}
-                    const datasets = parsed.series.map((s, i) => ({
-                        label: s.name || `Series ${i + 1}`,
-                        data: s.data,
-                        borderColor: COLORS[i % COLORS.length].border,
-                        backgroundColor: COLORS[i % COLORS.length].bg,
-                        fill: parsed.chartType === 'line' ? false : true,
-                        tension: 0.4,
-                        borderWidth: 2.5,
-                        pointRadius: 5,
-                        pointHoverRadius: 8,
-                    }));
-                    chartConfig = {
-                        type: parsed.chartType || 'line',
-                        data: { labels: parsed.labels, datasets },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: { position: 'top', labels: { font: { family: 'Inter, sans-serif' } } },
-                                title: { display: true, text: parsed.title || '', font: { size: 15, family: 'Inter, sans-serif' } },
-                            },
-                            scales: parsed.chartType === 'pie' ? undefined : {
-                                y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.06)' } },
-                                x: { grid: { display: false } },
-                            },
-                        },
-                    };
-                } else if (parsed.config) {
-                    // LEGACY schema: {type:"chart", config:{...chartjs config}}
-                    chartConfig = parsed.config;
-                    if (!chartConfig.options) chartConfig.options = {};
-                    chartConfig.options.responsive = true;
-                    chartConfig.options.maintainAspectRatio = false;
-                } else {
-                    console.warn('[UIController] Unrecognised graph schema:', parsed);
-                    continue;
-                }
-
+                const parsed = JSON.parse(this.repairJson(match[1]));
                 const wrap = document.createElement('div');
                 wrap.className = 'graph-container';
-                wrap.style.cssText = 'background:#fff;padding:24px;border-radius:16px;margin:20px 0;height:340px;box-shadow:0 4px 20px rgba(0,0,0,.1);';
-                wrap.setAttribute('data-graph-hash', jsonHash);
+                wrap.style.cssText = 'background:#fff;padding:15px;height:240px;border-radius:12px;margin-top:10px;border:1px solid var(--border-color);';
                 const canvas = document.createElement('canvas');
                 wrap.appendChild(canvas);
                 container.appendChild(wrap);
-                new Chart(canvas, chartConfig);
-                console.log('[UIController] ✅ Chart rendered from history (schema:', parsed.series ? 'simple' : 'legacy', ')');
-
-            } catch (e) {
-                console.error('[UIController] Graph render error:', e);
-            }
+                new Chart(canvas, {
+                    type: parsed.chartType || 'line',
+                    data: {
+                        labels: parsed.labels,
+                        datasets: parsed.series.map(s => ({
+                            label: s.name,
+                            data: s.data,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            fill: parsed.chartType !== 'line'
+                        }))
+                    },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } catch (e) { console.error('History graph error:', e); }
         }
     }
 
-
-    hashCode(s) {
-        return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
-    }
-
+    hashCode(s) { return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0); }
     repairJson(json) {
         if (!json) return json;
-        let r = json.trim();
-
-        // 1. Strip JS/C++ style single-line comments (// ...)
-        r = r.replace(/\/\/[^\n\r"]*/g, '');
-
-        // 2. Strip JS block comments (/* ... */)
-        r = r.replace(/\/\*[\s\S]*?\*\//g, '');
-
-        // 3. Remove tilde ~ approximation prefix on numbers: ~15 -> 15
-        r = r.replace(/~(\d)/g, '$1');
-
-        // 4. Remove ellipsis placeholders: [..., ...] or "..." values
-        // Remove bare ... tokens in arrays/values
-        r = r.replace(/,\s*\.\.\.\s*/g, '');
-        r = r.replace(/\.\.\.\s*,/g, '');
-        r = r.replace(/:\s*\.\.\./g, ': null');
-
-        // 5. Remove trailing commas before ] or }
-        r = r.replace(/,\s*([}\]])/g, '$1');
-
-        // 6. Fix unquoted keys: { key: "val" } -> { "key": "val" }
-        r = r.replace(/([{,\n])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1 "$2":');
-
-        // 7. Fix single-quoted keys: { 'key': } -> { "key": }
-        r = r.replace(/([{,\n])\s*'([a-zA-Z0-9_]+)'\s*:/g, '$1 "$2":');
-
-        // 8. Remove any lines that become empty objects from comment stripping
-        r = r.replace(/,\s*,/g, ',');
-
-        return r;
+        return json.trim().replace(/\/\/[^\n\r"]*/g, '').replace(/\/\*[\s\S]*?\*\//g, '').replace(/~(\d)/g, '$1').replace(/,\s*([}\]])/g, '$1').replace(/([{,\n])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1 "$2":');
     }
 }
