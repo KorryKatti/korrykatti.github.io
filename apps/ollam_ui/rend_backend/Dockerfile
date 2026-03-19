@@ -2,20 +2,18 @@ FROM nixos/nix:latest
 
 WORKDIR /app
 
-# Update nix channel
+# Update nix channels
 RUN nix-channel --update
 
-# Install Python and Pip
-RUN nix-env -iA nixpkgs.python3 nixpkgs.python3Packages.pip nixpkgs.bash nixpkgs.coreutils
-
-# Copy app
+# Copy app files (shell.nix needed for pre-build step)
 COPY . .
 
-# Install Python deps
-RUN python3 -m pip install --no-cache-dir -r requirements.txt
+# Pre-build the nix environment to cache it as a Docker layer
+# This avoids rebuilding on every container start
+RUN nix-shell shell.nix --run "echo Nix environment pre-built successfully"
 
-# Expose port for Render
 EXPOSE 10000
 
-# Start server
-CMD ["python3", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "10000"]
+# Run server inside nix-shell so python3 sees fastapi/uvicorn/pydantic
+# (nix-env installs packages in separate store paths; nix-shell wraps them together)
+CMD ["nix-shell", "shell.nix", "--run", "python3 -m uvicorn main:app --host 0.0.0.0 --port 10000"]
