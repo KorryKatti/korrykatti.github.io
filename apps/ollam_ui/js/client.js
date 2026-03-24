@@ -123,7 +123,7 @@ export class OllamaClient {
         try {
             // Map UI names to actual Gemini API model names if needed
             let actualModel = model;
-            if (model === 'gemini-2.5-flash-lite') actualModel = 'gemini-2.5-flash-lite-preview-02-05';
+            if (model === 'gemini-2.5-flash-lite') actualModel = 'gemini-2.5-flash-lite';
             if (model === 'gemini-2.5-flash') actualModel = 'gemini-2.5-flash';
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${actualModel}:streamGenerateContent?alt=sse&key=${this.geminiApiKey}`;
