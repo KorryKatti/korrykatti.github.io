@@ -40,10 +40,11 @@ export class HistoryManager {
         return -1;
     }
 
-    updateMessage(id, index, text) {
+    updateMessage(id, index, text, imageData = null) {
         const chat = this.chats.find(c => c.id === id);
         if (chat && chat.messages[index]) {
             chat.messages[index].text = text;
+            if (imageData) chat.messages[index].imageData = imageData;
             this.save();
         }
     }

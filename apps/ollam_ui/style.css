@@ -998,7 +998,8 @@ body.dark .file-chip {
 
 .chat-image {
     max-width: 100%;
-    height: auto;
+    max-height: 400px;
+    object-fit: contain;
     display: block;
     border-radius: 8px;
     cursor: zoom-in;

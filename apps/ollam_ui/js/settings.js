@@ -5,6 +5,8 @@ export class SettingsManager {
         this.defaults = {
             contextLimit: 4096,
             ollamaUrl: 'http://localhost:11434',
+            geminiApiKey: '',
+            imagenModel: 'google/imagen-4.0-fast',
             theme: 'dark',
             username: 'Local User',
             systemPrompt: '',

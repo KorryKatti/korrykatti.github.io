@@ -18,6 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://js.puter.com/v2/"></script>
 </head>
 
 <body class="dark-theme">
@@ -128,6 +129,7 @@
                                     <option value="graph">Graph Plotter</option>
                                     <option value="story">Story Mode</option>
                                     <option value="code">Code Interpreter</option>
+                                    <option value="image-gen">Image Generator (Puter.js)</option>
                                 </select>
                                 <button id="launch-story-btn" class="secondary-btn hidden"
                                     style="margin-left: 10px; border-color: var(--accent); color: var(--accent);">Launch
@@ -217,6 +219,10 @@
                             <input type="text" id="setting-ollama-url" value="http://localhost:11434">
                         </div>
                         <div class="setting-item">
+                            <label>Gemini API Key</label>
+                            <input type="password" id="setting-gemini-key" placeholder="Enter Gemini API Key">
+                        </div>
+                        <div class="setting-item">
                             <label>Theme</label>
                             <select id="setting-theme">
                                 <option value="dark">Dark</option>
@@ -226,6 +232,14 @@
                         <div class="setting-item">
                             <label>Context Limit (tokens)</label>
                             <input type="number" id="setting-context-limit" value="4096" step="512">
+                        </div>
+                        <div class="setting-item">
+                            <label>Imagen Quality (Puter.js)</label>
+                            <select id="setting-imagen-model">
+                                <option value="google/imagen-4.0-fast">Fast (Lowest)</option>
+                                <option value="google/imagen-4.0-preview">Balanced (Medium)</option>
+                                <option value="google/imagen-4.0-ultra">Ultra (Highest)</option>
+                            </select>
                         </div>
                         <div class="setting-item">
                             <label>External Image Key (Unsplash)</label>

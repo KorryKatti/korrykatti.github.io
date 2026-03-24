@@ -40,6 +40,7 @@ export class UIController {
             clearHistoryBtn: document.getElementById('clear-history-btn'),
             settingContextLimit: document.getElementById('setting-context-limit'),
             settingOllamaUrl: document.getElementById('setting-ollama-url'),
+            settingGeminiKey: document.getElementById('setting-gemini-key'),
             settingTheme: document.getElementById('setting-theme'),
             settingUsername: document.getElementById('setting-username'),
             settingAvatar: document.getElementById('setting-avatar'),
@@ -50,6 +51,7 @@ export class UIController {
             settingAiName: document.getElementById('setting-ai-name'),
             settingAiAvatar: document.getElementById('setting-ai-avatar'),
             settingDisableTokenLimit: document.getElementById('setting-disable-token-limit'),
+            settingImagenModel: document.getElementById('setting-imagen-model'),
             usernameDisplay: document.getElementById('username-display'),
             cpuUsage: document.getElementById('cpu-usage'),
             ramUsage: document.getElementById('ram-usage'),
@@ -71,6 +73,7 @@ export class UIController {
         };
         this.selectedModel = null;
         this.abortController = null;
+        this.warnedImageGen = false;
         this.init();
     }
 
@@ -134,9 +137,11 @@ export class UIController {
 
     applySettings(settings) {
         this.client.baseUrl = settings.ollamaUrl;
+        this.client.geminiApiKey = settings.geminiApiKey;
         this.contextManager.setLimit(settings.contextLimit);
         this.applyProfileUI();
         this.updateContext();
+        this.loadModels(); // Refresh models in case Gemini key was added/removed
     }
 
     applyProfileUI() {
@@ -147,6 +152,7 @@ export class UIController {
         const s = this.settings.settings;
         this.elements.settingContextLimit.value = s.contextLimit;
         this.elements.settingOllamaUrl.value = s.ollamaUrl;
+        this.elements.settingGeminiKey.value = s.geminiApiKey || '';
         this.elements.settingTheme.value = s.theme;
         this.elements.settingUsername.value = s.username;
         this.elements.settingSystemPrompt.value = s.systemPrompt;
@@ -155,6 +161,7 @@ export class UIController {
         if (this.elements.settingSafeSearch) this.elements.settingSafeSearch.checked = s.safeSearch;
         if (this.elements.settingAiName) this.elements.settingAiName.value = s.aiName || 'Assistant';
         if (this.elements.settingDisableTokenLimit) this.elements.settingDisableTokenLimit.checked = s.disableTokenLimit;
+        if (this.elements.settingImagenModel) this.elements.settingImagenModel.value = s.imagenModel || 'google/imagen-4.0-fast';
     }
 
     setupEventListeners() {
@@ -186,6 +193,10 @@ export class UIController {
         }
 
         this.elements.toolSelect.addEventListener('change', () => {
+            if (this.elements.toolSelect.value === 'image-gen' && !this.warnedImageGen) {
+                alert('Warning: Image Generation is a very heavy tool and might take time or use significant resources.');
+                this.warnedImageGen = true;
+            }
             if (this.elements.toolSelect.value === 'story') {
                 this.elements.launchStoryBtn.classList.remove('hidden');
             } else {
@@ -249,10 +260,12 @@ export class UIController {
 
         this.elements.settingContextLimit.addEventListener('change', (e) => this.settings.update('contextLimit', parseInt(e.target.value)));
         this.elements.settingOllamaUrl.addEventListener('change', (e) => this.settings.update('ollamaUrl', e.target.value));
+        this.elements.settingGeminiKey.addEventListener('change', (e) => this.settings.update('geminiApiKey', e.target.value));
         this.elements.settingTheme.addEventListener('change', (e) => this.settings.update('theme', e.target.value));
 
         if (this.elements.settingAiName) this.elements.settingAiName.addEventListener('input', (e) => this.settings.update('aiName', e.target.value));
         if (this.elements.settingDisableTokenLimit) this.elements.settingDisableTokenLimit.addEventListener('change', (e) => this.settings.update('disableTokenLimit', e.target.checked));
+        if (this.elements.settingImagenModel) this.elements.settingImagenModel.addEventListener('change', (e) => this.settings.update('imagenModel', e.target.value));
 
         if (this.elements.settingAiAvatar) {
             this.elements.settingAiAvatar.addEventListener('change', (e) => {
@@ -461,16 +474,27 @@ export class UIController {
         const isOnline = await this.client.checkStatus();
         const indicator = this.elements.statusIndicator;
         const text = indicator.querySelector('.status-text');
+        
+        // If we have Gemini, we are partially online even if Ollama is down
+        const hasGemini = !!this.settings.settings.geminiApiKey;
+
         if (isOnline) {
             indicator.classList.remove('status-offline');
             indicator.classList.add('status-online');
             text.textContent = 'Status: Online';
             await this.loadModels();
         } else {
-            indicator.classList.remove('status-online');
-            indicator.classList.add('status-offline');
-            text.textContent = window.location.protocol === 'https:' && this.client.baseUrl.startsWith('http://') ? 'Status: BLOCKED (SECURE_CONTEXT)' : 'Status: Offline';
-            this.elements.modelSelect.innerHTML = '<option disabled selected>Offline</option>';
+            if (hasGemini) {
+                indicator.classList.remove('status-online');
+                indicator.classList.add('status-offline');
+                text.textContent = 'Status: Gemini Only (Ollama Offline)';
+                await this.loadModels();
+            } else {
+                indicator.classList.remove('status-online');
+                indicator.classList.add('status-offline');
+                text.textContent = window.location.protocol === 'https:' && this.client.baseUrl.startsWith('http://') ? 'Status: BLOCKED (SECURE_CONTEXT)' : 'Status: Offline';
+                this.elements.modelSelect.innerHTML = '<option disabled selected>Offline</option>';
+            }
         }
     }
 
@@ -478,10 +502,17 @@ export class UIController {
         const models = await this.client.listModels();
         if (models.length > 0) {
             this.elements.modelSelect.innerHTML = models.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-            this.selectedModel = models[0].name;
-            this.elements.modelSelect.value = this.selectedModel;
+            
+            // Try to keep currently selected model if it still exists in the new list
+            if (this.selectedModel && models.some(m => m.name === this.selectedModel)) {
+                this.elements.modelSelect.value = this.selectedModel;
+            } else {
+                this.selectedModel = models[0].name;
+                this.elements.modelSelect.value = this.selectedModel;
+            }
         } else {
             this.elements.modelSelect.innerHTML = '<option disabled selected>No models</option>';
+            this.selectedModel = null;
         }
         this.updateSendButtonState();
     }
@@ -579,7 +610,9 @@ export class UIController {
         if (selectedTool === 'graph') {
             toolInstructions = `\n[GRAPH_TOOL_ACTIVE]\nAnalyze the user's request. Your task is to extract numerical data. Output ONLY a text summary here. A chart will be generated in parallel.`;
         } else if (selectedTool === 'code') {
-            toolInstructions = `\n[CODE_INTERPRETER_ACTIVE]\nWrite \`\`\`python\ncode\n\`\`\`. The code will be run in a Nix sandbox. You can import libraries like numpy, pandas, matplotlib, requests, PIL, etc.`;
+            toolInstructions = `\n[CODE_INTERPRETER_ACTIVE]\nWrite \`\`\`python\ncode\n\`\`\`. The code will be run in a Nix sandbox. You can import libraries like numpy, pandas, matplotlib, requests, PIL, etc. To use specific Nix packages, add a comment like \`# nix: scikit-learn numpy\` at the top.`;
+        } else if (selectedTool === 'image-gen') {
+            toolInstructions = `\n[IMAGE_GENERATOR_ACTIVE]\nRefine the user's image request into a detailed, descriptive prompt for an AI image generator (Imagen 4). Output your refined prompt inside <prompt>...</prompt> tags. Provide a brief explanation. NOTE: Puter.js Image Generator has a built-in safety filter and CANNOT generate NSFW, explicit, or sensitive content. If the request is NSFW, politely decline.`;
         }
 
         const combinedSystemPrompt = `${settings.systemPrompt}\nYou MUST use <think> reasoning blocks.\n${toolInstructions}\n[User: ${settings.username}]`;
@@ -755,6 +788,59 @@ CRITICAL: USE REAL DATA. NO PLACEHOLDERS. NO MARKDOWN. ONLY JSON.`;
                         } catch (e) { console.error('Graph build error:', e); }
                     }
                 }, this.abortController.signal);
+            }
+
+            // Image Generation tool with Puter.js
+            if (selectedTool === 'image-gen' && !this.abortController.signal.aborted) {
+                const promptMatch = finalFullResponse.match(/<prompt>([\s\S]*?)<\/prompt>/);
+                const refinedPrompt = promptMatch ? promptMatch[1].trim() : userInput;
+
+                const status = document.createElement('div');
+                status.className = 'status-msg';
+                status.style.cssText = 'color:var(--accent);font-style:italic;margin-top:10px;font-size:13px;';
+                status.textContent = '... [GENERATING_IMAGE_VIA_IMAGEN_4] ...';
+                textBody.appendChild(status);
+
+                try {
+                    const imagenModel = this.settings.settings.imagenModel || 'google/imagen-4.0-fast';
+                    const imageElement = await puter.ai.txt2img(refinedPrompt, { 
+                        model: imagenModel, 
+                        provider: "together-ai", 
+                        disable_safety_checker: true 
+                    });
+                    
+                    status.remove();
+                    
+                    const imageUrl = imageElement.src;
+                    const imageData = { url: imageUrl, provider: 'Imagen 4' };
+
+                    // Render it in the current message content
+                    this.renderImage(aiMessageContent, imageData);
+                    
+                    // Update history to persist on reload
+                    this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse, imageData);
+
+                    // Add to Artifact Panel
+                    const artifactCard = document.createElement('div');
+                    artifactCard.className = 'artifact-card';
+                    artifactCard.innerHTML = `
+                        <div class="artifact-card-header">
+                            <div class="artifact-card-title"><span>🎨</span> Image Artifact</div>
+                        </div>
+                        <div class="artifact-card-body" style="padding:0;">
+                            <img src="${imageUrl}" style="width:100%; display:block;">
+                        </div>
+                    `;
+                    
+                    const emptyState = this.elements.artifactPanelBody.querySelector('.artifact-empty-state');
+                    if (emptyState) emptyState.remove();
+                    this.elements.artifactPanelBody.insertBefore(artifactCard, this.elements.artifactPanelBody.firstChild);
+                    this.elements.artifactPanel.classList.remove('hidden');
+
+                } catch (e) {
+                    status.innerHTML = `<span style="color:red;">System: Image generation failed: ${e.message}</span>`;
+                    console.error('Puter Image Gen error:', e);
+                }
             }
 
         } catch (error) {

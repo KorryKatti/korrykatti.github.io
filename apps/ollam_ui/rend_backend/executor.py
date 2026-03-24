@@ -17,7 +17,8 @@ IMPORT_TO_PS = {
     "matplotlib":   "matplotlib",
     "plt":          "matplotlib",
     "scipy":        "scipy",
-    "sklearn":      "scikitlearn",
+    "sklearn":      "scikit-learn",
+    "scikitlearn":  "scikit-learn",
     "requests":     "requests",
     "bs4":          "beautifulsoup4",
     "beautifulsoup4": "beautifulsoup4",
@@ -48,8 +49,18 @@ IMPORT_TO_PS = {
 def parse_imports(code: str) -> set:
     """Extract and resolve package names for the detected Python imports."""
     names = set()
+    explicit_pkgs = set()
+    
     for line in code.splitlines():
         line = line.strip()
+        
+        # Support explicit package declaration: # nix: pkg1 pkg2
+        if line.startswith("# nix:"):
+            pkgs = line.replace("# nix:", "").strip().split()
+            for p in pkgs:
+                explicit_pkgs.add(p)
+            continue
+
         m = re.match(r'^import\s+([\w.]+)', line)
         if m:
             names.add(m.group(1).split('.')[0])
@@ -61,12 +72,14 @@ def parse_imports(code: str) -> set:
     for n in names:
         if n in IMPORT_TO_PS:
             resolved.add(IMPORT_TO_PS[n])
-    return resolved
+            
+    # Combine auto-detected with explicit ones
+    return resolved.union(explicit_pkgs)
 
 def build_nix_shell(code: str) -> str:
     """Build a robust shell.nix file."""
     pkgs = parse_imports(code)
-    ps_list = " ".join([f"ps.{p}" for p in sorted(pkgs)])
+    ps_list = " ".join([f'ps."{p}"' for p in sorted(pkgs)])
     
     nix_content = f"""
 {{ pkgs ? import <nixpkgs> {{}} }}:
