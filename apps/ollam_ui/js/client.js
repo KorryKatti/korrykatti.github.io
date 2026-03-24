@@ -30,11 +30,11 @@ export class OllamaClient {
         // Add Gemini models if API key is present
         if (this.geminiApiKey) {
             models.push({
-                name: 'gemini-2.0-flash-lite',
+                name: 'gemini-2.5-flash-lite',
                 details: { family: 'gemini' }
             });
             models.push({
-                name: 'gemini-2.0-flash',
+                name: 'gemini-2.5-flash',
                 details: { family: 'gemini' }
             });
         }
@@ -123,8 +123,8 @@ export class OllamaClient {
         try {
             // Map UI names to actual Gemini API model names if needed
             let actualModel = model;
-            if (model === 'gemini-2.0-flash-lite') actualModel = 'gemini-2.0-flash-lite-preview-02-05';
-            if (model === 'gemini-2.0-flash') actualModel = 'gemini-2.0-flash';
+            if (model === 'gemini-2.5-flash-lite') actualModel = 'gemini-2.5-flash-lite-preview-02-05';
+            if (model === 'gemini-2.5-flash') actualModel = 'gemini-2.5-flash';
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${actualModel}:streamGenerateContent?alt=sse&key=${this.geminiApiKey}`;
             
