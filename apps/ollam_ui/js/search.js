@@ -1,48 +1,53 @@
 export class SearchService {
-    constructor() {
-        this.instances = [
-            'https://searxng.site/search',
-            'https://searx.be/search',
-            'https://searx.fmac.xyz/search'
-        ];
+    constructor(baseUrl = "https://ollamas-ahh.onrender.com") {
+        this.baseUrl = baseUrl;
     }
 
     async search(query, type = 'text', safeSearch = true) {
         console.log(`[SearchService] Starting ${type} search for: "${query}" (Safe: ${safeSearch})`);
-        // SearXNG safe search: 0 (none), 1 (moderate), 2 (strict)
-        const safeVal = safeSearch ? 2 : 0;
 
-        for (const instance of this.instances) {
-            try {
-                let url = `${instance}?q=${encodeURIComponent(query)}&format=json&language=en&safesearch=${safeVal}`;
-                if (type === 'images') url += '&categories=images';
+        try {
+            const safeVal = safeSearch ? "moderate" : "off";
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-                console.log(`[SearchService] Fetching from: ${instance}`);
-                const response = await fetch(url);
-                if (!response.ok) {
-                    console.warn(`[SearchService] ${instance} returned status: ${response.status}`);
-                    continue;
-                }
+            console.log(`[SearchService] Fetching from local backend: ${this.baseUrl}/search`);
+            const response = await fetch(`${this.baseUrl}/search`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    query,
+                    max_results: 5,
+                    safe_search: safeVal
+                }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
 
-                const data = await response.json();
-                if (!data.results || data.results.length === 0) {
-                    console.warn(`[SearchService] No results from ${instance}`);
-                    continue;
-                }
-
-                console.log(`[SearchService] Successfully found ${data.results.length} results from ${instance}`);
-                return data.results.slice(0, 5).map(r => ({
-                    title: r.title || 'Untitled Result',
-                    url: r.url || r.image_url || r.img_src,
-                    thumbnail: r.thumbnail_src || r.img_src || r.thumbnail,
-                    content: r.content || r.title || 'No description available'
-                }));
-            } catch (e) {
-                console.error(`[SearchService] Error with ${instance}:`, e);
-                continue;
+            if (!response.ok) {
+                console.warn(`[SearchService] Backend returned status: ${response.status}`);
+                return [];
             }
+
+            const data = await response.json();
+            if (!data.results || data.results.length === 0) {
+                console.warn(`[SearchService] No results from search engine`);
+                return [];
+            }
+
+            console.log(`[SearchService] Successfully found ${data.results.length} results`);
+
+            // Map result to format expected by UI
+            return data.results.map(r => ({
+                title: r.title || 'Untitled Result',
+                url: r.url || '#',
+                thumbnail: null, // DuckDuckGo text search doesn't provide thumbnails in this format easily
+                content: r.content || 'No description available'
+            }));
+        } catch (e) {
+            console.error(`[SearchService] Error with local search:`, e);
+            return [];
         }
-        console.error('[SearchService] All search instances failed.');
-        return [];
     }
 }
+

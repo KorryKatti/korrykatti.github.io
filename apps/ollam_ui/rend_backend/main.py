@@ -1,9 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from schemas import CodeRequest, CodeResponse
+from schemas import CodeRequest, CodeResponse, SearchRequest, SearchResponse, SearchResult
 from executor import run_code
 import uvicorn
+try:
+    from duckduckgo_search import DDGS
+except ImportError:
+    try:
+        from ddgs import DDGS
+    except ImportError:
+        DDGS = None
 
 app = FastAPI(title="Nix Code Executor")
 
@@ -52,6 +59,33 @@ async def root():
 @app.get("/ping")
 async def ping():
     return {"status": "pong"}
+
+@app.post("/search", response_model=SearchResponse)
+async def search(request: SearchRequest):
+    if DDGS is None:
+        print("DuckDuckGo Search package not installed. Skipping search.")
+        return SearchResponse(results=[])
+    try:
+        with DDGS() as ddgs:
+            results = ddgs.text(
+                query=request.query,
+                max_results=request.max_results or 5,
+                safesearch=request.safe_search or "moderate"
+            )
+        
+        search_results = []
+        for r in results:
+            search_results.append(SearchResult(
+                title=r.get("title", "Untitled"),
+                url=r.get("href", ""),
+                content=r.get("body", "")[:1000]
+            ))
+        
+        return SearchResponse(results=search_results)
+    except Exception as e:
+        print(f"Search API Error: {str(e)}")
+        return SearchResponse(results=[])
+
 
 @app.post("/run", response_model=CodeResponse)
 async def execute_code(request: CodeRequest):
