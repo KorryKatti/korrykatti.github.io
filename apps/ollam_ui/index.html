@@ -19,19 +19,26 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://js.puter.com/v2/"></script>
-<script defer src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+    <!-- 1. Alpine loads synchronously in <head>, available before body parses -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- 2. Register component immediately (synchronous, lazy-loads ES deps) -->
+    <script src="js/register-component.js"></script>
+    <script src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c" defer></script>
 </head>
 
-<body class="dark-theme">
+<body x-data="ollamaApp()" x-init="init()" :class="{ 'dark': settings.theme === 'dark' }">
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" :class="{ 'sidebar-collapsed': sidebarCollapsed }"
+            @mouseenter="sidebarCollapsed = false" @mouseleave="sidebarCollapsed = true">
             <div class="sidebar-header">
                 <div class="logo">
                     <span class="logo-icon">○</span>
-                    <span class="logo-text">Ollama</span>
+                    <span class="logo-text" x-show="!sidebarCollapsed">Ollama</span>
                 </div>
-                <button id="new-chat-btn" class="icon-btn" title="New Chat">
+                <button @click="newChat()" class="icon-btn" title="New Chat"
+                    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-90"
+                    x-transition:enter-end="opacity-100 scale-100">
                     <svg viewBox="0 0 24 24" width="20" height="20">
                         <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                     </svg>
@@ -43,108 +50,214 @@
             </div>
             <div class="sidebar-nav">
                 <div class="nav-section">
-                    <h3>History</h3>
-                    <div id="chat-history">
-                        <!-- History items without icons -->
+                    <h3 x-show="!sidebarCollapsed">History</h3>
+                    <div id="chat-history" class="chat-history-alpine">
+                        <template x-for="chat in sortedChats" :key="chat.id">
+                            <div class="history-item" :class="{ 'active': currentChatId === chat.id }"
+                                @click="loadChat(chat.id)" draggable="true"
+                                @dragstart="draggedChatId = chat.id"
+                                @dragover.prevent="dragOverChatId = chat.id"
+                                @dragleave="dragOverChatId = null"
+                                @drop="reorderChat(chat.id)"
+                                :class="{ 'drag-over': dragOverChatId === chat.id }">
+                                <span class="chat-title" x-text="chat.title"></span>
+                                <span class="chat-time" x-show="!sidebarCollapsed" x-text="chat.timeLabel"></span>
+                                <span class="delete-history-item" title="Delete chat"
+                                    @click.stop="deleteChat(chat.id)">&times;</span>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
-            <div class="resource-monitor">
-                <div class="stat-item">CPU: <span id="cpu-usage">--%</span></div>
-                <div class="stat-item">RAM: <span id="ram-usage">-- / -- GB</span></div>
+            <div class="resource-monitor" x-show="!sidebarCollapsed">
+                <div class="stat-item">CPU: <span x-text="cpuUsage">--%</span></div>
+                <div class="stat-item">RAM: <span x-text="ramUsage">-- / -- GB</span></div>
             </div>
             <div class="sidebar-footer">
                 <div class="user-profile">
-                    <span id="username-display">User</span>
+                    <span x-text="settings.username">User</span>
                 </div>
-                <button id="settings-btn">Settings</button>
+                <button @click="showSettings = true">Settings</button>
             </div>
         </aside>
 
         <main>
             <header>
                 <div class="model-selector">
-                    <select id="model-select">
-                        <option disabled selected>Connecting...</option>
+                    <select x-model="selectedModel" @change="onModelChange()" id="model-select">
+                        <option disabled selected x-text="statusText">Connecting...</option>
+                        <template x-for="model in models" :key="model.name">
+                            <option :value="model.name" x-text="model.name"></option>
+                        </template>
                     </select>
                 </div>
                 <div id="status-container" style="display: flex; align-items: center; gap: 18px;">
                     <a href="features.html" target="_blank"
                         style="text-decoration: none; font-size: 11px; font-weight: 600; color: var(--accent); opacity: 0.8; transition: opacity 0.2s; margin-right: 5px;"
                         onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.8">System Features</a>
-                    <button id="artifact-toggle-btn" title="Toggle Artifact Panel"
-                        style="background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        ⬡ Artifacts
+                    <button @click="showArtifactPanel = !showArtifactPanel" title="Toggle Artifact Panel"
+                        style="background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent); padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                        x-text="showArtifactPanel ? '⬡ Hide Artifacts' : '⬡ Artifacts'">
                     </button>
-                    <div id="status-indicator" class="status-indicator">
+                    <div id="status-indicator" class="status-indicator" :class="statusClass">
                         <div class="status-dot"></div>
-                        <span class="status-text">Status: Offline</span>
+                        <span class="status-text" x-text="statusText">Status: Offline</span>
                     </div>
                 </div>
                 <div id="nix-status-indicator" class="status-indicator" style="margin-left: 15px;">
-                    <div class="status-dot" style="background-color: var(--text-secondary);"></div>
-                    <span class="status-text">Nix: Sleeping...</span>
+                    <div class="status-dot" :style="{ backgroundColor: nixOnline ? '#10b981' : '#f59e0b' }"></div>
+                    <span class="status-text" x-text="nixOnline ? 'Nix: Online' : 'Nix: Waking...'"></span>
                 </div>
             </header>
 
             <div id="chat-container" class="chat-container">
-                <div id="welcome-screen" class="welcome-screen">
+                <!-- Welcome Screen -->
+                <div x-show="messages.length === 0" class="welcome-screen"
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 translate-y-4"
+                    x-transition:enter-end="opacity-100 translate-y-0">
                     <h1>How can I help you today?</h1>
                     <div class="suggestions-grid">
-                        <div class="suggestion-card">
-                            <p>"Assistance with document processing."</p>
+                        <template x-for="(suggestion, idx) in suggestions" :key="idx">
+                            <div class="suggestion-card" @click="useSuggestion(suggestion)">
+                                <p x-text="suggestion"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <template x-for="(msg, idx) in messages" :key="msg.id || idx">
+                    <div class="message" :class="msg.role === 'user' ? 'user-message' : 'ai-message'"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 translate-y-2"
+                        x-transition:enter-end="opacity-100 translate-y-0">
+                        <div class="message-avatar">
+                            <template x-if="msg.role === 'user' && settings.avatar">
+                                <img :src="settings.avatar" alt="User">
+                            </template>
+                            <template x-if="msg.role === 'user' && !settings.avatar">
+                                <span>U</span>
+                            </template>
+                            <template x-if="msg.role === 'ai' && settings.aiAvatar">
+                                <img :src="settings.aiAvatar" alt="AI">
+                            </template>
+                            <template x-if="msg.role === 'ai' && !settings.aiAvatar">
+                                <span x-text="(settings.aiName || 'A')[0]"></span>
+                            </template>
                         </div>
-                        <div class="suggestion-card">
-                            <p>"Standard technical query resolution."</p>
-                        </div>
-                        <div class="suggestion-card">
-                            <p>"Drafting of routine correspondence."</p>
-                        </div>
-                        <div class="suggestion-card">
-                            <p>"Verification of system data logic."</p>
+                        <div class="message-content">
+                            <!-- Thinking block for AI messages -->
+                            <template x-if="msg.role === 'ai' && msg.thinking">
+                                <details class="thinking-block" :open="msg.isStreaming">
+                                    <summary>Thinking...</summary>
+                                    <div class="thinking-content" x-html="msg.thinking"></div>
+                                </details>
+                            </template>
+                            <!-- Message text -->
+                            <div x-html="msg.html || msg.text"></div>
+                            <!-- Code blocks rendered progressively -->
+                            <!-- Image attachments -->
+                            <template x-if="msg.imageData">
+                                <div class="chat-image-container">
+                                    <img :src="msg.imageData" class="chat-image" alt="Attached image">
+                                </div>
+                            </template>
+                            <!-- Message reactions -->
+                            <div class="message-reactions" x-show="msg.role === 'ai'">
+                                <button class="reaction-btn" @click="msg.reaction = msg.reaction === 'up' ? null : 'up'"
+                                    :class="{ active: msg.reaction === 'up' }">👍</button>
+                                <button class="reaction-btn" @click="msg.reaction = msg.reaction === 'down' ? null : 'down'"
+                                    :class="{ active: msg.reaction === 'down' }">👎</button>
+                                <button class="reaction-btn" @click="copyMessage(msg)" title="Copy message">📋</button>
+                            </div>
                         </div>
                     </div>
+                </template>
+
+                <!-- Streaming indicator -->
+                <div x-show="isStreaming" class="message ai-message"
+                    x-transition:enter="transition ease-out duration-200">
+                    <div class="message-avatar">
+                        <template x-if="settings.aiAvatar">
+                            <img :src="settings.aiAvatar" alt="AI">
+                        </template>
+                        <template x-if="!settings.aiAvatar">
+                            <span x-text="(settings.aiName || 'A')[0]"></span>
+                        </template>
+                    </div>
+                    <div class="message-content">
+                        <div class="typing-indicator">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error banner -->
+                <div x-show="errorMessage" class="error-banner"
+                    x-transition:enter="transition ease-out duration-200"
+                    x-transition:enter-start="opacity-0 -translate-y-2"
+                    x-transition:enter-end="opacity-100 translate-y-0">
+                    <span x-text="errorMessage"></span>
+                    <button @click="regenerateLast()">Regenerate</button>
+                    <button @click="errorMessage = null">Dismiss</button>
                 </div>
             </div>
 
             <div class="input-area">
                 <div class="context-info" id="context-info">
                     <div class="context-bar-bg">
-                        <div id="context-bar"></div>
+                        <div id="context-bar" :style="{ width: contextRatio + '%' }"
+                            :class="{ 'full': contextRatio >= 100 }"></div>
                     </div>
                 </div>
-                <div id="attachments-container" class="attachments-container"></div>
+                <div id="attachments-container" class="attachments-container">
+                    <template x-for="attachment in attachments" :key="attachment.name">
+                        <div class="file-chip" @click="showPreview(attachment)">
+                            <span class="file-name" x-text="attachment.name"></span>
+                            <span class="file-status" x-text="'[' + attachment.status + ']'"></span>
+                            <span class="remove-file" @click.stop="removeAttachment(attachment)"
+                                style="cursor:pointer; margin-left:10px;">&times;</span>
+                        </div>
+                    </template>
+                </div>
                 <div class="input-container">
-                    <textarea id="user-input" placeholder="Type message..."></textarea>
+                    <textarea id="user-input" x-model="userInput" @input="onInputChange()"
+                        @keydown.enter.prevent="!sendDisabled && sendMessage()" placeholder="Type message..."
+                        rows="1"></textarea>
                     <div class="input-actions">
                         <div class="input-actions-left">
-                            <input type="file" id="file-input" multiple hidden>
-                            <button id="attach-btn" class="secondary-btn">Attach</button>
-                            <div class="search-toggle">
-                                <input type="checkbox" id="search-web-toggle">
+                            <input type="file" id="file-input" multiple hidden @change="handleFileUpload($event)">
+                            <button @click="$el.nextElementSibling.click()" class="secondary-btn">Attach</button>
+                            <div class="search-toggle"
+                                :class="{ 'active': searchWeb }">
+                                <input type="checkbox" id="search-web-toggle" x-model="searchWeb">
                                 <label for="search-web-toggle">Web Search</label>
                             </div>
                             <div class="tool-selector">
-                                <select id="tool-select">
+                                <select x-model="selectedTool" @change="onToolChange()">
                                     <option value="none">No Tool</option>
                                     <option value="graph">Graph Plotter</option>
                                     <option value="story">Story Mode</option>
                                     <option value="code">Code Interpreter</option>
                                     <option value="image-gen">Image Generator (Puter.js)</option>
                                 </select>
-                                <button id="launch-story-btn" class="secondary-btn hidden"
+                                <button class="secondary-btn" x-show="selectedTool === 'story'"
+                                    @click="window.open('story.html', '_blank')"
                                     style="margin-left: 10px; border-color: var(--accent); color: var(--accent);">Launch
                                     Story Mode →</button>
                             </div>
-                            <div class="deep-think-config">
-                                <input type="checkbox" id="deep-think-toggle">
+                            <div class="deep-think-config" :class="{ 'active': deepThink }">
+                                <input type="checkbox" id="deep-think-toggle" x-model="deepThink">
                                 <label for="deep-think-toggle">Deep Think</label>
-                                <input type="number" id="deep-think-iterations" value="1" min="1" max="5">
+                                <input type="number" x-model.number="deepThinkIterations" value="1" min="1" max="5">
                             </div>
                         </div>
                         <div class="input-actions-right">
-                            <button id="stop-btn" class="stop-btn">Stop</button>
-                            <button id="send-btn" disabled>Send</button>
+                            <button x-show="isStreaming" @click="stopGeneration()" class="stop-btn"
+                                style="display: inline-block;">Stop</button>
+                            <button id="send-btn" @click="sendMessage()" :disabled="sendDisabled"
+                                :class="{ 'disabled': sendDisabled }">Send</button>
                         </div>
                     </div>
                 </div>
@@ -153,27 +266,44 @@
         </main>
 
         <!-- Artifact Panel -->
-        <aside id="artifact-panel" class="artifact-panel hidden">
+        <aside id="artifact-panel" class="artifact-panel" x-show="showArtifactPanel"
+            x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0 translate-x-4"
+            x-transition:enter-end="opacity-100 translate-x-0"
+            x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-x-0"
+            x-transition:leave-end="opacity-0 translate-x-4">
             <div class="artifact-panel-header">
                 <span>Artifacts</span>
-                <button id="artifact-panel-close" title="Close panel">&times;</button>
+                <button @click="showArtifactPanel = false" title="Close panel">&times;</button>
             </div>
             <div id="artifact-panel-body" class="artifact-panel-body">
-                <div class="artifact-empty-state">
-                    <div class="artifact-empty-icon">⬡</div>
-                    <p>No artifacts yet.</p>
-                    <p style="font-size:11px; opacity:0.6;">Charts &amp; code results will appear here.</p>
-                </div>
+                <template x-if="artifacts.length === 0">
+                    <div class="artifact-empty-state">
+                        <div class="artifact-empty-icon">⬡</div>
+                        <p>No artifacts yet.</p>
+                        <p style="font-size:11px; opacity:0.6;">Charts &amp; code results will appear here.</p>
+                    </div>
+                </template>
+                <template x-for="(artifact, idx) in artifacts" :key="idx">
+                    <div class="artifact-item" x-html="artifact.html"></div>
+                </template>
             </div>
         </aside>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="modal-overlay hidden">
-        <div class="modal-content">
+    <div x-show="showSettings" class="modal-overlay" @click.self="showSettings = false"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        <div class="modal-content" @click.outside="showSettings = false">
             <div class="modal-header">
                 <h2 style="font-size: 16px; font-weight: normal;">Settings</h2>
-                <button id="close-settings">&times;</button>
+                <button @click="showSettings = false">&times;</button>
             </div>
             <div class="modal-body">
                 <!-- Section: User Profile -->
@@ -182,11 +312,12 @@
                     <div class="setting-grid">
                         <div class="setting-item">
                             <label>Display Name</label>
-                            <input type="text" id="setting-username" placeholder="Enter your name">
+                            <input type="text" x-model="settings.username" @change="saveSettings()"
+                                placeholder="Enter your name">
                         </div>
                         <div class="setting-item">
                             <label>Profile Picture</label>
-                            <input type="file" id="setting-avatar" accept="image/*">
+                            <input type="file" @change="loadAvatar($event)" accept="image/*">
                         </div>
                     </div>
                 </div>
@@ -197,16 +328,17 @@
                     <div class="setting-grid">
                         <div class="setting-item">
                             <label>AI Name</label>
-                            <input type="text" id="setting-ai-name" placeholder="e.g. Assistant, Jarvis">
+                            <input type="text" x-model="settings.aiName" @change="saveSettings()"
+                                placeholder="e.g. Assistant, Jarvis">
                         </div>
                         <div class="setting-item">
                             <label>AI Profile Picture</label>
-                            <input type="file" id="setting-ai-avatar" accept="image/*">
+                            <input type="file" @change="loadAiAvatar($event)" accept="image/*">
                         </div>
                     </div>
                     <div class="setting-item">
                         <label>System Prompt (Personality)</label>
-                        <textarea id="setting-system-prompt" rows="3"
+                        <textarea x-model="settings.systemPrompt" @change="saveSettings()" rows="3"
                             placeholder="e.g. You are a helpful assistant who speaks like a pirate."></textarea>
                     </div>
                 </div>
@@ -217,26 +349,28 @@
                     <div class="setting-grid">
                         <div class="setting-item">
                             <label>Ollama Base URL</label>
-                            <input type="text" id="setting-ollama-url" value="http://localhost:11434">
+                            <input type="text" x-model="settings.ollamaUrl" @change="saveSettings(); checkStatus()">
                         </div>
                         <div class="setting-item">
                             <label>Gemini API Key</label>
-                            <input type="password" id="setting-gemini-key" placeholder="Enter Gemini API Key">
+                            <input type="password" x-model="settings.geminiApiKey" @change="saveSettings(); checkStatus()"
+                                placeholder="Enter Gemini API Key">
                         </div>
                         <div class="setting-item">
                             <label>Theme</label>
-                            <select id="setting-theme">
+                            <select x-model="settings.theme" @change="saveSettings()">
                                 <option value="dark">Dark</option>
                                 <option value="light">Light</option>
                             </select>
                         </div>
                         <div class="setting-item">
                             <label>Context Limit (tokens)</label>
-                            <input type="number" id="setting-context-limit" value="4096" step="512">
+                            <input type="number" x-model.number="settings.contextLimit" @change="saveSettings()"
+                                value="4096" step="512">
                         </div>
                         <div class="setting-item">
                             <label>Imagen Quality (Puter.js)</label>
-                            <select id="setting-imagen-model">
+                            <select x-model="settings.imagenModel" @change="saveSettings()">
                                 <option value="google/imagen-4.0-fast">Fast (Lowest)</option>
                                 <option value="google/imagen-4.0-preview">Balanced (Medium)</option>
                                 <option value="google/imagen-4.0-ultra">Ultra (Highest)</option>
@@ -244,26 +378,27 @@
                         </div>
                         <div class="setting-item">
                             <label>External Image Key (Unsplash)</label>
-                            <input type="password" id="setting-unsplash-key" placeholder="Access Key">
+                            <input type="password" x-model="settings.unsplashKey" @change="saveSettings()"
+                                placeholder="Access Key">
                         </div>
                     </div>
 
                     <div class="checkbox-group">
                         <div class="setting-item checkbox-setting">
                             <label>
-                                <input type="checkbox" id="setting-include-time">
+                                <input type="checkbox" x-model="settings.includeTime" @change="saveSettings()">
                                 Include current time in messages
                             </label>
                         </div>
                         <div class="setting-item checkbox-setting">
                             <label>
-                                <input type="checkbox" id="setting-safe-search">
+                                <input type="checkbox" x-model="settings.safeSearch" @change="saveSettings()">
                                 Safe Search (Filter explicit content)
                             </label>
                         </div>
                         <div class="setting-item checkbox-setting">
                             <label>
-                                <input type="checkbox" id="setting-disable-token-limit">
+                                <input type="checkbox" x-model="settings.disableTokenLimit" @change="saveSettings()">
                                 Disable History Limit (Use Full Context)
                             </label>
                         </div>
@@ -276,8 +411,8 @@
                     <div class="diagnostics-box"
                         style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02);">
                         <strong>🌐 Nix Execution Service</strong><br>
-                        Status: <span id="settings-nix-status"
-                            style="font-weight: bold; color: var(--accent);">Connecting...</span><br>
+                        Status: <span :style="{ color: nixOnline ? '#10b981' : '#f59e0b', fontWeight: 'bold' }"
+                            x-text="nixOnline ? 'Online & Ready' : 'Waking up (Render Cold Start)...'"></span><br>
                         Endpoint: <code>https://ollamas-ahh.onrender.com</code><br>
                         <p style="margin-top: 5px; opacity: 0.8;">Secure Nix-based Python sandbox with a 30s timeout and
                             a 5000 character output limit.</p>
@@ -296,25 +431,42 @@
 
                 <div class="setting-section danger-zone">
                     <h3>Danger Zone</h3>
-                    <button id="clear-history-btn" class="danger-btn">Clear All Chat History</button>
+                    <button @click="clearAllHistory()" class="danger-btn">Clear All Chat History</button>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- File Preview Modal -->
-    <div id="preview-modal" class="modal-overlay hidden">
-        <div class="modal-content preview-modal-content">
+    <div x-show="showPreviewModal" class="modal-overlay" @click.self="showPreviewModal = false"
+        x-transition:enter="transition ease-out duration-200"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        <div class="modal-content preview-modal-content" @click.outside="showPreviewModal = false">
             <div class="modal-header">
-                <h2 id="preview-title" style="font-size: 16px; font-weight: normal;">File Preview</h2>
-                <button id="close-preview">&times;</button>
+                <h2 x-text="'Preview: ' + (previewAttachment?.name || '')"
+                    style="font-size: 16px; font-weight: normal;"></h2>
+                <button @click="showPreviewModal = false">&times;</button>
             </div>
-            <div id="preview-body" class="modal-body preview-body">
-                <!-- Content will be injected here -->
+            <div class="modal-body preview-body">
+                <template x-if="previewAttachment?.type?.startsWith('image/') && previewAttachment?.dataUrl">
+                    <div>
+                        <img :src="previewAttachment.dataUrl" class="preview-image" alt="Preview">
+                        <br>
+                        <strong>Extracted Text:</strong>
+                        <hr>
+                        <pre x-text="previewAttachment?.text || '[No text]'"></pre>
+                    </div>
+                </template>
+                <template x-if="!previewAttachment?.type?.startsWith('image/')">
+                    <pre x-text="previewAttachment?.text || '[No content]'"></pre>
+                </template>
             </div>
         </div>
     </div>
-
-    <script src="app.js" type="module"></script>
 </body>
 
 </html>
