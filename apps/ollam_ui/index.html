@@ -252,10 +252,14 @@
                                 <label for="deep-think-toggle">Deep Think</label>
                                 <input type="number" x-model.number="deepThinkIterations" value="1" min="1" max="5">
                             </div>
+                            <div class="think-toggle" :class="{ 'active': thinkEnabled }"
+                                title="Enable model thinking (DeepSeek R1, Qwen 3)">
+                                <input type="checkbox" id="think-toggle" x-model="thinkEnabled">
+                                <label for="think-toggle">🧠 Think</label>
+                            </div>
                         </div>
                         <div class="input-actions-right">
-                            <button x-show="isStreaming" @click="stopGeneration()" class="stop-btn"
-                                style="display: inline-block;">Stop</button>
+                            <button x-show="isStreaming" @click="stopGeneration()" class="stop-btn">Stop</button>
                             <button id="send-btn" @click="sendMessage()" :disabled="sendDisabled"
                                 :class="{ 'disabled': sendDisabled }">Send</button>
                         </div>
@@ -286,7 +290,10 @@
                     </div>
                 </template>
                 <template x-for="(artifact, idx) in artifacts" :key="idx">
-                    <div class="artifact-item" x-html="artifact.html"></div>
+                    <div class="artifact-item">
+                        <div class="artifact-item-header" x-text="artifact.title"></div>
+                        <div class="artifact-item-body" x-html="artifact.html"></div>
+                    </div>
                 </template>
             </div>
         </aside>
@@ -413,7 +420,7 @@
                         <strong>🌐 Nix Execution Service</strong><br>
                         Status: <span :style="{ color: nixOnline ? '#10b981' : '#f59e0b', fontWeight: 'bold' }"
                             x-text="nixOnline ? 'Online & Ready' : 'Waking up (Render Cold Start)...'"></span><br>
-                        Endpoint: <code>https://ollamas-ahh.onrender.com</code><br>
+                        Endpoint: <code x-text="backendUrl">https://ollamas-ahh.onrender.com</code><br>
                         <p style="margin-top: 5px; opacity: 0.8;">Secure Nix-based Python sandbox with a 30s timeout and
                             a 5000 character output limit.</p>
                     </div>

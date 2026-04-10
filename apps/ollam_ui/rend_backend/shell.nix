@@ -6,7 +6,7 @@ pkgs.mkShell {
       ps.fastapi
       ps.uvicorn
       ps.pydantic
-      ps.duckduckgo-search
+      ps.ddgs
     ]))
     pkgs.bash
     pkgs.coreutils

@@ -9,7 +9,10 @@ export class SearchService {
         try {
             const safeVal = safeSearch ? "moderate" : "off";
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+            const timeoutId = setTimeout(() => {
+                console.warn(`[SearchService] Search request timed out after 30s`);
+                controller.abort();
+            }, 30000); // Increased to 30 seconds for slow backends (e.g. Render cold start)
 
             console.log(`[SearchService] Fetching from local backend: ${this.baseUrl}/search`);
             const response = await fetch(`${this.baseUrl}/search`, {
@@ -25,7 +28,8 @@ export class SearchService {
             clearTimeout(timeoutId);
 
             if (!response.ok) {
-                console.warn(`[SearchService] Backend returned status: ${response.status}`);
+                const errText = await response.text().catch(() => 'No error body');
+                console.warn(`[SearchService] Backend returned status: ${response.status}. Body: ${errText}`);
                 return [];
             }
 

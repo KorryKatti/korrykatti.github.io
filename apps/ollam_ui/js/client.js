@@ -71,7 +71,7 @@ export class OllamaClient {
         }
     }
 
-    async chat(model, prompt, systemPrompt, onChunk, abortSignal) {
+    async chat(model, prompt, systemPrompt, onChunk, abortSignal, think = false) {
         if (model.startsWith('gemini-')) {
             return this.chatGemini(model, prompt, systemPrompt, onChunk, abortSignal);
         }
@@ -80,7 +80,8 @@ export class OllamaClient {
             const body = {
                 model: model,
                 prompt: prompt,
-                stream: true
+                stream: true,
+                think: think
             };
             if (systemPrompt) body.system = systemPrompt;
 
@@ -95,6 +96,7 @@ export class OllamaClient {
 
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
+            let fullThinking = '';
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -107,7 +109,13 @@ export class OllamaClient {
                     if (!line.trim()) continue;
                     try {
                         const json = JSON.parse(line);
-                        onChunk(json.response, json.done);
+                        // Ollama API: thinking content arrives in separate 'thinking' field
+                        if (json.thinking) {
+                            fullThinking += json.thinking;
+                            onChunk(json.response || '', json.done, fullThinking);
+                        } else {
+                            onChunk(json.response || '', json.done, fullThinking);
+                        }
                     } catch (e) {
                         // Partial JSON
                     }

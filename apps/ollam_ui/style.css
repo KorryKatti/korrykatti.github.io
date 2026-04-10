@@ -599,7 +599,8 @@ textarea#user-input {
 }
 
 .search-toggle,
-.deep-think-config {
+.deep-think-config,
+.think-toggle {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -611,16 +612,22 @@ textarea#user-input {
     border-radius: 20px;
     cursor: pointer;
     user-select: none;
+    white-space: nowrap;
 }
 
 .search-toggle:has(input:checked),
-.deep-think-config:has(input:checked) {
+.deep-think-config:has(input:checked),
+.think-toggle:has(input:checked),
+.search-toggle.active,
+.deep-think-config.active,
+.think-toggle.active {
     background: var(--accent-soft, rgba(99, 102, 241, 0.1));
     color: var(--accent);
 }
 
 .search-toggle input[type="checkbox"],
-.deep-think-config input[type="checkbox"] {
+.deep-think-config input[type="checkbox"],
+.think-toggle input[type="checkbox"] {
     cursor: pointer;
     accent-color: var(--accent);
     width: 14px;
@@ -695,7 +702,6 @@ body.dark .tool-selector select {
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    display: none;
     letter-spacing: 0.02em;
 }
 
@@ -1442,9 +1448,195 @@ body.dark .error-banner {
 
 /* Search toggle active state */
 .search-toggle.active,
-.deep-think-config.active {
+.deep-think-config.active,
+.think-toggle.active {
     background: var(--accent-soft, rgba(99, 102, 241, 0.1));
     color: var(--accent);
+}
+
+/* ===== Graph in chat ===== */
+.graph-wrapper {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    margin: 10px 0;
+}
+
+.graph-wrapper canvas {
+    max-height: 240px;
+    width: 100% !important;
+}
+
+/* ===== Generated image in chat ===== */
+.generated-image-wrap {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.generated-image {
+    width: 100%;
+    max-width: 360px;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.generated-image:hover {
+    transform: scale(1.02);
+}
+
+.image-caption {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 6px;
+    opacity: 0.7;
+}
+
+/* ===== Collapsible tool errors ===== */
+.tool-error,
+.tool-log {
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+    border-radius: 8px;
+    margin: 8px 0;
+    font-size: 12px;
+}
+
+.tool-log {
+    background: var(--hover-bg);
+    border-color: var(--border-color);
+}
+
+.tool-error summary,
+.tool-log summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 500;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    color: var(--text-secondary);
+}
+
+.tool-error summary::before,
+.tool-log summary::before {
+    content: '›';
+    margin-right: 6px;
+    transition: transform 0.2s;
+    font-size: 14px;
+}
+
+.tool-error[open] summary::before,
+.tool-log[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.tool-error pre,
+.tool-log pre {
+    padding: 8px 12px 12px;
+    font-size: 11px;
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+/* ===== Artifact panel — clean ===== */
+.artifact-item {
+    background: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    animation: artifact-in 0.25s ease;
+}
+
+.artifact-item-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'Outfit', sans-serif;
+}
+
+.artifact-item-body {
+    padding: 12px;
+    font-size: 12px;
+}
+
+/* Artifact code details */
+.artifact-code-details summary {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+}
+
+.artifact-code-details summary::before {
+    content: '›';
+    margin-right: 6px;
+    transition: transform 0.2s;
+}
+
+.artifact-code-details[open] summary::before {
+    transform: rotate(90deg);
+}
+
+.artifact-code-output {
+    padding: 10px 12px;
+    background: var(--bg-sidebar);
+    border-radius: 6px;
+    font-size: 11px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin: 0;
+}
+
+.artifact-nix {
+    margin-top: 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+.artifact-nix summary {
+    padding: 6px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text-secondary);
+}
+
+.artifact-nix pre {
+    padding: 8px 12px;
+    font-size: 10px;
+    max-height: 120px;
+    overflow-y: auto;
+    margin: 0;
+}
+
+/* Artifact chart */
+.artifact-chart-wrap {
+    padding: 8px;
+}
+
+.artifact-chart-wrap canvas {
+    width: 100% !important;
+    max-height: 200px;
+}
+
+/* Artifact image */
+.artifact-image {
+    width: 100%;
+    border-radius: 8px;
+    display: block;
 }
 
 /* Send button disabled state */

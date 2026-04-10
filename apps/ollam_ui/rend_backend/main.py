@@ -60,19 +60,40 @@ async def root():
 async def ping():
     return {"status": "pong"}
 
+def _run_ddgs_search(query: str, max_results: int, safesearch: str):
+    """Run DDGS search with one retry on HTTP/2 protocol errors."""
+    import time
+    last_err = None
+    for attempt in range(2):
+        try:
+            with DDGS() as ddgs:
+                return list(ddgs.text(
+                    query=query,
+                    max_results=max_results,
+                    safesearch=safesearch
+                ))
+        except Exception as e:
+            last_err = e
+            err_str = str(e)
+            # HTTP/2 HPACK table size error from primp — retry once
+            if "LocalProtocolError" in err_str or "header block" in err_str:
+                if attempt == 0:
+                    time.sleep(0.5)
+                    continue
+            break
+    raise last_err
+
 @app.post("/search", response_model=SearchResponse)
 async def search(request: SearchRequest):
     if DDGS is None:
         print("DuckDuckGo Search package not installed. Skipping search.")
         return SearchResponse(results=[])
     try:
-        with DDGS() as ddgs:
-            results = ddgs.text(
-                query=request.query,
-                max_results=request.max_results or 5,
-                safesearch=request.safe_search or "moderate"
-            )
-        
+        results = _run_ddgs_search(
+            query=request.query,
+            max_results=request.max_results or 5,
+            safesearch=request.safe_search or "moderate"
+        )
         search_results = []
         for r in results:
             search_results.append(SearchResult(
@@ -80,7 +101,6 @@ async def search(request: SearchRequest):
                 url=r.get("href", ""),
                 content=r.get("body", "")[:1000]
             ))
-        
         return SearchResponse(results=search_results)
     except Exception as e:
         print(f"Search API Error: {str(e)}")
