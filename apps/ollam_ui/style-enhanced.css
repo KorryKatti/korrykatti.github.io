@@ -1,0 +1,1207 @@
+/* ═══════════════════════════════════════════════════════════
+   mini_fwrk Enhancement Layer for Ollama UI
+   Applies mini.css glassmorphism & component styling
+   NO functional changes — pure cosmetic enhancement
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Sidebar glass effect ───────────────────────────────── */
+.sidebar {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-right: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-header {
+  padding: 20px 20px 16px;
+}
+
+.logo-icon {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  box-shadow: 0 2px 12px var(--accent-glow);
+  border-radius: var(--radius);
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: var(--text);
+}
+
+/* ─── Sidebar new chat button ───────────────────────────── */
+.icon-btn#new-chat-btn {
+  background: var(--accent);
+  box-shadow: 0 2px 12px var(--accent-glow);
+  border: none;
+  transition: all var(--transition-md);
+}
+
+.icon-btn#new-chat-btn:hover {
+  background: var(--accent-2);
+  box-shadow: 0 4px 24px var(--accent-glow);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+/* ─── History items as chips ────────────────────────────── */
+.history-item {
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.history-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: height var(--transition-md);
+}
+
+.history-item:hover::before,
+.history-item.active::before {
+  height: 60%;
+}
+
+.history-item:hover {
+  background: var(--accent-lt);
+  transform: translateX(2px);
+}
+
+.history-item.active {
+  background: var(--accent-lt);
+  font-weight: 600;
+  color: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ─── Resource monitor as stat card ─────────────────────── */
+.resource-monitor {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-glass);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  background: var(--bg-3);
+  font-size: 10px;
+}
+
+.stat-item span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ─── Sidebar footer ────────────────────────────────────── */
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-glass);
+  background: transparent;
+}
+
+.sidebar-footer .user-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--bg-3);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sidebar-footer button {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--transition-md);
+}
+
+.sidebar-footer button:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Header as glass nav bar ───────────────────────────── */
+main header {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border-bottom: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-sm);
+  padding: 10px 24px;
+  gap: 16px;
+}
+
+/* ─── Model selector ────────────────────────────────────── */
+.model-selector select {
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.model-selector select:hover {
+  border-color: var(--border-2);
+}
+
+.model-selector select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ─── Status indicator as badge ─────────────────────────── */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+.status-online {
+  background: var(--success-lt);
+  border-color: rgba(45, 122, 79, 0.25);
+  color: var(--success);
+}
+
+.status-online .status-dot {
+  background: var(--success);
+}
+
+.status-offline {
+  background: var(--danger-lt);
+  border-color: rgba(192, 57, 43, 0.25);
+  color: var(--danger);
+}
+
+.status-offline .status-dot {
+  background: var(--danger);
+}
+
+/* ─── Main content background ───────────────────────────── */
+main {
+  background: var(--bg);
+  background-image: var(--noise);
+}
+
+/* ─── Welcome screen suggestion cards ───────────────────── */
+.suggestion-card {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  transition: all var(--transition-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.suggestion-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--noise);
+  pointer-events: none;
+  opacity: 0.4;
+  border-radius: inherit;
+}
+
+.suggestion-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  background: var(--bg-glass);
+}
+
+.suggestion-card p {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-screen h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  background: none;
+  -webkit-text-fill-color: unset;
+  color: var(--text);
+}
+
+/* ─── Message avatars ───────────────────────────────────── */
+.message-avatar {
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border-glass);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-md);
+}
+
+.message:hover .message-avatar {
+  box-shadow: var(--shadow);
+  transform: scale(1.05);
+}
+
+.message-avatar img {
+  border-radius: inherit;
+}
+
+/* ─── AI message glass card ─────────────────────────────── */
+.ai-message {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  transition: all var(--transition-md);
+}
+
+.ai-message:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+/* ─── User message accent border ────────────────────────── */
+.user-message {
+  background: var(--accent-lt);
+  border: 1px solid rgba(108, 92, 231, 0.12);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-xl);
+  margin-bottom: 20px;
+}
+
+/* ─── Message content ───────────────────────────────────── */
+.message-content {
+  line-height: 1.65;
+}
+
+.message-content code {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  border-left: 3px solid var(--accent);
+  padding: 14px 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  box-shadow: var(--shadow-sm);
+}
+
+body.dark .message-content code {
+  background: var(--bg-2);
+  border-color: var(--border);
+}
+
+/* ─── Thinking block ────────────────────────────────────── */
+.thinking-block {
+  background: var(--info-lt);
+  border: 1px solid rgba(26, 107, 138, 0.25);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--info);
+}
+
+body.dark .thinking-block {
+  background: var(--info-lt);
+}
+
+.thinking-block summary {
+  color: var(--info);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.thinking-content {
+  color: var(--text-2);
+  border-top-color: rgba(26, 107, 138, 0.15);
+}
+
+/* ─── Typing indicator ──────────────────────────────────── */
+.typing-indicator span {
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ─── Reaction buttons ──────────────────────────────────── */
+.reaction-btn {
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: var(--bg-3);
+  transition: all var(--transition);
+}
+
+.reaction-btn:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  transform: scale(1.1);
+}
+
+.reaction-btn.active {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* ─── Input area ────────────────────────────────────────── */
+.input-container {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.input-container:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-md);
+}
+
+textarea#user-input {
+  padding: 14px 16px 8px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+textarea#user-input::placeholder {
+  color: var(--text-3);
+}
+
+/* ─── Input actions ─────────────────────────────────────── */
+.input-actions {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border-glass);
+  padding: 8px 12px;
+}
+
+/* ─── Toggle pills (search, think, deep think) ──────────── */
+.search-toggle,
+.deep-think-config,
+.think-toggle {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all var(--transition-md);
+}
+
+.search-toggle:has(input:checked),
+.deep-think-config:has(input:checked),
+.think-toggle:has(input:checked),
+.search-toggle.active,
+.deep-think-config.active,
+.think-toggle.active {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.search-toggle input[type="checkbox"],
+.deep-think-config input[type="checkbox"],
+.think-toggle input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* ─── Tool selector ─────────────────────────────────────── */
+.tool-selector select {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--transition);
+  outline: none;
+}
+
+.tool-selector select:hover {
+  border-color: var(--border-2);
+}
+
+.tool-selector select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ─── Send button ───────────────────────────────────────── */
+#send-btn {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  padding: 7px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  box-shadow: 0 2px 12px var(--accent-glow);
+  transition: all var(--transition-md);
+  color: #fff;
+}
+
+#send-btn:hover:not(:disabled) {
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  box-shadow: 0 4px 24px var(--accent-glow);
+  transform: translateY(-1px);
+  opacity: 1;
+}
+
+#send-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Stop button ───────────────────────────────────────── */
+#stop-btn {
+  background: transparent;
+  border: 1.5px solid var(--danger);
+  border-radius: var(--radius-full);
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--danger);
+  transition: all var(--transition-md);
+}
+
+#stop-btn:hover {
+  background: var(--danger-lt);
+  box-shadow: 0 0 12px rgba(192, 57, 43, 0.2);
+}
+
+/* ─── Secondary/attach button ───────────────────────────── */
+.secondary-btn {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--transition-md);
+}
+
+.secondary-btn:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* ─── Context bar ───────────────────────────────────────── */
+.context-bar-bg {
+  background: var(--bg-3);
+  border-radius: var(--radius-full);
+  height: 4px;
+  overflow: hidden;
+}
+
+#context-bar {
+  background: linear-gradient(to right, var(--success), var(--accent));
+  box-shadow: 0 0 8px var(--accent-glow);
+  border-radius: var(--radius-full);
+}
+
+#context-bar.full {
+  background: var(--danger);
+  box-shadow: none;
+}
+
+/* ─── Attachment chips ──────────────────────────────────── */
+.attachments-container {
+  padding: 0 16px;
+}
+
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.file-chip:hover {
+  background: var(--accent-lt);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.file-chip .remove-file {
+  color: var(--danger);
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+}
+
+.file-chip .remove-file:hover {
+  opacity: 1;
+}
+
+.file-status {
+  color: var(--text-3);
+  font-size: 10px;
+}
+
+/* ─── Disclaimer ────────────────────────────────────────── */
+.disclaimer {
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 8px;
+  letter-spacing: 0.02em;
+}
+
+/* ─── Chat image container ──────────────────────────────── */
+.chat-image-container {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: 8px;
+  transition: all var(--transition-md);
+}
+
+.chat-image-container:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.chat-image {
+  border-radius: var(--radius);
+}
+
+/* ─── Graph wrapper ─────────────────────────────────────── */
+.graph-wrapper {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+}
+
+/* ─── Generated image wrapper ───────────────────────────── */
+.generated-image-wrap {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.generated-image {
+  border-radius: var(--radius);
+}
+
+/* ─── Error banner as alert ─────────────────────────────── */
+.error-banner {
+  background: var(--danger-lt);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  color: var(--danger);
+  font-size: 13px;
+  box-shadow: var(--shadow-sm);
+}
+
+body.dark .error-banner {
+  background: var(--danger-lt);
+}
+
+.error-banner button {
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-full);
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  color: inherit;
+  transition: all var(--transition);
+}
+
+.error-banner button:hover {
+  background: rgba(192, 57, 43, 0.15);
+}
+
+/* ─── Code execution details ────────────────────────────── */
+.code-execution-details {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.code-execution-details summary {
+  background: var(--accent-lt);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 10px 14px;
+  letter-spacing: 0.02em;
+}
+
+.code-output {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--accent) !important;
+  padding: 14px !important;
+  font-family: var(--font-mono) !important;
+  font-size: 12px !important;
+}
+
+/* ─── Tool errors & logs ────────────────────────────────── */
+.tool-error {
+  background: var(--danger-lt);
+  border: 1px solid rgba(192, 57, 43, 0.2);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius);
+}
+
+.tool-log {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.tool-error summary,
+.tool-log summary {
+  color: var(--text-2);
+  font-weight: 500;
+  font-size: 12px;
+}
+
+.tool-error pre,
+.tool-log pre {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-2);
+}
+
+/* ─── Artifact panel ────────────────────────────────────── */
+.artifact-panel {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border-left: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-sm);
+}
+
+.artifact-panel-header {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-glass);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: -0.015em;
+}
+
+.artifact-panel-header button {
+  border-radius: var(--radius-full);
+  transition: all var(--transition);
+}
+
+.artifact-panel-header button:hover {
+  background: var(--danger-lt);
+  color: var(--danger);
+}
+
+/* ─── Artifact items as cards ───────────────────────────── */
+.artifact-item {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: all var(--transition-md);
+}
+
+.artifact-item:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.artifact-item-header {
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border-glass);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: -0.01em;
+  color: var(--accent);
+  padding: 10px 14px;
+}
+
+.artifact-item-body {
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* ─── Artifact chart wrapper ────────────────────────────── */
+.artifact-chart-wrap {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px;
+}
+
+/* ─── Artifact code output ──────────────────────────────── */
+.artifact-code-output {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+/* ─── Artifact empty state ──────────────────────────────── */
+.artifact-empty-state {
+  color: var(--text-3);
+}
+
+.artifact-empty-icon {
+  opacity: 0.15;
+  color: var(--text-3);
+}
+
+/* ─── Settings modal ────────────────────────────────────── */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.modal-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--noise);
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0.35;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--border-glass);
+  padding: 20px 24px 16px;
+}
+
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+
+.modal-header button {
+  border-radius: var(--radius-full);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.modal-header button:hover {
+  background: var(--danger-lt);
+  color: var(--danger);
+  border-color: rgba(192, 57, 43, 0.3);
+}
+
+.modal-body {
+  padding: 20px 24px;
+}
+
+/* ─── Settings sections ─────────────────────────────────── */
+.setting-section {
+  margin-bottom: 28px;
+}
+
+.setting-section h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+/* ─── Settings inputs ───────────────────────────────────── */
+.setting-item input[type="text"],
+.setting-item input[type="number"],
+.setting-item input[type="password"],
+.setting-item select,
+.setting-item textarea {
+  background: var(--bg-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--text);
+  transition: all var(--transition);
+  outline: none;
+}
+
+.setting-item input:hover,
+.setting-item select:hover,
+.setting-item textarea:hover {
+  border-color: var(--border-2);
+}
+
+.setting-item input:focus,
+.setting-item select:focus,
+.setting-item textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+  background: var(--bg-overlay);
+}
+
+.setting-item label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ─── Checkbox settings ─────────────────────────────────── */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkbox-setting label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-2);
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.checkbox-setting input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 16px;
+  height: 16px;
+}
+
+/* ─── Diagnostics box ───────────────────────────────────── */
+.diagnostics-box {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px !important;
+  font-size: 11px !important;
+  color: var(--text-2) !important;
+  font-family: var(--font-mono) !important;
+}
+
+/* ─── Danger zone buttons ───────────────────────────────── */
+.danger-btn {
+  background: var(--danger-lt);
+  color: var(--danger);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--transition-md);
+}
+
+.danger-btn:hover {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(192, 57, 43, 0.35);
+}
+
+/* ─── Scrollbar styling ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-3);
+  border-radius: var(--radius-full);
+  border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+  background: var(--bg-3);
+}
+
+body.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-3);
+}
+
+/* ─── Preview modal ─────────────────────────────────────── */
+.preview-modal-content {
+  background: var(--bg-glass);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.preview-body {
+  background: var(--bg-2);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.preview-body pre {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+}
+
+.preview-image {
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Nix status indicator ──────────────────────────────── */
+#nix-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ─── Deep think number input ───────────────────────────── */
+.deep-think-config input[type="number"] {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-align: center;
+  font-size: 11px;
+  padding: 2px 4px;
+  outline: none;
+  width: 36px;
+}
+
+.deep-think-config input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+/* ─── Collapsible tool errors ───────────────────────────── */
+.tool-error summary::before,
+.tool-log summary::before {
+  color: var(--text-2);
+}
+
+/* ─── Artifact code details ─────────────────────────────── */
+.artifact-code-details summary {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.artifact-nix summary {
+  color: var(--text-3);
+  font-size: 10px;
+}
+
+.artifact-nix pre {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+}
+
+/* ─── Image caption ─────────────────────────────────────── */
+.chat-image-caption {
+  font-size: 11px;
+  color: var(--text-3);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+.image-caption {
+  font-size: 11px;
+  color: var(--text-3);
+  opacity: 0.7;
+}
+
+/* ─── Transition polish ─────────────────────────────────── */
+.history-item,
+.suggestion-card,
+.message,
+.reaction-btn,
+.file-chip,
+.artifact-item,
+#send-btn,
+.secondary-btn,
+.icon-btn {
+  transition: all var(--transition-md);
+}
+
+/* ─── Sidebar collapse polish ───────────────────────────── */
+.sidebar.sidebar-collapsed {
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+}
+
+.sidebar.sidebar-collapsed .logo-text,
+.sidebar.sidebar-collapsed .nav-section h3,
+.sidebar.sidebar-collapsed .resource-monitor,
+.sidebar.sidebar-collapsed .chat-time,
+.sidebar.sidebar-collapsed .user-profile {
+  display: none;
+}
+
+.sidebar.sidebar-collapsed .history-item {
+  justify-content: center;
+  padding: 10px;
+}
+
+.sidebar.sidebar-collapsed .history-item .chat-title {
+  display: none;
+}
+
+.sidebar.sidebar-collapsed .history-item .delete-history-item {
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar.sidebar-collapsed .sidebar-footer {
+  padding: 15px 10px;
+}
+
+/* ─── Drag over state ───────────────────────────────────── */
+.history-item.drag-over {
+  border-top: 2px solid var(--accent);
+  background: var(--accent-lt);
+}
+
+/* ─── Cloak utility ─────────────────────────────────────── */
+[x-cloak] {
+  display: none !important;
+}

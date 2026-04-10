@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mini_fwrk/mini.css">
+    <link rel="stylesheet" href="style-enhanced.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -18,11 +20,21 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module">
+        import Imagine from 'https://esm.sh/@themaximalist/imagine.js';
+        window.Imagine = Imagine;
+        window.ImagineService = {
+            A1111: 'a1111',
+            REPLICATE: 'replicate',
+            STABILITY: 'stability'
+        };
+    </script>
     <script src="https://js.puter.com/v2/"></script>
     <!-- 1. Alpine loads synchronously in <head>, available before body parses -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- 2. Register component immediately (synchronous, lazy-loads ES deps) -->
     <script src="js/register-component.js"></script>
+    <script src="mini_fwrk/mini.js"></script>
     <script src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c" defer></script>
 </head>
 
@@ -241,6 +253,7 @@
                                     <option value="story">Story Mode</option>
                                     <option value="code">Code Interpreter</option>
                                     <option value="image-gen">Image Generator (Puter.js)</option>
+                                    <option value="imagine-gen">Image Generator (Imagine.js)</option>
                                 </select>
                                 <button class="secondary-btn" x-show="selectedTool === 'story'"
                                     @click="window.open('story.html', '_blank')"
@@ -381,6 +394,14 @@
                                 <option value="google/imagen-4.0-fast">Fast (Lowest)</option>
                                 <option value="google/imagen-4.0-preview">Balanced (Medium)</option>
                                 <option value="google/imagen-4.0-ultra">Ultra (Highest)</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>Imagine.js Service</label>
+                            <select x-model="settings.imagineService" @change="saveSettings()">
+                                <option value="a1111">A1111 (Automatic1111)</option>
+                                <option value="replicate">Replicate</option>
+                                <option value="stability">Stability AI</option>
                             </select>
                         </div>
                         <div class="setting-item">

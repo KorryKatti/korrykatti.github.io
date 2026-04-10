@@ -21,6 +21,7 @@ function createState() {
             ollamaUrl: 'http://localhost:11434',
             geminiApiKey: '',
             imagenModel: 'google/imagen-4.0-fast',
+            imagineService: 'a1111',
             theme: 'dark',
             username: 'Local User',
             systemPrompt: '',
@@ -259,8 +260,33 @@ function createState() {
                 this.$nextTick(() => this.scrollToBottom());
 
                 try {
-                    // Step 1: Refine the user's prompt into a search query
-                    const refinementPrompt = `Transform the following user request into a concise, highly effective search engine query. Output ONLY the query, no explanations, no quotes.\n\nUser Request: "${text}"`;
+                    // Step 1: Build conversation context for search refinement
+                    const conversationContext = this.messages
+                        .filter(m => m.role !== 'ai' || m.text)
+                        .filter(m => !(m.role === 'ai' && m.text.includes('[REFINING_SEARCH_QUERY]')))
+                        .slice(-10) // Last 10 messages for context window
+                        .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.text}`)
+                        .join('\n\n');
+
+                    // Step 2: Refine the user's prompt into a search query WITH full conversation context
+                    const refinementPrompt = `You are a search query optimizer. Your job is to create the most effective search query based on the user's current request AND the ongoing conversation context.
+
+**Conversation so far:**
+${conversationContext}
+
+**Current user request:** "${text}"
+
+Your task:
+1. Understand what the user is asking NOW in the context of what was already discussed
+2. If they're building on a previous topic, include relevant context from earlier messages
+3. If they changed topics, focus only on the new request
+4. Output ONLY the search query string — no explanations, no quotes, no markdown
+
+Rules:
+- Keep it concise (5-15 words ideal)
+- Include key entities, concepts, and relationships from the conversation
+- If the user says "more about that" or "what else", reference the earlier topic
+- Output ONLY the raw search query`;
                     let refinedQuery = "";
                     await this.client.chat(this.selectedModel, refinementPrompt, "You are a search query optimizer. Output ONLY the search query string.", (chunk) => {
                         refinedQuery += chunk;
@@ -273,7 +299,21 @@ function createState() {
 
                     // Step 2: Perform the actual search with the refined query
                     const results = await this.searchService.search(refinedQuery, 'text', safeSearch);
-                    searchContext = `[REAL-TIME WEB DATA FOUND FOR "${refinedQuery}"]:\n\n` + results.map((r, i) => `${i + 1}. ${r.title} (${r.url})\n"${r.content}"`).join('\n\n');
+
+                    // Build contextual wrapper for search results — tells the AI what the user was discussing
+                    const searchContextSummary = this.messages
+                        .filter(m => m.role === 'user' && m.text !== text)
+                        .slice(-3)
+                        .map(m => m.text.substring(0, 100))
+                        .join(' | ');
+
+                    searchContext = `[REAL-TIME WEB SEARCH — CONTEXT-AWARE RESULTS]\n` +
+                        `[Search query: "${refinedQuery}" (refined from user request: "${text}")]\n` +
+                        `[Conversation topic: ${searchContextSummary || 'New topic'}]\n\n` +
+                        `Use these web results to answer the user's question in the context of your ongoing conversation:\n\n` +
+                        results.map((r, i) => `${i + 1}. ${r.title} (${r.url})\n"${r.content}"`).join('\n\n') +
+                        `\n\n[END OF WEB RESULTS — Use conversation context above to maintain continuity when answering.]`;
+
                     this.messages[searchMsgIdx].text = `System: Web search completed for "${refinedQuery}" (${results.length} sources).`;
                     this.messages[searchMsgIdx].html = `<em>System: Web search completed for "${refinedQuery}" (${results.length} sources).</em>`;
                 } catch (error) {
@@ -361,6 +401,8 @@ function createState() {
                     await this.executeCode(text, ctx, sys, mi, full);
                 } else if (selectedTool === 'image-gen') {
                     await this.executeImageGen(text, mi, full);
+                } else if (selectedTool === 'imagine-gen') {
+                    await this.executeImagineGen(text, mi, full);
                 }
 
                 // Save FINAL enriched message (with tool results) to history
@@ -684,6 +726,141 @@ If your response discusses temperature vs time, use those axes. If it discusses 
             }
         },
 
+        // ===== IMAGE GEN TOOL — Imagine.js =====
+        async executeImagineGen(userInput, mi, response) {
+            // Extract refined prompt from AI response
+            const promptMatch = response.match(/<prompt>([\s\S]*?)<\/prompt>/);
+            let refinedPrompt = promptMatch ? promptMatch[1].trim() : userInput;
+
+            // VALIDATION: Check if AI's refined prompt matches user's actual request
+            const userWords = userInput.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+            const refinedLower = refinedPrompt.toLowerCase();
+            const hasKeyword = userWords.some(w => refinedLower.includes(w));
+
+            if (!hasKeyword && promptMatch) {
+                console.warn('AI ignored user prompt, using original:', userInput);
+                refinedPrompt = userInput;
+            }
+
+            // LLM prompt remixing: use the model to enhance the prompt for better image generation
+            const remixPrompt = `You are an expert image prompt remixer. Given a text prompt, return a more detailed, vivid description suitable for AI image generation.
+
+Focus on:
+- Lighting, atmosphere, mood
+- Composition, camera angle, perspective
+- Color palette, textures, materials
+- Art style or medium (photorealistic, oil painting, digital art, etc.)
+
+Keep it concise (1-3 sentences). Output ONLY the remixed image prompt — no explanations.
+
+Original prompt: "${refinedPrompt}"`;
+
+            let remixedPrompt = refinedPrompt;
+            try {
+                await this.client.chat(this.selectedModel, remixPrompt, "Output ONLY the remixed image prompt. No explanations, no quotes, no markdown.", (chunk) => {
+                    remixedPrompt += chunk;
+                }, this.abortController?.signal || new AbortController().signal);
+                remixedPrompt = remixedPrompt.trim().replace(/^["']|["']$/g, '').replace(/^`+|`+$/g, '');
+            } catch (e) {
+                console.warn('LLM prompt remixing failed, using original prompt:', refinedPrompt);
+                remixedPrompt = refinedPrompt;
+            }
+
+            this.messages[mi].text += '\n\n🖼️ *Generating with Imagine.js...*';
+            this.messages[mi].html = this.renderMarkdown(this.messages[mi].text);
+            this.$nextTick(() => this.scrollToBottom());
+
+            const generateWithImagine = async (prompt) => {
+                const serviceName = this.settings.imagineService || 'a1111';
+
+                if (typeof Imagine !== 'function') {
+                    throw new Error('Imagine.js not loaded — check network connection');
+                }
+
+                const imageBuffer = await Imagine(prompt, { service: serviceName });
+
+                // Convert the image buffer to a data URL for display
+                let imageUrl;
+                if (imageBuffer instanceof Uint8Array || imageBuffer instanceof ArrayBuffer) {
+                    const blob = new Blob([imageBuffer], { type: 'image/png' });
+                    imageUrl = await this.blobToDataUrl(blob);
+                } else if (typeof imageBuffer === 'string') {
+                    imageUrl = imageBuffer;
+                } else {
+                    throw new Error('Unexpected image format from Imagine.js');
+                }
+
+                if (!imageUrl) throw new Error('Could not extract image from Imagine.js output');
+                return { imageUrl, provider: 'Imagine.js', service: serviceName };
+            };
+
+            const generateWithPuter = async (prompt) => {
+                const imagenModel = this.settings.imagenModel || 'google/imagen-4.0-fast';
+
+                if (typeof puter === 'undefined' || !puter.ai) {
+                    throw new Error('Puter.js not loaded');
+                }
+
+                const imageElement = await puter.ai.txt2img(prompt, {
+                    model: imagenModel,
+                    provider: "together-ai",
+                    disable_safety_checker: true
+                });
+
+                let imageUrl;
+                if (imageElement?.src) {
+                    if (imageElement.src.startsWith('blob:')) {
+                        imageUrl = await this.blobToDataUrl(imageElement.src);
+                    } else {
+                        imageUrl = imageElement.src;
+                    }
+                } else if (imageElement instanceof Blob || imageElement instanceof File) {
+                    imageUrl = await this.blobToDataUrl(imageElement);
+                } else {
+                    throw new Error('Could not extract image from Puter.js');
+                }
+
+                return { imageUrl, provider: 'Puter.js', service: imagenModel };
+            };
+
+            try {
+                // Try Imagine.js first, fall back to Puter.js on any error
+                let result;
+                try {
+                    result = await generateWithImagine(remixedPrompt);
+                } catch (imagineErr) {
+                    console.warn('⚠️ Imagine.js failed, falling back to Puter.js:', imagineErr.message);
+                    this.messages[mi].text = this.messages[mi].text.replace(/🖼️ \*Generating with Imagine\.js\.\.\.\*/, '');
+                    this.messages[mi].text += '\n\n🔄 *Imagine.js unavailable — falling back to Puter.js...*';
+                    this.messages[mi].html = this.renderMarkdown(this.messages[mi].text);
+                    this.$nextTick(() => this.scrollToBottom());
+                    result = await generateWithPuter(remixedPrompt);
+                }
+
+                // Remove status, add image with thumbnail
+                this.messages[mi].text = this.messages[mi].text.replace(/🔄 \*Imagine\.js unavailable.*\*/, '');
+                this.messages[mi].text = this.messages[mi].text.replace(/🖼️ \*Generating with Imagine\.js\.\.\.\*/, '');
+                const usedPrompt = remixedPrompt !== userInput ? ` (remixed)` : '';
+                this.messages[mi].text += `\n\n<div class="generated-image-wrap"><img src="${result.imageUrl}" alt="Generated image" class="generated-image"><div class="image-caption">${result.provider} — ${result.service}${usedPrompt}</div></div>`;
+                this.messages[mi].html = this.renderMarkdown(this.messages[mi].text);
+
+                // Artifact: replace previous image
+                this.artifacts = this.artifacts.filter(a => a.type !== 'image');
+                this.artifacts.push({
+                    type: 'image', title: `Generated Image (${result.provider})`,
+                    html: `<img src="${result.imageUrl}" class="artifact-image" alt="Generated image">`
+                });
+
+                this.$nextTick(() => this.scrollToBottom());
+            } catch (e) {
+                this.messages[mi].text = this.messages[mi].text.replace(/🖼️ \*Generating with Imagine\.js\.\.\.\*/, '');
+                this.messages[mi].text = this.messages[mi].text.replace(/🔄 \*Imagine\.js unavailable.*\*/, '');
+                this.messages[mi].text += `\n\n<details class="tool-error"><summary>🖼️ Image generation failed</summary><pre>${this.escapeHtml(e.message)}</pre></details>`;
+                this.messages[mi].html = this.renderMarkdown(this.messages[mi].text);
+                this.$nextTick(() => this.scrollToBottom());
+            }
+        },
+
         repairJson(json) {
             if (!json) return json;
             return json.trim()
@@ -767,7 +944,8 @@ If your response discusses temperature vs time, use those axes. If it discusses 
             const toolMap = {
                 'graph': '\n[TOOL: GRAPH_PLOTTER]\nWhen the user provides data or asks for a visualization, first provide a text summary. Then, at the end of your response, output a markdown block with the numerical data. A separate process will then convert this into a Chart.js visualization.',
                 'code': '\n[TOOL: CODE_INTERPRETER]\nYou have access to a Nix-based Python sandbox. To execute code, wrap it in a ```python\n# code here\n``` block. You can use libraries like numpy, pandas, matplotlib, requests, PIL. For specific Nix packages, add a comment: # nix: package_name',
-                'image-gen': '\n[TOOL: IMAGE_GENERATOR]\nTo generate an image, refine the user\'s request into a detailed, vivid prompt and wrap it in <prompt>...</prompt> tags. Provide a brief description of what you\'re generating.'
+                'image-gen': '\n[TOOL: IMAGE_GENERATOR (Puter.js)]\nTo generate an image, refine the user\'s request into a detailed, vivid prompt and wrap it in <prompt>...</prompt> tags. Provide a brief description of what you\'re generating.',
+                'imagine-gen': '\n[TOOL: IMAGE_GENERATOR (Imagine.js)]\nTo generate an image, refine the user\'s request into a detailed, vivid prompt and wrap it in <prompt>...</prompt> tags. Provide a brief description of what you\'re generating. Imagine.js uses Stable Diffusion and supports A1111, Replicate, or Stability backends.'
             };
             return toolMap[this.selectedTool] || '';
         },
