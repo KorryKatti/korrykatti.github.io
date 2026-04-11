@@ -591,7 +591,7 @@ If your response discusses temperature vs time, use those axes. If it discusses 
                 try {
                     const result = await this.nixService.run(code, 'python', {
                         userPrompt: userInput,
-                        aiText: response,
+                        aiText: this.extractTextWithoutCode(response),
                         model: this.selectedModel
                     });
                     const output = `${result.stdout || ''}${result.stderr ? `\n[Errors]:\n${result.stderr}` : ''}`.trim() || 'No output';
@@ -961,14 +961,21 @@ Original prompt: "${refinedPrompt}"`;
 
         copyMessage(msg) { navigator.clipboard.writeText(msg.text); },
 
+        // Extract text content without code blocks for logging
+        extractTextWithoutCode(fullText) {
+            // Remove all code blocks (```...```)
+            return fullText.replace(/```[\s\S]*?```/g, '[CODE]').trim();
+        },
+
         async setReaction(msg, reactionType) {
             // Toggle reaction
             const newReaction = msg.reaction === reactionType ? null : reactionType;
             msg.reaction = newReaction;
 
             // Only submit to backend if this was a code interpreter mode message
-            if (msg.isCodeResult && this.nixService) {
-                const reviewValue = newReaction === 'up' ? 1 : (newReaction === 'down' ? 0 : 0);
+            // Only submit if there's an actual reaction (not when toggling off)
+            if (msg.isCodeResult && this.nixService && newReaction) {
+                const reviewValue = newReaction === 'up' ? 1 : 0;
                 await this.nixService.submitReview(reviewValue, 'code');
             }
         },
