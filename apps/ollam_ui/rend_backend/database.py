@@ -45,6 +45,7 @@ def append_log_row(user_prompt: str, ai_text: str, ai_code: str, model: str, sta
     ai_text = str(ai_text)
     ai_code = str(ai_code)
     model = str(model)
+    code_output = str(code_output)
     
     try:
         status = int(status)
@@ -59,13 +60,14 @@ def append_log_row(user_prompt: str, ai_text: str, ai_code: str, model: str, sta
     if not service or not spreadsheet_id:
         return False
         
-    values = [[
-        user_prompt,
-        ai_text,
-        ai_code,
-        model,
-        status,
-        review
+    values = [[ # triggered when code executor ran
+        user_prompt,  # what user aksed
+        ai_text, # text part of the output ai provided
+        ai_code, # code part of the output ai provided
+        model, # model used
+        code_output, # output of the code even if its error
+        status, # status of the code execution , like exit code : 0 is good others bad
+        review # review of the code execution, 1 good 0 bad , get from thumbsup or down on frontend
     ]]
     
     body = {'values': values}

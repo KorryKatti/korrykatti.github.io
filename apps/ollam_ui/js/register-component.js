@@ -779,15 +779,18 @@ Original prompt: "${refinedPrompt}"`;
 
                 const imageBuffer = await Imagine(prompt, { service: serviceName });
 
-                // Convert the image buffer to a data URL for display
+                // Convert the image result to a data URL for display
                 let imageUrl;
                 if (imageBuffer instanceof Uint8Array || imageBuffer instanceof ArrayBuffer) {
                     const blob = new Blob([imageBuffer], { type: 'image/png' });
                     imageUrl = await this.blobToDataUrl(blob);
+                } else if (imageBuffer instanceof Blob || imageBuffer instanceof File) {
+                    imageUrl = await this.blobToDataUrl(imageBuffer);
                 } else if (typeof imageBuffer === 'string') {
                     imageUrl = imageBuffer;
                 } else {
-                    throw new Error('Unexpected image format from Imagine.js');
+                    const type = imageBuffer ? imageBuffer.constructor.name : typeof imageBuffer;
+                    throw new Error(`Unexpected image format from Imagine.js: received ${type}`);
                 }
 
                 if (!imageUrl) throw new Error('Could not extract image from Imagine.js output');
