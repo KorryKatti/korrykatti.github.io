@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook</title>
     <link rel="stylesheet" href="guestbook.css">
-<script defer src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
 <body>
@@ -23,7 +23,7 @@
         <button type="submit">Submit</button>
     </form>
     <div id="entries"></div>
-    <script src="prefetch.js"></script>
+    <script src="assets/js/prefetch.js"></script>
     <script>
         async function loadEntries() {
             try {
@@ -125,7 +125,7 @@
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const container = document.getElementById('random-image-container');
             if (container) {
-                container.innerHTML = `<img src="img/guestbook/${randomImg}" alt="random guestbook image">`;
+                container.innerHTML = `<img src="assets/img/guestbook/${randomImg}" alt="random guestbook image">`;
             }
         });
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);
