@@ -3,6 +3,20 @@ export class HistoryManager {
         this.storageKey = 'ollama_chat_history';
         this.chats = JSON.parse(localStorage.getItem(this.storageKey) || '[]');
         this.currentChatId = null;
+        this.ensureMessageIds();
+    }
+
+    ensureMessageIds() {
+        let changed = false;
+        this.chats.forEach(chat => {
+            chat.messages.forEach((msg, idx) => {
+                if (!msg.id) {
+                    msg.id = (chat.id || Date.now().toString()) + '-' + idx + '-' + Math.random().toString(36).substring(2, 5);
+                    changed = true;
+                }
+            });
+        });
+        if (changed) this.save();
     }
 
     save() {
@@ -27,25 +41,35 @@ export class HistoryManager {
         return newChat;
     }
 
-    addMessage(id, role, text, imageData = null) {
-        const chat = this.chats.find(c => c.id === id);
+    addMessage(chatId, role, text, imageData = null) {
+        const chat = this.chats.find(c => c.id === chatId);
         if (chat) {
-            chat.messages.push({ role, text, imageData });
+            const messageId = Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9);
+            const newMessage = { id: messageId, role, text, imageData, timestamp: Date.now() };
+            chat.messages.push(newMessage);
             if (chat.messages.length === 1 && role === 'user') {
                 chat.title = text.substring(0, 30) + (text.length > 30 ? '...' : '');
             }
             this.save();
-            return chat.messages.length - 1;
+            return messageId;
         }
-        return -1;
+        return null;
     }
 
-    updateMessage(id, index, text, imageData = null) {
-        const chat = this.chats.find(c => c.id === id);
-        if (chat && chat.messages[index]) {
-            chat.messages[index].text = text;
-            if (imageData) chat.messages[index].imageData = imageData;
-            this.save();
+    updateMessage(chatId, messageId, text, imageData = null) {
+        const chat = this.chats.find(c => c.id === chatId);
+        if (chat) {
+            let message = chat.messages.find(m => m.id === messageId);
+            // Fallback for old numeric index usage if message not found by string ID
+            if (!message && (typeof messageId === 'number' || !isNaN(messageId))) {
+                message = chat.messages[parseInt(messageId)];
+            }
+            
+            if (message) {
+                message.text = text;
+                if (imageData) message.imageData = imageData;
+                this.save();
+            }
         }
     }
 

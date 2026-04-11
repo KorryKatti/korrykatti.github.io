@@ -193,7 +193,7 @@ function createState() {
             this.currentChatId = id;
             const chat = this.history.getChat(id);
             this.messages = chat.messages.map((msg, idx) => ({
-                ...msg, id: idx,
+                ...msg, id: msg.id || idx,
                 html: msg.role === 'ai' ? this.renderMarkdown(msg.text) : this.escapeHtml(msg.text),
                 reaction: msg.reaction || null, isStreaming: false
             }));
@@ -251,10 +251,44 @@ function createState() {
             this.$nextTick(() => this.scrollToBottom());
 
             let searchContext = "";
+            let foundImage = null;
+
+            const lowerInput = text.toLowerCase();
+            const wantsImage = /anime|catgirl|waifu|manga|show|picture|image|pic|photo|art/.test(lowerInput);
+
+            if (wantsImage) {
+                const imgMsgIdx = this.messages.length;
+                this.messages.push({
+                    id: Date.now().toString() + '-img-load', role: 'ai', text: '... [ACQUIRING_VISUAL_DATA] ...', html: '<em>... [ACQUIRING_VISUAL_DATA] ...</em>',
+                    thinking: '', reaction: null, isStreaming: false, imageData: null
+                });
+                this.$nextTick(() => this.scrollToBottom());
+
+                try {
+                    if (/anime|catgirl|waifu/.test(lowerInput)) {
+                        foundImage = await this.imageService.fetchAnimeImage(text, safeSearch);
+                    }
+                    if (!foundImage) {
+                        const imgResults = await this.searchService.search(text, 'images', safeSearch);
+                        if (imgResults.length > 0) {
+                            foundImage = { url: imgResults[0].url, title: imgResults[0].title, provider: 'Global Search' };
+                        } else {
+                            foundImage = await this.generalImageService.fetchImage(text, this.settings.unsplashKey, safeSearch);
+                        }
+                    }
+                    this.messages[imgMsgIdx].text = foundImage ? `System: Visual data acquired [Provider: ${foundImage.provider || 'External'}]` : `System: No suitable visual data found.`;
+                    this.messages[imgMsgIdx].html = foundImage ? `<em>System: Visual data acquired [Provider: ${foundImage.provider || 'External'}]</em>` : `<em>System: No suitable visual data found.</em>`;
+                } catch (e) {
+                    this.messages[imgMsgIdx].text = `System: Visual uplink failed.`;
+                    this.messages[imgMsgIdx].html = `<em>System: Visual uplink failed.</em>`;
+                }
+                this.$nextTick(() => this.scrollToBottom());
+            }
+
             if (isWebSearch) {
                 const searchMsgIdx = this.messages.length;
                 this.messages.push({
-                    id: searchMsgIdx, role: 'ai', text: '... [REFINING_SEARCH_QUERY] ...', html: '<em>... [REFINING_SEARCH_QUERY] ...</em>',
+                    id: Date.now().toString() + '-search', role: 'ai', text: '... [REFINING_SEARCH_QUERY] ...', html: '<em>... [REFINING_SEARCH_QUERY] ...</em>',
                     thinking: '', reaction: null, isStreaming: false, imageData: null
                 });
                 this.$nextTick(() => this.scrollToBottom());
@@ -328,10 +362,8 @@ Rules:
             const sys = this.buildSystemPrompt();
 
             const mi = this.messages.length;
-            this.messages.push({
-                id: mi, role: 'ai', text: '', html: '',
-                thinking: '', reaction: null, isStreaming: true, imageData: null
-            });
+            const messageId = this.addMessageToChat('ai', '', foundImage);
+            this.messages[mi].isStreaming = true;
 
             try {
                 let full = '';
@@ -432,54 +464,7 @@ Rules:
             const msg = this.messages[mi];
             if (!msg) return;
 
-            // Find if we already saved an AI message for this turn (by matching index)
-            // We use a marker: store the message index in the history entry
-            // For simplicity: find the LAST AI message in this chat
-            const aiMsgs = [];
-            chat.messages.forEach((m, i) => {
-                if (m.role === 'ai') aiMsgs.push(i);
-            });
-
-            // If there's an AI message at the expected position, update it
-            if (aiMsgs.length > 0) {
-                const lastAiIdx = aiMsgs[aiMsgs.length - 1];
-                // Only update if the last AI message text matches what we streamed
-                // (to avoid overwriting an older chat's message)
-                const expectedUserMsg = mi > 0 ? this.messages[mi - 1]?.text : '';
-                const userMsgsBefore = chat.messages.filter(m => m.role === 'user');
-                if (userMsgsBefore.length > 0) {
-                    // Find the last user message position
-                    let lastUserIdx = -1;
-                    for (let i = chat.messages.length - 1; i >= 0; i--) {
-                        if (chat.messages[i].role === 'user') { lastUserIdx = i; break; }
-                    }
-                    // The AI message should be right after the last user message
-                    if (lastAiIdx === lastUserIdx + 1 || lastAiIdx >= lastUserIdx) {
-                        chat.messages[lastAiIdx].text = msg.text;
-                        if (msg.imageData) chat.messages[lastAiIdx].imageData = msg.imageData;
-                    } else {
-                        // Position mismatch, push new
-                        const entry = { role: 'ai', text: msg.text };
-                        if (msg.imageData) entry.imageData = msg.imageData;
-                        chat.messages.push(entry);
-                    }
-                }
-            } else {
-                // No AI message yet, push
-                const entry = { role: 'ai', text: msg.text };
-                if (msg.imageData) entry.imageData = msg.imageData;
-                chat.messages.push(entry);
-            }
-
-            // Update chat title from first user message
-            if (chat.messages.length > 0 && chat.title === 'New Chat') {
-                const firstUser = chat.messages.find(m => m.role === 'user');
-                if (firstUser) {
-                    chat.title = firstUser.text.substring(0, 30) + (firstUser.text.length > 30 ? '...' : '');
-                }
-            }
-
-            this.history.save();
+            this.history.updateMessage(this.currentChatId, msg.id, msg.text, msg.imageData);
         },
 
         // ===== GRAPH TOOL — Chart.js =====
@@ -561,6 +546,9 @@ If your response discusses temperature vs time, use those axes. If it discusses 
 
         // ===== CODE TOOL — Nix execution =====
         async executeCode(userInput, ctx, sys, mi, response) {
+            // Mark this message as a code interpreter result
+            this.messages[mi].isCodeResult = true;
+
             let currentOutput = response;
             let lastResult = null;
             let consoleLog = '';
@@ -601,7 +589,11 @@ If your response discusses temperature vs time, use those axes. If it discusses 
                 this.$nextTick(() => this.scrollToBottom());
 
                 try {
-                    const result = await this.nixService.run(code);
+                    const result = await this.nixService.run(code, 'python', {
+                        userPrompt: userInput,
+                        aiText: response,
+                        model: this.selectedModel
+                    });
                     const output = `${result.stdout || ''}${result.stderr ? `\n[Errors]:\n${result.stderr}` : ''}`.trim() || 'No output';
                     consoleLog += `\n[Turn ${retry + 1}] Exit: ${result.exit_code}\n${output}\n`;
                     lastResult = result;
@@ -918,18 +910,13 @@ Original prompt: "${refinedPrompt}"`;
         },
 
         addMessageToChat(role, text, imageData = null) {
-            const chat = this.history.getChat(this.currentChatId);
-            if (chat) {
-                chat.messages.push({ role, text, imageData });
-                if (chat.messages.length === 1 && role === 'user')
-                    chat.title = text.substring(0, 30) + (text.length > 30 ? '...' : '');
-                this.history.save();
-            }
+            const messageId = this.history.addMessage(this.currentChatId, role, text, imageData);
             this.messages.push({
-                id: this.messages.length, role, text,
+                id: messageId, role, text,
                 html: role === 'ai' ? this.renderMarkdown(text) : this.escapeHtml(text),
                 reaction: null, isStreaming: false, imageData
             });
+            return messageId;
         },
 
         buildContextText(searchContext = "") {
@@ -973,6 +960,18 @@ Original prompt: "${refinedPrompt}"`;
         },
 
         copyMessage(msg) { navigator.clipboard.writeText(msg.text); },
+
+        async setReaction(msg, reactionType) {
+            // Toggle reaction
+            const newReaction = msg.reaction === reactionType ? null : reactionType;
+            msg.reaction = newReaction;
+
+            // Only submit to backend if this was a code interpreter mode message
+            if (msg.isCodeResult && this.nixService) {
+                const reviewValue = newReaction === 'up' ? 1 : (newReaction === 'down' ? 0 : 0);
+                await this.nixService.submitReview(reviewValue, 'code');
+            }
+        },
 
         scrollToBottom() {
             const container = document.getElementById('chat-container');

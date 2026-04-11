@@ -175,10 +175,9 @@
                             </template>
                             <!-- Message reactions -->
                             <div class="message-reactions" x-show="msg.role === 'ai'">
-                                <button class="reaction-btn" @click="msg.reaction = msg.reaction === 'up' ? null : 'up'"
+                                <button class="reaction-btn" @click="setReaction(msg, 'up')"
                                     :class="{ active: msg.reaction === 'up' }">👍</button>
-                                <button class="reaction-btn"
-                                    @click="msg.reaction = msg.reaction === 'down' ? null : 'down'"
+                                <button class="reaction-btn" @click="setReaction(msg, 'down')"
                                     :class="{ active: msg.reaction === 'down' }">👎</button>
                                 <button class="reaction-btn" @click="copyMessage(msg)" title="Copy message">📋</button>
                             </div>
@@ -238,7 +237,7 @@
                     <div class="input-actions">
                         <div class="input-actions-left">
                             <input type="file" id="file-input" multiple hidden @change="handleFileUpload($event)">
-                            <button @click="$el.nextElementSibling.click()" class="secondary-btn">Attach</button>
+                            <button @click="document.getElementById('file-input').click()" class="secondary-btn">Attach</button>
                             <div class="search-toggle" :class="{ 'active': searchWeb }">
                                 <input type="checkbox" id="search-web-toggle" x-model="searchWeb">
                                 <label for="search-web-toggle">Web Search</label>

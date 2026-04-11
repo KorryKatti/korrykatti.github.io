@@ -13,14 +13,24 @@ def get_sheets_service():
     """Returns a Google Sheets service object using file or env credentials."""
     try:
         creds = None
-        
+
         env_creds = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
         if env_creds:
             try:
-                info = json.loads(env_creds)
+                # Handle both single-line and multiline JSON
+                # Strip whitespace and normalize newlines
+                cleaned = env_creds.strip()
+                info = json.loads(cleaned)
                 creds = service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
-            except json.JSONDecodeError:
-                print("Error: GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON")
+            except json.JSONDecodeError as e:
+                print(f"Error: GOOGLE_SERVICE_ACCOUNT_JSON is not valid JSON: {e}")
+                # Try to normalize - replace escaped newlines
+                try:
+                    cleaned = env_creds.replace('\\n', '\n').strip()
+                    info = json.loads(cleaned)
+                    creds = service_account.Credentials.from_service_account_info(info, scopes=SCOPES)
+                except Exception as e2:
+                    print(f"Error: Failed JSON cleanup: {e2}")
         
         if not creds and os.path.exists(CREDENTIALS_FILE):
             creds = service_account.Credentials.from_service_account_file(
@@ -38,7 +48,7 @@ def get_sheets_service():
 def get_spreadsheet_id():
     return os.environ.get("SPREADSHEET_ID")
 
-def append_log_row(user_prompt: str, ai_text: str, ai_code: str, model: str, status: int, review: int = 0):
+def append_log_row(user_prompt: str, ai_text: str, ai_code: str, model: str, code_output: str, status: int, review: int = 0):
     """Appends a new log row to the Google Sheet with basic sanitization."""
     # Sanitization
     user_prompt = str(user_prompt)
@@ -82,4 +92,37 @@ def append_log_row(user_prompt: str, ai_text: str, ai_code: str, model: str, sta
         return True
     except Exception as e:
         print(f"Error appending to Google Sheets: {e}")
+        return False
+
+def update_last_review(review: int):
+    """Updates the review column (column G) of the last row in the sheet."""
+    service = get_sheets_service()
+    spreadsheet_id = get_spreadsheet_id()
+
+    if not service or not spreadsheet_id:
+        return False
+
+    try:
+        # First, find the last row with data
+        result = service.spreadsheets().values().get(
+            spreadsheetId=spreadsheet_id,
+            range="Sheet1!A:A"
+        ).execute()
+
+        values = result.get('values', [])
+        last_row = len(values)
+
+        if last_row < 2:  # No data rows yet
+            return False
+
+        # Update column G (7th column) of the last row
+        service.spreadsheets().values().update(
+            spreadsheetId=spreadsheet_id,
+            range=f"Sheet1!G{last_row + 1}",  # +1 because sheet is 1-indexed and row 1 is header
+            valueInputOption="RAW",
+            body={'values': [[review]]}
+        ).execute()
+        return True
+    except Exception as e:
+        print(f"Error updating review in Google Sheets: {e}")
         return False

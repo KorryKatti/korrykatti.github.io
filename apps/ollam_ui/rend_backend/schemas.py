@@ -19,6 +19,9 @@ class CodeRequest(BaseModel):
     code: str
     pow_id: Optional[str] = None
     pow_nonce: Optional[str] = None
+    user_prompt: Optional[str] = ""
+    ai_text: Optional[str] = ""
+    model: Optional[str] = ""
 
 class CodeResponse(BaseModel):
     stdout: str
@@ -31,4 +34,7 @@ class PowChallenge(BaseModel):
     salt: str
     difficulty: int
     expiry: int
+
+class ReviewRequest(BaseModel):
+    review: int  # 1 for thumbs up, 0 for thumbs down
 

@@ -349,7 +349,7 @@ export class UIController {
             this.elements.welcomeScreen.classList.remove('hidden');
         } else {
             this.elements.welcomeScreen.classList.add('hidden');
-            chat.messages.forEach(msg => this.addMessage(msg.text, msg.role, false, msg.imageData));
+            chat.messages.forEach(msg => this.addMessage(msg.text, msg.role, false, msg.imageData, msg.id));
         }
         this.renderHistory();
         this.updateContext();
@@ -618,8 +618,8 @@ export class UIController {
         const combinedSystemPrompt = `${settings.systemPrompt}\nYou MUST use <think> reasoning blocks.\n${toolInstructions}\n[User: ${settings.username}]`;
         const promptWithContext = `${searchContext}\n${historyContext}${attachmentsText}\n\nUser: ${userInput}\nAssistant:`;
 
-        this.history.addMessage(chatId, 'user', userInput);
-        this.addMessage(userInput, 'user');
+        const userMsgId = this.history.addMessage(chatId, 'user', userInput);
+        this.addMessage(userInput, 'user', false, null, userMsgId);
         this.elements.userInput.value = '';
         this.fileManager.attachments = [];
         this.elements.attachmentsContainer.innerHTML = '';
@@ -627,8 +627,8 @@ export class UIController {
         this.updateContext();
         this.renderHistory();
 
-        const aiMessageContent = this.addMessage('', 'ai', false, foundImage);
-        const aiMessageIndex = this.history.addMessage(chatId, 'ai', '', foundImage);
+        const aiMessageId = this.history.addMessage(chatId, 'ai', '', foundImage);
+        const aiMessageContent = this.addMessage('', 'ai', false, foundImage, aiMessageId);
         const loadingText = document.createElement('span');
         loadingText.textContent = '... [GENERATING_RESPONSE] ...';
         aiMessageContent.appendChild(loadingText);
@@ -660,7 +660,7 @@ export class UIController {
             if (loadingText.parentNode) loadingText.remove();
             textBody.innerHTML = this.parseThinkingAndMarkdown(finalFullResponse);
             this.detectAndRenderGraphs(textBody, finalFullResponse);
-            this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse);
+            this.history.updateMessage(chatId, aiMessageId, finalFullResponse);
 
             // Code execution loop
             if (selectedTool === 'code' && !this.abortController.signal.aborted) {
@@ -724,7 +724,7 @@ export class UIController {
                     this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
                 }, this.abortController.signal);
                 finalAnLoading.remove();
-                this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse + "\n\n---\n**Logs**:\n" + consoleLog + "\n\n---\n**Summary**:\n" + finalResText);
+                this.history.updateMessage(chatId, aiMessageId, finalFullResponse + "\n\n---\n**Logs**:\n" + consoleLog + "\n\n---\n**Summary**:\n" + finalResText);
             }
 
             // Graph tool with improved prompt & artifact redirection
@@ -818,7 +818,7 @@ CRITICAL: USE REAL DATA. NO PLACEHOLDERS. NO MARKDOWN. ONLY JSON.`;
                     this.renderImage(aiMessageContent, imageData);
                     
                     // Update history to persist on reload
-                    this.history.updateMessage(chatId, aiMessageIndex, finalFullResponse, imageData);
+                    this.history.updateMessage(chatId, aiMessageId, finalFullResponse, imageData);
 
                     // Add to Artifact Panel
                     const artifactCard = document.createElement('div');
@@ -852,9 +852,10 @@ CRITICAL: USE REAL DATA. NO PLACEHOLDERS. NO MARKDOWN. ONLY JSON.`;
         }
     }
 
-    addMessage(text, role, animate = false, imageData = null) {
+    addMessage(text, role, animate = false, imageData = null, messageId = null) {
         const div = document.createElement('div');
         div.className = `message ${role}-message`;
+        if (messageId) div.setAttribute('data-message-id', messageId);
         const avatar = document.createElement('div');
         avatar.className = 'message-avatar';
         avatar.textContent = (role === 'user' ? (this.settings.settings.username || 'U') : (this.settings.settings.aiName || 'A')).charAt(0).toUpperCase();

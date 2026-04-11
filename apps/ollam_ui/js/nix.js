@@ -20,7 +20,7 @@ export class NixService {
         return false;
     }
 
-    async run(code, language = "python") {
+    async run(code, language = "python", options = {}) {
         // 1. Fetch PoW Challenge
         const challengeResp = await fetch(`${this.baseUrl}/challenge`);
         if (!challengeResp.ok) throw new Error("Failed to fetch PoW challenge");
@@ -29,7 +29,7 @@ export class NixService {
         // 2. Solve PoW
         const nonce = await PowSolver.solve(challenge.salt, challenge.difficulty);
 
-        // 3. Send request with PoW solution
+        // 3. Send request with PoW solution and logging data
         const resp = await fetch(`${this.baseUrl}/run`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -37,7 +37,10 @@ export class NixService {
                 code,
                 language,
                 pow_id: challenge.id,
-                pow_nonce: nonce
+                pow_nonce: nonce,
+                user_prompt: options.userPrompt || "",
+                ai_text: options.aiText || "",
+                model: options.model || ""
             })
         });
         if (!resp.ok) {
@@ -65,5 +68,20 @@ export class NixService {
             await new Promise(r => setTimeout(r, 5000));
         }
         this.isWakingUp = false;
+    }
+
+    async submitReview(review, selectedTool) {
+        // Only submit review for code interpreter mode
+        if (selectedTool !== 'code') return;
+
+        try {
+            await fetch(`${this.baseUrl}/review`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ review })
+            });
+        } catch (e) {
+            console.warn("Review submission failed:", e);
+        }
     }
 }
