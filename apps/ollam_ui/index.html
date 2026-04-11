@@ -456,6 +456,26 @@
         </div>
     </div>
 
+    <!-- Code Interpreter Warning Modal -->
+    <div x-show="showCodeWarningModal" class="modal-overlay" @click.self="showCodeWarningModal = false"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
+        <div class="modal-content" @click.outside="showCodeWarningModal = false" style="max-width: 520px;">
+            <div class="modal-header">
+                <h2 style="font-size: 16px; font-weight: normal;">Code Interpreter Warning</h2>
+                <button @click="showCodeWarningModal = false">&times;</button>
+            </div>
+            <div class="modal-body" style="gap: 16px;">
+                <p>Code Interpreter mode executes Python code on the backend and may collect execution data for analysis.</p>
+                <p><strong>Please do not include secrets, passwords, private keys, or sensitive personal data.</strong></p>
+                <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+                    <button class="secondary-btn" @click="showCodeWarningModal = false">Got it</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- File Preview Modal -->
     <div x-show="showPreviewModal" class="modal-overlay" @click.self="showPreviewModal = false"
         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"

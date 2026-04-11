@@ -38,6 +38,8 @@ function createState() {
         showSettings: false,
         showArtifactPanel: false,
         showPreviewModal: false,
+        showCodeWarningModal: false,
+        codeWarningSeen: false,
         previewAttachment: null,
 
         messages: [],
@@ -109,6 +111,7 @@ function createState() {
             this._modulesLoaded = true;
 
             this.loadSettings();
+            this.codeWarningSeen = localStorage.getItem('codeInterpreterWarningSeen') === 'true';
             this.startResourceMonitor();
             this.startNixPing();
             await this.checkStatus();
@@ -1065,7 +1068,14 @@ Original prompt: "${refinedPrompt}"`;
         },
 
         onModelChange() { this.updateContext(); },
-        onToolChange() { },
+        onToolChange() {
+            this.updateContext();
+            if (this.selectedTool === 'code' && !this.codeWarningSeen) {
+                this.showCodeWarningModal = true;
+                this.codeWarningSeen = true;
+                localStorage.setItem('codeInterpreterWarningSeen', 'true');
+            }
+        },
 
         startNixPing() { this.nixService.startPinging(s => { this.nixOnline = s === 'online'; }); },
 
