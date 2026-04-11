@@ -35,14 +35,15 @@
     <!-- 2. Register component immediately (synchronous, lazy-loads ES deps) -->
     <script src="js/register-component.js"></script>
     <script src="mini_fwrk/mini.js"></script>
-    <script src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c" defer></script>
+    <script src="/umami.js" data-host-url="https://cloud.umami.is"
+        data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c" defer></script>
 </head>
 
 <body x-data="ollamaApp()" x-init="init()" :class="{ 'dark': settings.theme === 'dark' }">
     <div class="app-container">
         <!-- Sidebar -->
-        <aside class="sidebar" :class="{ 'sidebar-collapsed': sidebarCollapsed }"
-            @mouseenter="sidebarCollapsed = false" @mouseleave="sidebarCollapsed = true">
+        <aside class="sidebar" :class="{ 'sidebar-collapsed': sidebarCollapsed }" @mouseenter="sidebarCollapsed = false"
+            @mouseleave="sidebarCollapsed = true">
             <div class="sidebar-header">
                 <div class="logo">
                     <span class="logo-icon">○</span>
@@ -66,12 +67,9 @@
                     <div id="chat-history" class="chat-history-alpine">
                         <template x-for="chat in sortedChats" :key="chat.id">
                             <div class="history-item" :class="{ 'active': currentChatId === chat.id }"
-                                @click="loadChat(chat.id)" draggable="true"
-                                @dragstart="draggedChatId = chat.id"
-                                @dragover.prevent="dragOverChatId = chat.id"
-                                @dragleave="dragOverChatId = null"
-                                @drop="reorderChat(chat.id)"
-                                :class="{ 'drag-over': dragOverChatId === chat.id }">
+                                @click="loadChat(chat.id)" draggable="true" @dragstart="draggedChatId = chat.id"
+                                @dragover.prevent="dragOverChatId = chat.id" @dragleave="dragOverChatId = null"
+                                @drop="reorderChat(chat.id)" :class="{ 'drag-over': dragOverChatId === chat.id }">
                                 <span class="chat-title" x-text="chat.title"></span>
                                 <span class="chat-time" x-show="!sidebarCollapsed" x-text="chat.timeLabel"></span>
                                 <span class="delete-history-item" title="Delete chat"
@@ -118,7 +116,7 @@
                 </div>
                 <div id="nix-status-indicator" class="status-indicator" style="margin-left: 15px;">
                     <div class="status-dot" :style="{ backgroundColor: nixOnline ? '#10b981' : '#f59e0b' }"></div>
-                    <span class="status-text" x-text="nixOnline ? 'Nix: Online' : 'Nix: Waking...'"></span>
+                    <span class="status-text" x-text="nixOnline ? 'Python: Online' : 'Python: Waking...'"></span>
                 </div>
             </header>
 
@@ -179,7 +177,8 @@
                             <div class="message-reactions" x-show="msg.role === 'ai'">
                                 <button class="reaction-btn" @click="msg.reaction = msg.reaction === 'up' ? null : 'up'"
                                     :class="{ active: msg.reaction === 'up' }">👍</button>
-                                <button class="reaction-btn" @click="msg.reaction = msg.reaction === 'down' ? null : 'down'"
+                                <button class="reaction-btn"
+                                    @click="msg.reaction = msg.reaction === 'down' ? null : 'down'"
                                     :class="{ active: msg.reaction === 'down' }">👎</button>
                                 <button class="reaction-btn" @click="copyMessage(msg)" title="Copy message">📋</button>
                             </div>
@@ -206,8 +205,7 @@
                 </div>
 
                 <!-- Error banner -->
-                <div x-show="errorMessage" class="error-banner"
-                    x-transition:enter="transition ease-out duration-200"
+                <div x-show="errorMessage" class="error-banner" x-transition:enter="transition ease-out duration-200"
                     x-transition:enter-start="opacity-0 -translate-y-2"
                     x-transition:enter-end="opacity-100 translate-y-0">
                     <span x-text="errorMessage"></span>
@@ -241,8 +239,7 @@
                         <div class="input-actions-left">
                             <input type="file" id="file-input" multiple hidden @change="handleFileUpload($event)">
                             <button @click="$el.nextElementSibling.click()" class="secondary-btn">Attach</button>
-                            <div class="search-toggle"
-                                :class="{ 'active': searchWeb }">
+                            <div class="search-toggle" :class="{ 'active': searchWeb }">
                                 <input type="checkbox" id="search-web-toggle" x-model="searchWeb">
                                 <label for="search-web-toggle">Web Search</label>
                             </div>
@@ -284,12 +281,9 @@
 
         <!-- Artifact Panel -->
         <aside id="artifact-panel" class="artifact-panel" x-show="showArtifactPanel"
-            x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0 translate-x-4"
-            x-transition:enter-end="opacity-100 translate-x-0"
-            x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 translate-x-0"
-            x-transition:leave-end="opacity-0 translate-x-4">
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-4"
+            x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-4">
             <div class="artifact-panel-header">
                 <span>Artifacts</span>
                 <button @click="showArtifactPanel = false" title="Close panel">&times;</button>
@@ -314,12 +308,9 @@
 
     <!-- Settings Modal -->
     <div x-show="showSettings" class="modal-overlay" @click.self="showSettings = false"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0">
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="modal-content" @click.outside="showSettings = false">
             <div class="modal-header">
                 <h2 style="font-size: 16px; font-weight: normal;">Settings</h2>
@@ -373,8 +364,8 @@
                         </div>
                         <div class="setting-item">
                             <label>Gemini API Key</label>
-                            <input type="password" x-model="settings.geminiApiKey" @change="saveSettings(); checkStatus()"
-                                placeholder="Enter Gemini API Key">
+                            <input type="password" x-model="settings.geminiApiKey"
+                                @change="saveSettings(); checkStatus()" placeholder="Enter Gemini API Key">
                         </div>
                         <div class="setting-item">
                             <label>Theme</label>
@@ -438,11 +429,12 @@
                     <h3>Code Interpretation (Experimental)</h3>
                     <div class="diagnostics-box"
                         style="font-size: 11px; color: var(--text-secondary); border: 1px solid var(--border-color); padding: 10px; background: rgba(0,0,0,0.02);">
-                        <strong>🌐 Nix Execution Service</strong><br>
+                        <strong>🌐 Alpine Execution Service</strong><br>
                         Status: <span :style="{ color: nixOnline ? '#10b981' : '#f59e0b', fontWeight: 'bold' }"
                             x-text="nixOnline ? 'Online & Ready' : 'Waking up (Render Cold Start)...'"></span><br>
                         Endpoint: <code x-text="backendUrl">https://ollamas-ahh.onrender.com</code><br>
-                        <p style="margin-top: 5px; opacity: 0.8;">Secure Nix-based Python sandbox with a 30s timeout and
+                        <p style="margin-top: 5px; opacity: 0.8;">Lightweight Alpine-based Python sandbox with a 60s
+                            timeout and
                             a 5000 character output limit.</p>
                     </div>
                 </div>
@@ -467,12 +459,9 @@
 
     <!-- File Preview Modal -->
     <div x-show="showPreviewModal" class="modal-overlay" @click.self="showPreviewModal = false"
-        x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-150"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0">
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
         <div class="modal-content preview-modal-content" @click.outside="showPreviewModal = false">
             <div class="modal-header">
                 <h2 x-text="'Preview: ' + (previewAttachment?.name || '')"

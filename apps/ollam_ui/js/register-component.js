@@ -343,7 +343,7 @@ Rules:
                     full = '';
                     thinking = '';
                     if (i > 0) {
-                        this.messages[mi].text += `\n\n--- [Deep Think Iteration ${i+1}] ---\n\n`;
+                        this.messages[mi].text += `\n\n--- [Deep Think Iteration ${i + 1}] ---\n\n`;
                         currentCtx += `\n\nAssistant: ${this.messages[mi].text}\n\nUser: [INTERNAL_CRITIQUE: Analyze the previous response for accuracy and depth, then provide an improved final answer.]\n\nAssistant:`;
                     }
 
@@ -374,11 +374,11 @@ Rules:
                                 // but showing iterations is cooler for a "Power User" UI.
                                 const base = this.messages[mi].text.split(`--- [Deep Think Iteration`)[0];
                                 let prevIters = "";
-                                for(let j=1; j<i+1; j++) {
-                                     // This is getting complex, let's just keep it simple: 
-                                     // concatenate if it's not the first one.
+                                for (let j = 1; j < i + 1; j++) {
+                                    // This is getting complex, let's just keep it simple: 
+                                    // concatenate if it's not the first one.
                                 }
-                                this.messages[mi].text = (i === 0 ? full : this.messages[mi].text.split(`--- [Deep Think Iteration ${i+1}] ---`)[0] + `--- [Deep Think Iteration ${i+1}] ---\n\n` + full);
+                                this.messages[mi].text = (i === 0 ? full : this.messages[mi].text.split(`--- [Deep Think Iteration ${i + 1}] ---`)[0] + `--- [Deep Think Iteration ${i + 1}] ---\n\n` + full);
                             }
                             this.messages[mi].html = this.renderMarkdown(this.messages[mi].text);
                             this.$nextTick(() => this.scrollToBottom());
@@ -610,7 +610,7 @@ If your response discusses temperature vs time, use those axes. If it discusses 
                     this.artifacts = this.artifacts.filter(a => a.type !== 'code');
                     this.artifacts.push({
                         type: 'code', title: `Code — Exit: ${result.exit_code}`,
-                        html: `<details class="artifact-code-details"><summary>📟 Execution Output</summary><pre class="artifact-code-output">${this.escapeHtml(output)}</pre>${result.nix ? `<details class="artifact-nix"><summary>Nix config</summary><pre>${this.escapeHtml(result.nix)}</pre></details>` : ''}</details>`
+                        html: `<details class="artifact-code-details" open><summary>📟 Execution Output</summary><pre class="artifact-code-output">${this.escapeHtml(output)}</pre></details>`
                     });
 
                     this.messages[mi].text = this.messages[mi].text.replace(/📟 \*Executing.*\*\s*/s, '').replace(/📟 \*Retrying.*\*\s*/s, '');
@@ -933,7 +933,7 @@ Original prompt: "${refinedPrompt}"`;
             const h = this.messages.filter(m => m.role !== 'ai' || m.text)
                 .map(m => `${m.role === 'user' ? (this.settings.username || 'User') : (this.settings.aiName || 'Assistant')}: ${m.text}`).join('\n\n');
             const a = this.attachments.map(x => `\n\nFile (${x.name}):\n${x.text}`).join('');
-            
+
             // searchContext is passed in from sendMessage if web search was performed
             let text = (searchContext ? searchContext + '\n\n' : '') + h + a + `\n\nAssistant:`;
 
@@ -954,7 +954,7 @@ Original prompt: "${refinedPrompt}"`;
             let p = this.settings.systemPrompt || 'You are a helpful and advanced AI assistant.';
             if (this.settings.includeTime) p += `\nCurrent time: ${new Date().toLocaleString()}`;
             if (this.settings.aiName) p = `Your name is ${this.settings.aiName}.\n` + p;
-            
+
             // Add tool-specific awareness to system prompt
             const toolInstruction = this.getToolInstruction();
             if (toolInstruction) {
@@ -1056,7 +1056,7 @@ Original prompt: "${refinedPrompt}"`;
         },
 
         onModelChange() { this.updateContext(); },
-        onToolChange() {},
+        onToolChange() { },
 
         startNixPing() { this.nixService.startPinging(s => { this.nixOnline = s === 'online'; }); },
 

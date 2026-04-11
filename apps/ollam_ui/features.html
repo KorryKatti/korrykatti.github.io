@@ -5,134 +5,170 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Interface - Documentation</title>
+    <!-- Framework & Styles -->
+    <link rel="stylesheet" href="mini_fwrk/mini.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
     <style>
+        /* Bridge: Force mini.css Dark Tokens if body has .dark class */
+        body.dark {
+            --bg: #080808;
+            --bg-2: #111111;
+            --bg-3: #1a1a1a;
+            --text: #f0ede8;
+            --text-2: #a09890;
+            --text-3: #504840;
+            --border: rgba(240, 237, 232, 0.08);
+            --border-2: rgba(240, 237, 232, 0.15);
+            --accent: #e8832e;
+            background: var(--bg) !important;
+            color: var(--text) !important;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
             max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-            background-color: #fff;
+            margin: 60px auto;
+            padding: 0 40px;
+            overflow: auto !important;
+            height: auto !important;
         }
 
         header {
-            border-bottom: 2px solid #eee;
-            margin-bottom: 30px;
-            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
         }
 
         h1 {
-            margin-bottom: 0px;
-            font-weight: 600;
             font-size: 2.2em;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
 
         h2 {
-            margin-top: 40px;
-            border-bottom: 1px solid #eee;
-            font-weight: 500;
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-top: 50px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
         }
 
         h3 {
-            margin-top: 25px;
+            font-size: 1.2em;
             font-weight: 500;
-            font-size: 1.25em;
+            margin-top: 25px;
+            color: var(--accent);
         }
 
         p {
             margin: 15px 0;
+            opacity: 0.9;
         }
 
-        ul,
-        ol {
+        ul {
             margin: 15px 0;
             padding-left: 20px;
         }
 
         li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         code {
-            background-color: #f6f8fa;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             padding: 0.2em 0.4em;
-            border-radius: 3px;
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            border-radius: 4px;
+            font-family: monospace;
             font-size: 0.9em;
+            color: var(--accent);
         }
 
-        .note {
-            background-color: #fffbdd;
+        .meta-note {
+            background-color: var(--bg-secondary);
             padding: 15px;
-            border-left: 5px solid #d4a017;
-            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+            margin: 25px 0;
+            font-size: 0.95em;
         }
 
         .footer {
-            margin-top: 60px;
+            margin-top: 80px;
             padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 0.9em;
-            color: #666;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.85em;
+            opacity: 0.6;
             text-align: center;
         }
     </style>
-<script defer src="/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
-<body>
+<body class="dark">
     <header>
         <h1>System Documentation</h1>
-        <p>A technical guide to the Ollama AI Nexus capabilities and tools.</p>
+        <p>Technical specifications and capabilities for the Ollama AI UI.</p>
     </header>
 
-    <h2>1. Code Interpreter (Nix)</h2>
-    <p>The system provides an isolated Python execution environment. All code is run within a temporary Nix-shell
-        sandbox to ensure security and dependency management.</p>
+    <h2>1. Python Code Interpreter</h2>
+    <p>The system provides an isolated Python 3.x execution environment. Code is run within a restricted Alpine Linux
+        sandbox to provide computational capabilities to the AI model.</p>
     <ul>
-        <li><strong>Runtime:</strong> Python 3.x</li>
-        <li><strong>Isolation:</strong> Subprocess sandbox via Nix flakes.</li>
-        <li><strong>Timeout:</strong> Processes are limited to 30 seconds of execution time.</li>
-        <li><strong>Automated Repair:</strong> If a script encounters a runtime error, the system will attempt to fix
-            the code and retry the execution once automatically.</li>
+        <li><strong>Runtime:</strong> Python 3.11 (Alpine Linux).</li>
+        <li><strong>Performance:</strong> Packages are pre-cached and managed by the <code>uv</code> high-speed package
+            manager.</li>
+        <li><strong>Isolation:</strong> Subprocess execution under a non-root <code>runner</code> user with
+            <code>env</code> scrubbing.
+        </li>
+        <li><strong>Security:</strong> All execution requests require a <strong>Proof-of-Work (PoW)</strong> challenge
+            solution (SHA-256) to prevent spam and automated abuse.</li>
+        <li><strong>Timeout:</strong> Hard process kill-switch active after <strong>60 seconds</strong>.</li>
     </ul>
 
     <h2>2. Data Visualization (Graphing)</h2>
-    <p>The graphing tool allows for the conversion of numerical data into visual charts. When active, it parses
-        JSON-formatted data into interactive canvases using Chart.js.</p>
+    <p>The system interprets numerical data and converts it into visual artifacts using Chart.js. The AI generates the
+        required schema, which is then rendered on the client side.</p>
     <ul>
-        <li><strong>Supported Types:</strong> Line charts, Bar charts, Pie charts.</li>
-        <li><strong>Schema:</strong> The model generates a serialized JSON structure containing labels and datasets.
-        </li>
-        <li><strong>Interactive:</strong> Hover over data points to see specific values and tooltips.</li>
+        <li><strong>Supported Charts:</strong> Line, Bar, Pie, Radar.</li>
+        <li><strong>Rendering:</strong> HTML5 Canvas via <code>Chart.min.js</code>.</li>
+        <li><strong>Interactivity:</strong> Supports dynamic tooltips and real-time data inspection.</li>
     </ul>
 
-    <h2>3. Web Search and Intel</h2>
-    <p>The interface can bridge the model to the live internet using external search providers. This allows the AI to
-        reference up-to-date information, news, and image data.</p>
+    <h2>3. Web Search & Intelligence</h2>
+    <p>Real-time internet access is facilitated through a Python-based search proxy, bridging the model to DuckDuckGo
+        and other external providers.</p>
     <ul>
-        <li><strong>Text Search:</strong> Pulls headlines and snippets from global search results.</li>
-        <li><strong>Image Integration:</strong> Can retrieve and display relevant images (Anime-focused or general
-            stock) alongside text responses.</li>
+        <li><strong>Search Logic:</strong> AI-driven query refinement to improve result relevancy.</li>
+        <li><strong>Intel Retrieval:</strong> Pulls headlines, body snippets, and source URLs.</li>
+        <li><strong>Image Generation:</strong> Integrated <code>Puter.js</code> support for generating visuals via
+            Imagen 4.</li>
     </ul>
 
-    <h2>4. Vision and Document Processing</h2>
-    <p>The system supports local processing of uploaded assets. This includes Optical Character Recognition (OCR) for
-        images and text extraction for PDF/Word documents.</p>
+    <h2>4. Document & Vision Processing</h2>
+    <p>Supports local processing of uploaded assets for privacy-first data extraction.</p>
     <ul>
-        <li><strong>OCR:</strong> Uses Tesseract logic to read text from pasted screenshots or uploaded photos.</li>
-        <li><strong>Client-Side:</strong> Processing is performed locally within the browser context wherever possible.
-        </li>
+        <li><strong>OCR Engine:</strong> <code>Tesseract.js</code> running locally in the browser worker.</li>
+        <li><strong>PDF Logic:</strong> <code>PDF.js</code> parsing for extracting text contexts from document
+            attachments.</li>
+        <li><strong>Compute Location:</strong> 100% Client-side processing (data does not leave the browser for
+            extraction).</li>
     </ul>
 
-    <h2>5. Advanced Thinking Models</h2>
-    <p>For complex tasks, users can enable "Deep Thinking" mode, which forces the model through multiple self-critique
-        cycles before finalizing its answer.</p>
+    <h2>5. Advanced Reasoning</h2>
+    <p>Enables multi-turn self-critique cycles ("Deep Think") to handle high-complexity logic and error correction.</p>
+    <ul>
+        <li><strong>Iteration:</strong> Configurable loops (1-5) for internal critique before the final response.</li>
+        <li><strong>Error Handling:</strong> Automated Python code repair logic on execution failure.</li>
+    </ul>
 
     <div class="footer">
-        Ollama AI Nexus v1.2 | Local Environment
+        Ollama AI Nexus Documentation | v2.0 Alpine | Local Environment
     </div>
+
+    <!-- Mini Framework Scripts -->
+    <script src="mini_fwrk/mini.js"></script>
 </body>
 
 </html>

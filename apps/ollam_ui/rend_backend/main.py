@@ -1,8 +1,14 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from schemas import CodeRequest, CodeResponse, SearchRequest, SearchResponse, SearchResult
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+from schemas import CodeRequest, CodeResponse, SearchRequest, SearchResponse, SearchResult, PowChallenge
 from executor import run_code
+from pow_manager import pow_manager
 import uvicorn
 try:
     from duckduckgo_search import DDGS
@@ -35,7 +41,7 @@ async def root():
     return """
     <html>
         <head>
-            <title>Nix Code Executor API</title>
+            <title>Alpine Code Executor API</title>
             <style>
                 body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f2f5; }
                 .container { display: inline-block; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -46,7 +52,7 @@ async def root():
         </head>
         <body>
             <div class="container">
-                <h1>🗺️ Nix Execution Service</h1>
+                <h1>🗺️ Alpine Execution Service</h1>
                 <p>Hello! The API is running and ready for Ollama.</p>
                 <div style="margin-top: 20px;">
                     <span class="status">⚡ Status: Operational</span>
@@ -107,10 +113,22 @@ async def search(request: SearchRequest):
         return SearchResponse(results=[])
 
 
+@app.get("/challenge", response_model=PowChallenge)
+async def get_challenge():
+    return pow_manager.generate_challenge()
+
+
 @app.post("/run", response_model=CodeResponse)
 async def execute_code(request: CodeRequest):
     if request.language.lower() != "python":
         raise HTTPException(status_code=400, detail="Only Python is supported in Phase 1.")
+    
+    # PoW verification
+    if not request.pow_id or not request.pow_nonce:
+        raise HTTPException(status_code=403, detail="PoW challenge required")
+    
+    if not pow_manager.verify_solution(request.pow_id, request.pow_nonce):
+        raise HTTPException(status_code=403, detail="Invalid or expired PoW solution")
     
     stdout, stderr, exit_code, nix_config = await run_code(request.code, request.language)
     
@@ -123,4 +141,6 @@ async def execute_code(request: CodeRequest):
 
 if __name__ == "__main__":
     # Render default port 10000
-    uvicorn.run(app, host="0.0.0.0", port=10000)
+    host = os.environ.get("HOST", "0.0.0.0")
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host=host, port=port)

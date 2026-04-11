@@ -1,3 +1,5 @@
+import { PowSolver } from './pow_solver.js';
+
 export class NixService {
     constructor(baseUrl = "https://ollamas-ahh.onrender.com") {
         this.baseUrl = baseUrl;
@@ -19,12 +21,29 @@ export class NixService {
     }
 
     async run(code, language = "python") {
+        // 1. Fetch PoW Challenge
+        const challengeResp = await fetch(`${this.baseUrl}/challenge`);
+        if (!challengeResp.ok) throw new Error("Failed to fetch PoW challenge");
+        const challenge = await challengeResp.json();
+
+        // 2. Solve PoW
+        const nonce = await PowSolver.solve(challenge.salt, challenge.difficulty);
+
+        // 3. Send request with PoW solution
         const resp = await fetch(`${this.baseUrl}/run`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, language })
+            body: JSON.stringify({
+                code,
+                language,
+                pow_id: challenge.id,
+                pow_nonce: nonce
+            })
         });
-        if (!resp.ok) throw new Error("Code execution failed");
+        if (!resp.ok) {
+            const err = await resp.json();
+            throw new Error(err.detail || "Code execution failed");
+        }
         return await resp.json();
     }
 
