@@ -81,9 +81,9 @@ def _run_ddgs_search(query: str, max_results: int, safesearch: str):
     for attempt in range(2):
         try:
             with DDGS() as ddgs:
-                # Newer versions of DDGS use 'text' as the parameter name
+                # DDGS.text() requires query as positional argument
                 return list(ddgs.text(
-                    text=query,
+                    query,
                     max_results=max_results,
                     safesearch=safesearch
                 ))
