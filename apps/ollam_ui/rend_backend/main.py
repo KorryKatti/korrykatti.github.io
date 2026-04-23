@@ -13,10 +13,17 @@ try:
 except TypeError:
     # Older python-dotenv versions don't support ignore_warnings
     load_dotenv()
-from schemas import CodeRequest, CodeResponse, SearchRequest, SearchResponse, SearchResult, PowChallenge, ReviewRequest
+from schemas import (
+    CodeRequest, CodeResponse, SearchRequest, SearchResponse, SearchResult, 
+    PowChallenge, ReviewRequest, CodeModeSessionResponse, CodeModeInteractRequest, 
+    CodeModePackageResponse, CodeModeShellRequest, CodeModeShellResponse
+)
 from executor import run_code
 from pow_manager import pow_manager
 from database import append_log_row, update_last_review
+from code_mode import code_manager, BASE_DIR
+from fastapi.responses import FileResponse
+import time
 import uvicorn
 try:
     from duckduckgo_search import DDGS
@@ -173,6 +180,49 @@ async def submit_review(request: ReviewRequest):
     except Exception as e:
         print(f"Review submission error: {e}")
         return {"status": "error", "message": str(e)}
+
+# --- Code Mode Endpoints ---
+
+@app.post("/code-mode/init", response_model=CodeModeSessionResponse)
+async def init_code_mode():
+    session_id = code_manager.create_session()
+    return CodeModeSessionResponse(session_id=session_id)
+
+@app.post("/code-mode/interact")
+async def interact_code_mode(request: CodeModeInteractRequest):
+    code_manager.save_version(request.session_id, request.files)
+    # Cleanup happens on every interaction to keep disk usage low
+    code_manager.cleanup()
+    return {"status": "success", "message": "Version saved"}
+
+@app.post("/code-mode/shell", response_model=CodeModeShellResponse)
+async def shell_code_mode(request: CodeModeShellRequest):
+    result = await code_manager.execute_command(request.session_id, request.command)
+    return CodeModeShellResponse(**result)
+
+@app.post("/code-mode/package", response_model=CodeModePackageResponse)
+async def package_code_mode(session_id: str):
+    zip_name = code_manager.package_project(session_id)
+    if not zip_name:
+        raise HTTPException(status_code=404, detail="Session not found")
+    
+    expires_at = time.time() + 600
+    return CodeModePackageResponse(
+        download_url=f"/code-mode/download/{zip_name}",
+        expires_at=expires_at
+    )
+
+@app.get("/code-mode/download/{zip_name}")
+async def download_code_mode(zip_name: str):
+    zip_path = BASE_DIR / zip_name
+    if not zip_path.exists():
+        raise HTTPException(status_code=404, detail="File expired or not found")
+    
+    return FileResponse(
+        path=zip_path,
+        filename=zip_name,
+        media_type="application/zip"
+    )
 
 if __name__ == "__main__":
     # Render default port 10000

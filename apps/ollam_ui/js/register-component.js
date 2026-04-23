@@ -85,6 +85,19 @@ function createState() {
             'Verification of system data logic.'
         ],
 
+        codeMode: {
+            active: false,
+            sessionId: null,
+            input: '',
+            lines: [],
+            files: {},
+            packaging: false,
+            downloadUrl: null,
+            expiryTime: '10:00',
+            timer: null,
+            loading: false
+        },
+
         async init() {
             // Lazy-load all ES modules (pre-cached by lazy-deps.js if fast)
             const modules = await loadModules();
@@ -1075,6 +1088,228 @@ Original prompt: "${refinedPrompt}"`;
                 this.codeWarningSeen = true;
                 localStorage.setItem('codeInterpreterWarningSeen', 'true');
             }
+            if (this.selectedTool === 'code-terminal') {
+                this.startCodeMode();
+            } else {
+                this.codeMode.active = false;
+            }
+        },
+
+        async startCodeMode() {
+            if (this.codeMode.sessionId) {
+                this.codeMode.active = true;
+                return;
+            }
+            this.codeMode.lines = [{ type: 'system', text: 'Initializing secure session on Render.com...' }];
+            this.codeMode.active = true;
+            try {
+                const res = await fetch(`${this.backendUrl}/code-mode/init`, { method: 'POST' });
+                if (!res.ok) throw new Error(`Server returned ${res.status}`);
+                const data = await res.json();
+                if (!data || !data.session_id) throw new Error('Invalid session data');
+                this.codeMode.sessionId = data.session_id;
+                this.codeMode.lines.push({ type: 'system', text: `Session active: ${data.session_id.substring(0, 8)}` });
+                this.codeMode.lines.push({ type: 'ai', text: 'Ready for commands. What are we building?' });
+            } catch (e) {
+                this.codeMode.lines.push({ type: 'error', text: `Failed to initialize session: ${e.message}` });
+                this.selectedTool = 'none';
+            }
+        },
+
+        async handleTerminalInput() {
+            const input = this.codeMode.input.trim();
+            if (!input) return;
+
+            this.codeMode.lines.push({ type: 'input', text: input });
+            this.codeMode.input = '';
+
+            if (input.toLowerCase() === 'help') {
+                this.codeMode.lines.push({ type: 'ai', text: 'Commands:\n- help: Show this message\n- clear: Clear terminal\n- status: Check session status\n- files: List current files\n- Any natural language request (e.g. "Create a fastapi app")' });
+                return;
+            }
+            if (input.toLowerCase() === 'clear') {
+                this.codeMode.lines = [];
+                return;
+            }
+            if (input.toLowerCase() === 'status') {
+                this.codeMode.lines.push({ type: 'system', text: `Session: ${this.codeMode.sessionId}\nPlatform: Alpine Linux\nBackend: ${this.backendUrl}` });
+                return;
+            }
+            if (input.toLowerCase() === 'files') {
+                const files = Object.keys(this.codeMode.files);
+                this.codeMode.lines.push({ type: 'system', text: files.length ? `Files:\n${files.join('\n')}` : 'No files created yet.' });
+                return;
+            }
+
+            await this.interactCodeMode(input);
+        },
+
+        async interactCodeMode(prompt) {
+            this.codeMode.loading = true;
+            this.codeMode.lines.push({ type: 'ai', text: '...', html: '<em>Thinking...</em>' });
+            const lineIdx = this.codeMode.lines.length - 1;
+
+            if (this.abortController) this.abortController.abort();
+            this.abortController = new AbortController();
+
+            const systemPrompt = `You are a high-performance Code Mode Agent (CLI-focused).
+Your goal is to build, debug, and manage projects with minimum chatter and maximum efficiency.
+
+TOOLSET:
+- <shell>command</shell> : Run any bash command in the project workspace (Alpine Linux).
+- <file path="filename">content</file> : Atomically create or overwrite a file.
+
+STRATEGY:
+1. EXPLORE: Use 'ls -R' or 'cat' to understand the project.
+2. EXECUTE: Use 'npm install', 'python', etc. (Node.js/NPM pre-installed).
+3. WRITE: Use <file> tags for code. AVOID shell redirects (>>) for multi-line files.
+4. LIMITS: Memory is 1GB. Avoid huge operations; work in smaller steps.
+5. MINIMALISM: No fluff. 
+
+Current Session: ${this.codeMode.sessionId}
+Files: ${JSON.stringify(Object.keys(this.codeMode.files))}
+
+When a command output is shown, analyze it and fix any errors immediately.`;
+
+            const history = this.codeMode.lines
+                .filter(l => l.type !== 'system' && l.text !== '...')
+                .slice(-10)
+                .map(l => `${l.type === 'input' ? 'User' : 'Assistant'}: ${l.text}`)
+                .join('\n\n');
+
+            let fullResponse = '';
+            try {
+                await this.client.chat(this.selectedModel, prompt, systemPrompt + '\n\n' + history, (chunk, done) => {
+                    fullResponse += chunk;
+                    this.codeMode.lines[lineIdx].text = fullResponse;
+                    this.codeMode.lines[lineIdx].html = this.renderMarkdown(fullResponse);
+                    this.$nextTick(() => {
+                        const el = document.getElementById('terminal-body');
+                        if (el) el.scrollTop = el.scrollHeight;
+                    });
+
+                    if (done) {
+                        this.processFileChanges(fullResponse);
+                        this.processShellCommands(fullResponse, prompt);
+                    }
+                }, this.abortController.signal);
+            } catch (e) {
+                if (e.name === 'AbortError') {
+                    this.codeMode.lines[lineIdx].text = 'Stopped by user.';
+                } else {
+                    this.codeMode.lines[lineIdx].text = `Error: ${e.message}`;
+                    this.codeMode.lines[lineIdx].type = 'error';
+                }
+            } finally {
+                this.codeMode.loading = false;
+            }
+        },
+
+        stopCodeModeAction() {
+            if (this.abortController) {
+                this.abortController.abort();
+                this.codeMode.loading = false;
+            }
+        },
+
+        async processShellCommands(text, originalPrompt) {
+            const shellRegex = /<shell>([\s\S]*?)<\/shell>/g;
+            let match;
+            let combinedOutput = "";
+            while ((match = shellRegex.exec(text)) !== null) {
+                const command = match[1].trim();
+                this.codeMode.lines.push({ type: 'system', text: `Running: ${command}` });
+                try {
+                    const res = await fetch(`${this.backendUrl}/code-mode/shell`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            session_id: this.codeMode.sessionId,
+                            command: command
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.stdout) {
+                        const line = { type: 'ai', text: `\n[STDOUT]\n${data.stdout}` };
+                        this.codeMode.lines.push(line);
+                        combinedOutput += `\nSTDOUT:\n${data.stdout}`;
+                    }
+                    if (data.stderr) {
+                        const line = { type: 'error', text: `\n[STDERR]\n${data.stderr}` };
+                        this.codeMode.lines.push(line);
+                        combinedOutput += `\nSTDERR:\n${data.stderr}`;
+                    }
+
+                    if (combinedOutput.trim().length > 0 && !text.toLowerCase().includes("finish")) {
+                        await new Promise(r => setTimeout(r, 1000)); // Brief pause for readability
+                        await this.interactCodeMode(`Command finished. Output above. Analyse and continue or say 'DONE'.\n${combinedOutput}`);
+                    }
+                } catch (e) {
+                    this.codeMode.lines.push({ type: 'error', text: `Command failed: ${e.message}` });
+                }
+            }
+        },
+
+        processFileChanges(text) {
+            const fileRegex = /<file path="(.*?)">([\s\S]*?)<\/file>/g;
+            let match;
+            let count = 0;
+            while ((match = fileRegex.exec(text)) !== null) {
+                const path = match[1];
+                const content = match[2];
+                this.codeMode.files[path] = content;
+                count++;
+            }
+            if (count > 0) {
+                this.saveFilesToBackend();
+                this.codeMode.lines.push({ type: 'system', text: `Saved ${count} file(s) to project.` });
+            }
+        },
+
+        async saveFilesToBackend() {
+            try {
+                await fetch(`${this.backendUrl}/code-mode/interact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: this.codeMode.sessionId,
+                        user_prompt: 'Internal sync',
+                        files: this.codeMode.files
+                    })
+                });
+            } catch (e) {
+                console.error('Failed to sync files:', e);
+            }
+        },
+
+        async packageCodeMode() {
+            this.codeMode.packaging = true;
+            try {
+                const res = await fetch(`${this.backendUrl}/code-mode/package?session_id=${this.codeMode.sessionId}`, { method: 'POST' });
+                const data = await res.json();
+                this.codeMode.downloadUrl = `${this.backendUrl}${data.download_url}`;
+                this.startExpiryTimer();
+                this.codeMode.lines.push({ type: 'system', text: 'Project packaged successfully. Download link ready below.' });
+            } catch (e) {
+                this.codeMode.lines.push({ type: 'error', text: `Packaging failed: ${e.message}` });
+            } finally {
+                this.codeMode.packaging = false;
+            }
+        },
+
+        startExpiryTimer() {
+            if (this.codeMode.timer) clearInterval(this.codeMode.timer);
+            let seconds = 600;
+            this.codeMode.timer = setInterval(() => {
+                seconds--;
+                if (seconds <= 0) {
+                    clearInterval(this.codeMode.timer);
+                    this.codeMode.downloadUrl = null;
+                }
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                this.codeMode.expiryTime = `${m}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
         },
 
         startNixPing() { this.nixService.startPinging(s => { this.nixOnline = s === 'online'; }); },

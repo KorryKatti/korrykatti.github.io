@@ -14,7 +14,10 @@ RUN apk add --no-cache \
     tiff-dev \
     zlib-dev \
     build-base \
-    bash
+    bash \
+    sudo \
+    nodejs \
+    npm
 
 WORKDIR /app
 
@@ -26,8 +29,10 @@ RUN uv pip install --no-cache --system -r requirements.txt
 # Copy application files
 COPY . .
 
-# Create a non-root user for security
-RUN adduser -D runner
+# Create a non-root user and allow sudo
+RUN adduser -D runner && \
+    echo "runner ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/runner && \
+    chmod 0440 /etc/sudoers.d/runner
 USER runner
 
 EXPOSE 10000

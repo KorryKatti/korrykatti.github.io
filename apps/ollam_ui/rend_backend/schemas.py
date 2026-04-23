@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Dict
 
 class SearchRequest(BaseModel):
     query: str
@@ -37,4 +37,25 @@ class PowChallenge(BaseModel):
 
 class ReviewRequest(BaseModel):
     review: int  # 1 for thumbs up, 0 for thumbs down
+
+class CodeModeSessionResponse(BaseModel):
+    session_id: str
+
+class CodeModeInteractRequest(BaseModel):
+    session_id: str
+    user_prompt: str
+    files: Dict[str, str] # {path: content}
+
+class CodeModePackageResponse(BaseModel):
+    download_url: str
+    expires_at: float
+
+class CodeModeShellRequest(BaseModel):
+    session_id: str
+    command: str
+
+class CodeModeShellResponse(BaseModel):
+    stdout: str
+    stderr: str
+    exit_code: int
 

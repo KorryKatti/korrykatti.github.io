@@ -7,7 +7,9 @@
     <title>Ollama AI Nexus</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mini_fwrk/mini.css">
     <link rel="stylesheet" href="style-enhanced.css">
@@ -237,7 +239,8 @@
                     <div class="input-actions">
                         <div class="input-actions-left">
                             <input type="file" id="file-input" multiple hidden @change="handleFileUpload($event)">
-                            <button @click="document.getElementById('file-input').click()" class="secondary-btn">Attach</button>
+                            <button @click="document.getElementById('file-input').click()"
+                                class="secondary-btn">Attach</button>
                             <div class="search-toggle" :class="{ 'active': searchWeb }">
                                 <input type="checkbox" id="search-web-toggle" x-model="searchWeb">
                                 <label for="search-web-toggle">Web Search</label>
@@ -248,6 +251,7 @@
                                     <option value="graph">Graph Plotter</option>
                                     <option value="story">Story Mode</option>
                                     <option value="code">Code Interpreter</option>
+                                    <option value="code-terminal">Code Mode (Terminal)</option>
                                     <option value="image-gen">Image Generator (Puter.js)</option>
                                     <option value="imagine-gen">Image Generator (Imagine.js)</option>
                                 </select>
@@ -275,6 +279,59 @@
                     </div>
                 </div>
                 <p class="disclaimer">Ollama can make mistakes. Check important info.</p>
+            </div>
+
+            <!-- Code Mode Terminal Overlay -->
+            <div x-show="selectedTool === 'code-terminal' && codeMode.active" class="terminal-overlay"
+                x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-95"
+                x-transition:enter-end="opacity-100 scale-100" x-cloak>
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <div class="terminal-controls">
+                            <span class="control-dot close" @click="selectedTool = 'none'"></span>
+                            <span class="control-dot minim"></span>
+                            <span class="control-dot expand"></span>
+                        </div>
+                        <div class="terminal-title">Ollama Code Terminal — session: <span
+                                x-text="codeMode.sessionId?.substring(0,8)"></span></div>
+                        <div class="terminal-actions">
+                            <button @click="stopCodeModeAction()" class="terminal-btn stop-btn"
+                                x-show="codeMode.loading" style="border-color: #f56565; color: #f56565;">
+                                <span>Stop</span>
+                            </button>
+                            <button @click="packageCodeMode()" class="terminal-btn download-btn"
+                                :disabled="codeMode.packaging">
+                                <span x-show="!codeMode.packaging">Finish & Download</span>
+                                <span x-show="codeMode.packaging">Packaging...</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="terminal-body" id="terminal-body" ref="terminalBody">
+                        <div class="terminal-intro">
+                            Ollama Code Mode v1.0.0
+                            System: Alpine Linux / Python 3.11
+                            Type 'help' for instructions.
+                        </div>
+                        <template x-for="(line, idx) in codeMode.lines" :key="idx">
+                            <div class="terminal-line" :class="line.type">
+                                <span class="line-prefix" x-show="line.type === 'input'">&gt; </span>
+                                <span class="line-content" x-html="line.html || line.text"></span>
+                            </div>
+                        </template>
+                        <div class="terminal-prompt-line">
+                            <span class="line-prefix">&gt; </span>
+                            <input type="text" class="terminal-input" x-model="codeMode.input"
+                                @keydown.enter="handleTerminalInput()" @keydown.slash.prevent=""
+                                placeholder="Ask anything..." autofocus>
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <div class="expiry-timer" x-show="codeMode.downloadUrl">
+                            Link expires in: <span x-text="codeMode.expiryTime">10:00</span>
+                            <a :href="codeMode.downloadUrl" class="download-link" target="_blank">Download ZIP</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -467,8 +524,10 @@
                 <button @click="showCodeWarningModal = false">&times;</button>
             </div>
             <div class="modal-body" style="gap: 16px;">
-                <p>Code Interpreter mode executes Python code on the backend and may collect execution data for analysis.</p>
-                <p><strong>Please do not include secrets, passwords, private keys, or sensitive personal data.</strong></p>
+                <p>Code Interpreter mode executes Python code on the backend and may collect execution data for
+                    analysis.</p>
+                <p><strong>Please do not include secrets, passwords, private keys, or sensitive personal data.</strong>
+                </p>
                 <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
                     <button class="secondary-btn" @click="showCodeWarningModal = false">Got it</button>
                 </div>
