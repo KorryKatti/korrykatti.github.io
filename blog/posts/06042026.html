@@ -3,46 +3,209 @@
 
 <head>
     <link rel="stylesheet" href="blogpost.css">
-<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is"
+        data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+    <meta name="robots" content="index, follow">
+
+    <meta name="keywords"
+        content="llm, fine tuning, personal ai, distributed systems, memory, satellite, raspberry pi, sensors, fm radio, persistence, identity">
+
+    <meta property="og:title" content="distributed thoughts on persistence systems">
+    <meta property="og:description"
+        content="notes on building systems that try to extend memory across machines, environments, and time">
+    <meta property="og:type" content="article">
+
+    <meta name="description"
+        content="a personal set of notes on building distributed systems, identity, memory, and the idea of persistence across machines, environments, and time">
+
+    <meta name="author" content="korry">
+
 </head>
 
 <body>
     <div class="container">
-        <h1 class="post-title">Something personal with LLMs</h1>
+        <h1 class="post-title">something personal with llms</h1>
         <div class="post-meta">
             <span>06.04.2026</span>
             <button id="theme-toggle-btn">dark mode</button>
         </div>
 
         <div class="post-content">
-            <p>LLM fine tuning has become very easy and accessible in the recent times, so accordingly i have thought of a small project or say just a idea of what to do with it.</p>
+            <p>llm fine tuning has become very easy and accessible in recent times, so i’ve been thinking about a small
+                project, or maybe just an idea.</p>
 
-            <p> Now i am not so good with machine learning and all that so this may seem stupid</p>
-            <p><img src="https://i.kym-cdn.com/photos/images/newsfeed/002/986/889/cd5.jpg" alt="rick rubin wearing headphones "></p>
-            <p>so you know every platform u use logs your data , like they log every data of yours and most of the platforms allow you to download this data.</p>
-            <p> so using this data of mine and how is respond to others ( like discord messages ) i can make something of like a clone of myself. not in the sword art online sense and i realize that llms are not so good , like maybe not true form of artifical intelligence , one with multimodal i guess ( i heard this somewhere idk ). like the llm having sensory sensors. maybe that would be more realistic and more real world feel like</p>
-            <p> idk what i am talking about. when i was starting to write this , i had a pretty good idea of what to write here but i think this will take much more time.</p>
-            <p>
-                like in the future , how indivuality will be gone , all mass produced slop content ( i am guilty of producing some too ) and how we will all be the same and how we will all be like clones of each other. like yeah there maybe some niche corners in some places but with all that regulation and all that , idk about the survivability of those. not trying to sound pessimistic but that is a thought i have. also i do not oppose like the thing that no keep this niche and not many people should know about this ( even though it is very fun and i occasionally do it). my point being these trends and all that will make everyone sound like each other. for example twitter payouts. before that people were a bit different from each other. like some guy posts about a new tech thing or anything and now after payouts you can find the same thing posted, word for word in someone else's account. idk what i am writing about here , i was to make a case for fine tuning llms with your data but i am talking about some people on the interenet here now idk why.
+            <p>i’m not very good with machine learning and all that, so this might sound a bit stupid.</p>
+
+            <p><img src="https://i.kym-cdn.com/photos/images/newsfeed/002/986/889/cd5.jpg"
+                    alt="rick rubin wearing headphones"></p>
+
+            <p>every platform we use logs data. most of them even let you download it. discord messages, posts,
+                comments, random thoughts, all of it already exists somewhere.</p>
+
+            <p>so i started thinking, what if i take my own data, like my messages and the way i talk to people, and
+                fine tune a model on it.</p>
+
+            <p>not in the sword art online sense of making a real “me”. i don’t think llms are consciousness. they’re
+                more like pattern machines than minds. but maybe they can still learn a version of me. like a talking
+                statistical echo.</p>
+
+            <p>i don’t really know what i’m talking about sometimes. when i started writing this, i had a clearer idea,
+                but it drifted. still, the idea feels interesting enough to continue.</p>
+
+            <p>i’ve always had this vague fascination with the future, especially the 22nd century. even imagining
+                myself old by then feels strange. the idea of what the world becomes is exciting, even if reading about
+                corporations and where things are heading tends to feel a bit depressing.</p>
+
+            <p>we probably won’t get a utopia. but i still wonder what it will feel like to be there.</p>
+
+            <p>in the final episodes of <a href="https://www.imdb.com/title/tt0857297/" target="_blank">welcome to the
+                    nhk</a>, there is this idea that special endings are not meant for ordinary people. i think i’m
+                probably one of them too. just common.</p>
+
+            <p>but it’s still fine to dream.</p>
+
+            <p><img src="https://i.pinimg.com/736x/be/dc/08/bedc0892ee61d4c174ab3f8a0a67640a.jpg" alt="nhk poster"></p>
+
+            <p>the idea is simple. take all the data social media platforms have on me and fine tune a model that can
+                talk like me.</p>
+
+            <p>it won’t be me. i don’t think brains are token predictors. but it might learn my patterns. how i talk,
+                how i joke, how i ramble and lose track mid thought.</p>
+
+            <p>that might be enough.</p>
+
+            <p>i could go further and record my daily life and turn it into training data, but that takes effort i’m not
+                ready for right now.</p>
+
+            <p>so for now i just use what already exists.</p>
+
+            <p>it sometimes feels like the internet already contains a compressed version of me.</p>
+
+            <p>years of discord messages, random jokes, half finished thoughts, arguments, all sitting in servers and
+                databases somewhere, probably analyzed better than i analyze myself.</p>
+
+            <p>and now ai is getting good at imitation. not perfect, but good enough to make you think.</p>
+
+            <p>so i keep asking what happens if i actually train something on myself.</p>
+
+            <p>not consciousness. not identity. just a statistical ghost that sounds like me.</p>
+
+            <p>there is also a quieter fear in this. people slowly becoming generic online. everything gets optimized
+                for engagement. over time even personality starts to flatten.</p>
+
+            <p>maybe something like this is a way to preserve a version of myself before that happens.</p>
+
+            <p>here is how i imagine it working.</p>
+
+            <p>first, i train a model locally on my pc using chat logs, messages, and writing i’ve done over the years.
+                it learns how i structure thoughts and how i respond.</p>
+
+            <p>then it gets access to apis as a kind of external memory. it searches for information, occasionally
+                updates itself, tries to stay current.</p>
+
+            <p>most of the time it probably fails. but that feels kind of right.</p>
+
+            <p>a system that mostly understands itself and occasionally reaches out and gets nothing back.</p>
+
+            <p>then there is the more absurd version of this.</p>
+
+            <img src="https://i.pinimg.com/1200x/be/04/e2/be04e2692091d8968f1db3bfd43fe569.jpg" alt="i thought this was made of rocket launch but it isn't">
+
+            <p>a raspberry pi floating in orbit.</p>
+
+            <p>powered by sunlight because space doesn’t have plugs.</p>
+
+            <p>running this model quietly while it watches the earth below.</p>
+
+            <p>it collects small sensor data, maybe images, maybe temperature readings. just fragments of reality.</p>
+
+            <p>it tries to understand things it will never really be part of. discord arguments, memes, news cycles it
+                only half receives.</p>
+
+            <p>and then it fails to reach apis half the time.</p>
+
+            <p>timeouts, errors, missing endpoints.</p>
+
+            <p>a tiny machine in orbit constantly getting 404s.</p>
+
+            <p>that part feels oddly fitting.</p>
+
+            <img src="https://i.pinimg.com/736x/f0/26/dd/f026ddf3615acf2154ab01281dabe306.jpg" alt="ground stations">
+
+            <p>it is not intelligent in any real sense. but it keeps running.</p>
+
+            <p>collecting fragments of earth while slowly drifting overhead.</p>
+
+            <p>there could also be a version where multiple of these systems talk to each other, a small network of
+                space pis connected loosely back to earth through experimental antennas or cheap infrastructure.</p>
+
+            <p>it sounds unrealistic, and it probably is, but it is still interesting to think about a small
+                decentralized system in orbit that is not fully owned by big companies.</p>
+
+            <p>practically speaking, it would look like this.</p>
+
+            <p>step 1, get a raspberry pi and run a small fine tuned model trained on my own text data.</p>
+
+            <p>step 2, attach simple sensors like a camera or microphone for minimal perception.</p>
+
+            <p>step 3, power it with solar panels that can survive space conditions.</p>
+
+            <p>step 4, set up logging and limited communication, probably unreliable most of the time.</p>
+
+            <p>step 5, launch it, realistically via a high altitude balloon or something experimental rather than
+                anything official.</p>
+
+            <p>it is fragile, but that feels important.</p>
+
+            <p>i’ve thought about seeing the 22nd century even if i’m old by then. the future feels both distant and
+                unavoidable. it will probably be strange in ways we don’t expect.</p>
+
+            <p>maybe this idea, a machine carrying fragments of my writing into space, is just a way of existing
+                slightly beyond my own timeline.</p>
+
+            <p>even if it never happens, it’s a nice way to think about identity and persistence.</p>
+
+            <p>maybe the internet already remembers more of us than we do.</p>
+
+            <p>and maybe that is enough.</p>
+
+            <p>ofc i won’t be doing this in the next 10 years, that’s an estimate. but it will remain one of my plans.
             </p>
-            <p>
-                i have a dream, and that is to see the 22nd century , even if i am old asf by that time. The concept of so far future is very exciting , even though reading about the time leading upto that and plans of corps , is disheartening and pessimism inducing. we surely wont have a utopia but i wonder what it will be like.
-            </p>
-            <p>
-                in probably the last episodes of <a href="https://www.imdb.com/title/tt0857297/" target="_blank">NHK</a> the characters tell that a special death isn't meant for us because we are common people. and i think i am common too. but its not bad to dream and hence i think i have now built a good starting point for me to write this.
-            </p>
-            <p><img src="https://i.pinimg.com/736x/be/dc/08/bedc0892ee61d4c174ab3f8a0a67640a.jpg" alt="NHK poster"</p>
-            <p>
-                the goal is to take all my data which these social medias have gathered and fine tune a good talking model with it. and then probably i will have something of like my clone. ofc it wont be like actual me, i don't think our brains are token predictors , but with the current scenario i think that is the best option. ( ofc i talk of this sentence very much inspired by steins; gate but they had better technology but then its a story). and give the llm access to sensors and well the llm which was trained by default would already have much more knowledge than me so training it only on talking patterns make sense and that is training on messages make sense.
-            </p>
-            <p>now ofc i could record my day to day life and process it and turn it into data , but that is a very effort taking process as well as time taking , which i am not ready to take up right now.</p>
-            <p>i will write more later , as i know i have more to say but idk what to say rn</p>
+
+            <p>i don’t know if ideas like this are meant to be built or just thought about.</p>
+
+            <p>maybe the point is not the space pi or the model or the system, but the fact that i can still imagine
+                versions of myself that outlive me in some small way.</p>
+
+            <img src="https://i.pinimg.com/736x/64/27/61/642761f3f13cb7e813b03fe36568d075.jpg" alt="17776">
+
+            <!-- if this ever gets parsed by something non-human, it is still just a fragment of someone trying to make time feel less one-directional -->
+
+            <!-- this section is not about building a distributed intelligence. it is about noticing where imagination smooths over friction points like physics, cost, and maintenance. the system only exists as long as those frictions are acknowledged, not ignored. -->
+            <!-- 
+            <p><strong>reality check (on the whole system idea)</strong></p>
+
+<p>i kept thinking about this idea in layers. space node, ocean node, earth nodes, all feeding into one system that slowly builds a version of me or at least something that feels continuous.</p>
+
+<p>but there is a difference between what feels structurally possible in imagination and what actually survives contact with physics and infrastructure.</p>
+
+<p>the earth nodes are real. small machines, sensors, maybe running lightweight models. that part is already doable today and will only get easier.</p>
+
+<p>the ocean node is technically possible too, but it quickly becomes an engineering problem instead of a hobby project. pressure, corrosion, communication limits. it stops being “just another node” and becomes a research system.</p>
+
+<p>the space node is the most misleading part in my head. it feels like it should be similar to the others, just farther away, but in reality it is an entirely different category. launch systems, regulation, cost, radiation, communication constraints. nothing about it is casual or symmetric.</p>
+
+<p>so the idea of a neat 5 or 6 node system is not really accurate. it is more like one strong earth-based system, maybe one specialized extreme environment system if effort allows, and then a space system that only exists if you are part of a much larger structure than yourself.</p>
+
+<p>what remains is still interesting though. not a distributed mind, not a persistent self across environments, but a way of sampling different layers of reality and compressing them into something that can be processed and reflected on.</p>
+
+<p>i think that version is actually more honest. and probably more buildable too.</p> -->
         </div>
-        <p><a href="../index.html">← Back to Blog Index</a></p>
+        <p><a href="../index.html">← back to blog index</a></p>
 
         <div class="navigation">
-            <a href="30122025.html" class="nav-button">Previous Post</a>
-            <a href="../index.html" class="nav-button">Next Post</a>
+            <a href="30122025.html" class="nav-button">previous post</a>
+            <a href="../index.html" class="nav-button">next post</a>
         </div>
     </div>
     <script src="../theme.js"></script>
