@@ -1,270 +1,379 @@
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&family=Zen+Maru+Gothic:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
-    /* Palette */
-    --bg-paper: #f4f1ea;
-    --bg-warm-gray: #e8e6e1;
-    --bg-charcoal: #1a1a1a;
+    /* Mustard & Wine Palette */
+    --bg-cream: #FFFAF0;
+    --bg-wine: #722F37;
+    --bg-mustard: #E1AD01;
+    --bg-charcoal: #3D3D3D;
+    --color-orange: #CD5C5C;
+    
+    /* Text Colors */
+    --text-charcoal: #3D3D3D;
+    --text-cream: #FFFAF0;
+    --text-gold: #E1AD01;
+    
+    /* Outlines */
+    --border-color: #3D3D3D;
+    --border-width: 6px;
+    --border-width-thin: 3px;
 
-    --text-main: #2b2b2b;
-    --text-faint: #888888;
-    --text-light: #f4f1ea;
-
-    /* Accents */
-    --acc-blood: #8a3324;
-    --acc-purple: #7a6a8f;
-    --acc-teal: #5f8a8b;
-    --acc-yellow: #d4b483;
-
-    /* Spacing */
-    --spacing-loose: 12vh;
-    --spacing-tight: 2rem;
+    /* Backward compatibility fallback */
+    --acc-blood: var(--bg-wine);
+    --acc-purple: var(--color-orange);
+    --acc-teal: var(--bg-mustard);
+    --acc-yellow: var(--bg-mustard);
 }
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    background-color: var(--bg-paper);
-    color: var(--text-main);
-    font-family: 'Zen Maru Gothic', sans-serif;
-    margin: 0;
-    padding: 0;
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700; /* heavy weight sans-serif body text */
+    line-height: 1.4;
+    padding: 2vw;
+    min-height: 100vh;
     overflow-x: hidden;
-    line-height: 1.8;
-    font-size: 16px;
-    transition: background-color 1s ease;
 }
 
 /* Typography */
-h1,
-h2,
-h3,
-h4 {
-    font-family: 'IM Fell English', serif;
+h1, h2, h3, h4, .serif-text {
+    font-family: 'IM Fell English', Georgia, serif;
     font-weight: 400;
-    margin: 0;
-    line-height: 1.1;
+    line-height: 0.9;
+    text-transform: lowercase;
 }
 
 h1 {
-    font-size: 4rem;
-    color: var(--acc-blood);
+    font-size: clamp(3.5rem, 8vw, 7.5rem);
     letter-spacing: -2px;
 }
 
 h2 {
-    font-size: 2.5rem;
-    color: var(--bg-charcoal);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: -1.5px;
 }
 
+h3 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: justify; /* tightly packed vibe */
+    hyphens: auto;
+}
+
+/* Links */
 a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s ease, color 0.3s ease;
+    border-bottom: 3px solid currentColor;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    display: inline-block;
 }
 
 a:hover {
-    border-bottom: 1px solid var(--acc-blood);
-    color: var(--acc-blood);
+    background-color: var(--color-orange);
+    color: var(--text-cream);
 }
 
-/* Layout Utilities */
-.floating-section {
+/* Heavy Text-Heavy Grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--border-width);
+    background-color: var(--border-color);
+    border: var(--border-width) solid var(--border-color);
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Panel base */
+.grid-panel {
+    background-color: var(--bg-cream);
+    padding: 2.5rem;
     position: relative;
-    max-width: 800px;
-    /* Constraints reading width but allows free positioning */
-    margin: var(--spacing-loose) 5vw;
-    padding: 2rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 300px;
 }
 
-.floating-section:nth-child(even) {
-    margin-left: auto;
-    /* Push to right */
-    margin-right: 15vw;
-    text-align: right;
+/* Column sizes */
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-7 { grid-column: span 7; }
+.col-6 { grid-column: span 6; }
+.col-5 { grid-column: span 5; }
+.col-4 { grid-column: span 4; }
+.col-3 { grid-column: span 3; }
+
+/* Panel themes (alternating blocks) */
+.panel-wine {
+    background-color: var(--bg-wine);
+    color: var(--text-cream);
+}
+.panel-wine h1, .panel-wine h2, .panel-wine h3 {
+    color: var(--text-gold);
+}
+.panel-wine a:hover {
+    background-color: var(--bg-mustard);
+    color: var(--bg-wine);
 }
 
-.floating-section:nth-child(odd) {
-    margin-left: 10vw;
-    text-align: left;
+.panel-charcoal {
+    background-color: var(--bg-charcoal);
+    color: var(--text-cream);
+}
+.panel-charcoal h1, .panel-charcoal h2, .panel-charcoal h3 {
+    color: var(--text-gold);
 }
 
-.offset-text {
-    display: inline-block;
-    transform: translateY(10px);
+.panel-mustard {
+    background-color: var(--bg-mustard);
+    color: var(--text-charcoal);
+}
+.panel-mustard h1, .panel-mustard h2, .panel-mustard h3 {
+    color: var(--bg-wine);
+}
+
+.panel-cream {
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+}
+.panel-cream h1, .panel-cream h2, .panel-cream h3 {
+    color: var(--bg-wine);
+}
+
+/* Diagonal stripe pattern card */
+.panel-stripes {
+    background: repeating-linear-gradient(
+        45deg,
+        var(--bg-wine),
+        var(--bg-wine) 20px,
+        var(--color-orange) 20px,
+        var(--color-orange) 40px
+    );
+    color: var(--text-cream);
+}
+
+/* Spacers and frames */
+.geometric-frame {
+    border: 3px solid currentColor;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.accent-block {
+    height: 12px;
+    background-color: var(--color-orange);
+    width: 100%;
+    margin: 1.5rem 0;
 }
 
 .vertical-text {
     writing-mode: vertical-rl;
     text-orientation: mixed;
     position: absolute;
-    right: -2rem;
-    top: 0;
+    right: 1.5rem;
+    top: 1.5rem;
     font-size: 1.5rem;
-    color: var(--acc-purple);
-    opacity: 0.7;
+    color: currentColor;
+    opacity: 0.8;
 }
 
-/* Specific Sections */
-#intro-scene {
-    margin-top: 20vh;
+/* Status Badge */
+.status-badge {
+    font-family: 'IM Fell English', serif;
+    font-size: 1rem;
+    color: var(--text-gold);
+    background-color: var(--bg-charcoal);
+    border: var(--border-width-thin) solid var(--text-gold);
+    padding: 0.4rem 1rem;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transform: rotate(-3deg);
+    width: fit-content;
+}
+.panel-wine .status-badge {
+    background-color: var(--bg-charcoal);
+    border-color: var(--text-gold);
+    color: var(--text-gold);
 }
 
-.intro-text {
-    font-size: 1.4rem;
-    max-width: 500px;
+/* Projects & Lists */
+.project-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     margin-top: 2rem;
 }
 
-.status-badge {
-    font-size: 0.9rem;
-    font-family: 'IM Fell English', serif;
-    color: var(--acc-teal);
-    border: 1px solid var(--acc-teal);
-    padding: 0.2rem 0.5rem;
-    display: inline-block;
-    margin-bottom: 1rem;
-    transform: rotate(-2deg);
-}
-
-/* Quotes */
-.quote-container {
-    font-size: 2rem;
-    font-family: 'IM Fell English', serif;
-    color: var(--text-faint);
-    max-width: 60%;
-    margin: 0 auto;
-    text-align: center;
-}
-
-/* Projects */
-.project-list {
+.project-item {
     display: flex;
     flex-direction: column;
-    gap: 4rem;
-}
-
-.project-item {
-    display: block;
-    position: relative;
-    transition: transform 0.3s ease;
+    padding: 1.5rem;
+    border: var(--border-width-thin) solid var(--border-color);
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .project-item:hover {
-    transform: translateX(10px);
+    transform: translate(-6px, -6px);
+    box-shadow: 6px 6px 0 var(--border-color);
+    background-color: var(--bg-mustard);
+    color: var(--text-charcoal);
 }
 
 .project-title {
-    font-size: 2rem;
-    display: block;
-    color: var(--bg-charcoal);
+    font-size: 1.8rem;
+    font-family: 'IM Fell English', serif;
+    margin-bottom: 0.5rem;
 }
 
 .project-desc {
-    font-size: 1rem;
-    color: var(--acc-purple);
+    font-size: 0.95rem;
     font-style: italic;
+    opacity: 0.85;
 }
 
-/* Logs */
+/* Logs Lists */
 .log-list {
     list-style: none;
-    padding: 0;
+    margin-top: 1.5rem;
 }
 
 .log-item {
-    margin-bottom: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: var(--border-width-thin) solid currentColor;
+}
+.log-item:last-child {
+    border-bottom: none;
 }
 
 .log-link {
-    font-size: 1.5rem;
-    color: var(--acc-blood);
+    font-family: 'IM Fell English', serif;
+    font-size: 1.8rem;
+    border-bottom: none;
 }
 
-/* Stream / Tumblr */
+/* Quote display container */
+.quote-container {
+    font-family: 'IM Fell English', serif;
+    font-size: 2.2rem;
+    line-height: 1.1;
+    text-align: center;
+    padding: 2rem;
+    border: var(--border-width-thin) solid currentColor;
+}
+
+.small-text {
+    font-size: 1.2rem;
+    display: block;
+    margin-top: 1rem;
+}
+
+/* Stream / Tumblr posts */
 #tumblr-posts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3rem;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
 }
 
 .tumblr-post {
-    width: 300px;
-    background: #fff;
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    border: var(--border-width-thin) solid var(--border-color);
     padding: 1.5rem;
-    box-shadow: 5px 5px 0px var(--acc-yellow);
-    border: 1px solid var(--text-main);
-    font-size: 0.9rem;
-    text-align: left;
-    /* Reset text align */
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.tumblr-post img {
-    filter: grayscale(100%);
-    transition: filter 0.5s ease;
+.tumblr-post:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0 var(--border-color);
 }
 
-.tumblr-post:hover img {
-    filter: grayscale(0%);
+.tumblr-post h4 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--bg-wine);
 }
 
 .post-meta {
-    font-size: 0.8rem;
-    color: var(--acc-teal);
-    margin-bottom: 0.5rem;
     font-family: monospace;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-bottom: 1rem;
 }
 
-/* Animations */
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.5s ease, transform 1.5s ease;
+.post-body img {
+    max-width: 100%;
+    height: auto;
+    filter: grayscale(100%) contrast(120%);
+    border: var(--border-width-thin) solid var(--border-color);
+    margin-top: 1rem;
+    transition: filter 0.3s ease;
 }
 
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
+.tumblr-post:hover img {
+    filter: grayscale(0%) contrast(100%);
 }
 
-/* Decorations */
-.scribble {
-    position: absolute;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.5;
-}
-
-.scribble-1 {
-    top: -50px;
-    left: -50px;
-    width: 200px;
-}
-
-.circle-shape {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background-color: var(--acc-yellow);
-    opacity: 0.2;
-    z-index: -1;
-    filter: blur(40px);
-}
-
-/* UI Elements */
-button {
-    background: transparent;
-    border: none;
+#load-more-btn {
+    background-color: var(--bg-mustard);
+    color: var(--text-charcoal);
+    border: var(--border-width-thin) solid var(--border-color);
+    padding: 0.8rem 2rem;
     font-family: 'IM Fell English', serif;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-    border-bottom: 2px solid var(--acc-blood);
-    padding-bottom: 2px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#load-more-btn:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 4px 4px 0 var(--border-color);
+}
+
+/* Controls */
+#desktop-mode-control, #music-control {
+    position: fixed;
+    z-index: 100;
+    background-color: var(--bg-mustard);
+    color: var(--text-charcoal);
+    border: var(--border-width-thin) solid var(--border-color);
+    padding: 0.5rem 1rem;
+    font-family: 'IM Fell English', serif;
+    font-size: 1.1rem;
+    box-shadow: 4px 4px 0 var(--border-color);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+#desktop-mode-control:hover, #music-control:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 2px 2px 0 var(--border-color);
+}
+
+#desktop-mode-control {
+    bottom: 80px;
+    right: 20px;
+}
+
+#music-control {
+    bottom: 20px;
+    right: 20px;
 }
 
 /* Modal */
@@ -275,39 +384,87 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(244, 241, 234, 0.95);
+    background-color: rgba(61, 61, 61, 0.85);
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
 }
 
 .modal-content {
-    width: 90%;
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    border: var(--border-width) solid var(--border-color);
+    box-shadow: 12px 12px 0 var(--bg-wine);
+    padding: 2.5rem;
+    width: 100%;
     max-width: 500px;
-    padding: 2rem;
-    border: 1px solid var(--text-main);
-    background: var(--bg-paper);
-    box-shadow: 10px 10px 0 var(--acc-blood);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-/* Mobile Responsiveness */
+.modal-content button {
+    background-color: var(--bg-mustard);
+    border: var(--border-width-thin) solid var(--border-color);
+    font-family: 'IM Fell English', serif;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* Fade-in Observer Support */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Decorative circle blur - disabled/adapted to grid */
+.circle-shape {
+    display: none; /* keep pure grid geometric look */
+}
+
+/* Responsive Rules */
+@media (max-width: 992px) {
+    .col-8, .col-7, .col-5, .col-4 {
+        grid-column: span 6;
+    }
+}
+
 @media (max-width: 768px) {
-
-    .floating-section,
-    .floating-section:nth-child(even),
-    .floating-section:nth-child(odd) {
-        margin: 5rem 1rem;
-        text-align: left;
-        /* Reset alignment for mobile readability */
-        max-width: 100%;
+    body {
+        padding: 1rem;
     }
-
+    
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: var(--border-width);
+    }
+    
+    .col-12, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3 {
+        grid-column: span 12;
+    }
+    
+    .grid-panel {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+    
     h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
-
+    
     .vertical-text {
-        display: none;
-        /* Hide vertical decorations on tiny screens */
+        position: static;
+        writing-mode: horizontal-tb;
+        margin-top: 1rem;
+        font-size: 1.2rem;
     }
 }

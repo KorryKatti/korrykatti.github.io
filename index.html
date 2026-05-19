@@ -4,75 +4,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>korry // fragments</title>
-    <meta name="description" content="a personal collection of fragments">
+    <title>korry // blog</title>
+    <meta name="description" content="a personal blog">
     <meta name="author" content="korry">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://korrykatti.github.io/">
-    <meta property="og:title" content="korry // fragments">
-    <meta property="og:description" content="a personal collection of fragments">
+    <meta property="og:title" content="korry // blog">
+    <meta property="og:description" content="a personal blog">
     <meta property="og:image" content="https://korrykatti.github.io/assets/img/main-image.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@dunkelkron">
     <meta name="twitter:creator" content="@dunkelkron">
-    <meta name="twitter:title" content="korry // fragments">
-    <meta name="twitter:description" content="a personal collection of fragments">
+    <meta name="twitter:title" content="korry // blog">
+    <meta name="twitter:description" content="a personal blog">
     <meta name="twitter:image" content="https://korrykatti.github.io/assets/img/main-image.png">
 
     <link rel="icon" href="assets/img/icon.jpeg">
     <link rel="stylesheet" href="style.css">
-<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
 <body>
 
+    <div class="grid-container">
+        
+        <!-- PANEL 1: BRAND HEADER (WINE) -->
+        <header class="grid-panel col-8 panel-wine fade-in">
+            <div>
+                <h1 style="margin-bottom: 1rem;">korry.</h1>
+                <p style="font-family: 'IM Fell English', serif; font-size: 1.8rem; line-height: 1; opacity: 0.9;">blog // a collection of personal memories & codes</p>
+            </div>
+            <div class="accent-block" style="background-color: var(--bg-mustard); margin: 1rem 0 0 0;"></div>
+        </header>
 
-    <div class="circle-shape" style="top: 10%; right: 10%;"></div>
-    <div class="circle-shape" style="top: 40%; left: 5%; background-color: var(--acc-teal);"></div>
-    <div class="circle-shape" style="bottom: 15%; right: 20%; background-color: var(--acc-purple);"></div>
+        <!-- PANEL 2: STATUS & REALITY (MUSTARD) -->
+        <section class="grid-panel col-4 panel-mustard fade-in">
+            <div>
+                <div class="status-badge" id="status-container">checking reality...</div>
+                <div class="vertical-text">私について</div>
+            </div>
+            <div>
+                <p style="font-size: 0.95rem; margin-bottom: 0;">
+                    last update:<br><span id="last-updated" style="font-family: monospace; font-size: 0.9rem;">...</span>
+                </p>
+            </div>
+        </section>
 
-    <!-- SCENE 01: INTRO -->
-    <section id="intro-scene" class="floating-section fade-in">
-        <svg class="scribble scribble-1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path fill="none" stroke="var(--acc-blood)" stroke-width="2"
-                d="M20,100 C50,0 150,0 180,100 S80,200 20,100" />
-        </svg>
+        <!-- PANEL 3: INTRO / BIO (CREAM) -->
+        <section id="intro-scene" class="grid-panel col-7 panel-cream fade-in">
+            <div>
+                <h2 style="margin-bottom: 1.5rem;">hello.</h2>
+                <p>hello, korry here.</p>
+                <p>this website is well, forever wip cuz i keep changing it, but this is a collection of my work i like to show and some other stuff which i think are cool.</p>
+                <p style="color: var(--bg-wine); margin-bottom: 0;">i am still in college and learning and yeah thats it.</p>
+            </div>
+        </section>
 
-        <div class="status-badge" id="status-container">checking reality...</div>
+        <!-- PANEL 4: THOUGHTS / QUOTE (CHARCOAL) -->
+        <section class="grid-panel col-5 panel-charcoal fade-in" style="justify-content: center;">
+            <div id="quote-display" class="quote-container">
+                <!-- Populated by JS -->
+            </div>
+        </section>
 
-        <h1>korry.</h1>
-        <div class="vertical-text">私について</div>
-
-        <div class="intro-text">
-            <p>hello, korry here.</p>
-            <p>this website is well, forever wip cuz i keep changing it, but this is a collection of my work i like to
-                show and some other stuff which i think are cool.</p>
-            <p><span style="color: var(--acc-purple);">i am still in college and learning and yeah thats it.</span></p>
-
-            <p style="font-size: 0.9rem; margin-top: 2rem;">
-                last update: <span id="last-updated">...</span>
-            </p>
-        </div>
-    </section>
-
-    <!-- SCENE 02: THOUGHT -->
-    <section class="floating-section fade-in" style="text-align: center;">
-        <div id="quote-display" class="quote-container">
-            <!-- Populated by JS -->
-        </div>
-    </section>
-
-    <!-- SCENE 03: PROJECTS -->
-    <section class="floating-section fade-in">
-        <div
-            style="display: flex; flex-wrap: wrap; gap: 5rem; align-items: flex-start; justify-content: space-between;">
-            <div style="flex: 1; min-width: 320px;">
-                <h2 style="margin-bottom: 3rem; opacity: 0.9;">artifacts<span style="color: var(--acc-teal);">.</span>
-                </h2>
+        <!-- PANEL 5: ARTIFACTS / PROJECTS (CREAM) -->
+        <section class="grid-panel col-8 panel-cream fade-in">
+            <div>
+                <h2 style="margin-bottom: 2rem;">artifacts.</h2>
                 <div class="project-list">
                     <a href="https://korrykatti.github.io/project_sites/mirage/index.html" class="project-item">
                         <span class="project-title">mirage</span>
@@ -90,76 +92,73 @@
                     </a>
                 </div>
             </div>
+        </section>
 
-            <div style="max-width: 250px; padding-top: 5rem; position: relative;">
-                <!-- Subtle Vertical Guide -->
-                <div
-                    style="position: absolute; left: -2.5rem; top: 5.5rem; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--acc-purple), transparent); opacity: 0.2;">
-                </div>
-
-                <h3
-                    style="font-size: 0.7rem; margin-bottom: 1.5rem; letter-spacing: 4px; color: var(--acc-purple); text-transform: uppercase; font-weight: bold; opacity: 0.6;">
-                    recent fragments</h3>
+        <!-- PANEL 6: RECENT POSTS (WINE) -->
+        <section class="grid-panel col-4 panel-wine fade-in">
+            <div>
+                <h3 style="letter-spacing: 2px; text-transform: uppercase; font-weight: bold; font-size: 1.4rem; margin-bottom: 1.5rem;">recent posts</h3>
                 <ul id="blog-mini-stream" class="log-list" style="margin-top: 0;">
                     <li class="log-item" style="opacity: 0.5; font-size: 0.8rem;">receiving signal...</li>
                 </ul>
-                <a href="/blog/index.html"
-                    style="font-size: 0.8rem; opacity: 0.4; font-style: italic; border-bottom: none; display: inline-block; margin-top: 0.5rem; transition: opacity 0.3s;"
-                    onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.4">archive →</a>
             </div>
-        </div>
-    </section>
-
-    <!-- SCENE 04: LOGS & CONNECT -->
-    <section class="floating-section fade-in">
-        <div style="display: flex; flex-wrap: wrap; gap: 4rem; justify-content: space-between;">
             <div>
-                <h3>logs</h3>
+                <a href="/blog/index.html" style="font-size: 1.1rem; border-bottom: 3px solid currentColor; margin-top: 1rem;">archive →</a>
+            </div>
+        </section>
+
+        <!-- PANEL 7: LOGS (CHARCOAL) -->
+        <section class="grid-panel col-6 panel-charcoal fade-in">
+            <div>
+                <h2 style="margin-bottom: 1.5rem;">logs.</h2>
                 <ul class="log-list">
-                    <li class="log-item"><a href="/blog/index.html" class="log-link">fragments (blog)</a></li>
+                    <li class="log-item"><a href="/blog/index.html" class="log-link">blog</a></li>
                     <li class="log-item"><a href="logs.html" class="log-link">system logs</a></li>
                 </ul>
             </div>
+        </section>
 
+        <!-- PANEL 8: SIGNALS / CONNECT (CREAM) -->
+        <section class="grid-panel col-6 panel-cream fade-in">
             <div>
-                <h3>signals</h3>
+                <h2 style="margin-bottom: 1.5rem;">signals.</h2>
                 <ul class="log-list">
                     <li class="log-item"><a href="/guestbook.html" class="log-link">guestbook</a></li>
                     <li class="log-item"><a href="https://github.com/korrykatti" class="log-link">github</a></li>
-                    <li class="log-item"><a href="#" id="open-modal-btn" class="log-link"
-                            style="color: var(--acc-teal);">transmit msg</a></li>
+                    <li class="log-item"><a href="#" id="open-modal-btn" class="log-link" style="color: var(--bg-wine);">transmit msg</a></li>
                 </ul>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- SCENE 05: STREAM -->
-    <section class="floating-section fade-in" style="max-width: 1000px; margin: 15vh auto; text-align: left;">
-        <h2 style="margin-bottom: 3rem;">stream<span style="font-size: 1rem; margin-left:1rem; opacity: 0.5;">(of
-                consciousness)</span></h2>
+        <!-- PANEL 9: STREAM (MUSTARD) -->
+        <section class="grid-panel col-12 panel-mustard fade-in">
+            <div style="width: 100%;">
+                <h2 style="margin-bottom: 2.5rem; border-bottom: 6px solid var(--border-color); padding-bottom: 1rem;">stream <span style="font-size: 1.5rem; opacity: 0.8; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">(of consciousness)</span></h2>
+                
+                <div id="tumblr-posts">
+                    <!-- Tumblr content -->
+                </div>
 
-        <div id="tumblr-posts">
-            <!-- Tumblr content -->
-        </div>
+                <div style="text-align: center; margin-top: 4rem;">
+                    <button id="load-more-btn">more...</button>
+                </div>
+                <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0; font-family: 'IM Fell English', serif; font-size: 1.5rem;">seeking...</div>
+            </div>
+        </section>
+        
+    </div>
 
-        <div style="text-align: center; margin-top: 4rem;">
-            <button id="load-more-btn">more...</button>
-        </div>
-        <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0;">seeking...</div>
-    </section>
+    <!-- Bottom Spacing & Counter -->
+    <div style="height: 10vh;"></div>
 
-    <div style="height: 20vh;"></div>
-
-    <div style="text-align: center; margin-bottom: 2rem; opacity: 0.7;">
+    <div style="text-align: center; margin-bottom: 4rem; opacity: 0.9;">
         <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
-            style="height: 25%; width: 25%;">
+            style="border: var(--border-width-thin) solid var(--border-color); padding: 5px; background: var(--bg-cream); max-width: 250px;">
     </div>
 
     <!-- Desktop Mode Control -->
-    <div id="desktop-mode-control"
-        style="position: fixed; bottom: 60px; right: 20px; z-index: 100; cursor: pointer; font-family: 'IM Fell English', serif; background: var(--bg-paper); padding: 5px 10px; border: 1px solid var(--text-faint);">
-        <a href="#" onclick="confirmDesktopMode(event)" style="text-decoration: none; color: inherit;">[ plain mode
-            ]</a>
+    <div id="desktop-mode-control">
+        <a href="#" onclick="confirmDesktopMode(event)" style="text-decoration: none; color: inherit;">[ plain mode ]</a>
     </div>
 
     <script>
@@ -172,19 +171,18 @@
     </script>
 
     <!-- Music Player Control -->
-    <div id="music-control"
-        style="position: fixed; bottom: 20px; right: 20px; z-index: 100; cursor: pointer; font-family: 'IM Fell English', serif; background: var(--bg-paper); padding: 5px 10px; border: 1px solid var(--text-faint);">
-        <span id="play-btn" style="color: var(--acc-blood);">▶ play</span>
+    <div id="music-control">
+        <span id="play-btn">▶ play</span>
     </div>
     <div id="youtube-player" style="display:none;"></div>
 
     <!-- Modal -->
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3>direct_line</h3>
-            <p style="margin-bottom: 1rem; color: var(--acc-purple);">leave a message after the beep.</p>
+            <h3 style="color: var(--bg-wine); font-size: 2.2rem;">direct_line</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-charcoal); font-weight: 700;">leave a message after the beep.</p>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="300" frameBorder="0"
-                style="border: 1px solid var(--text-faint);"></iframe>
+                style="border: var(--border-width-thin) solid var(--border-color);"></iframe>
             <button id="close-modal-btn" style="margin-top: 1rem; width: 100%;">
                 terminate connection
             </button>
