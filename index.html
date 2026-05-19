@@ -71,6 +71,71 @@
             </div>
         </section>
 
+        <!-- 
+            =============================================================================
+             UNDER THE HOOD - CLIENT-SIDE SEMANTIC SEARCH ENGINE - OFC AI GENERATED
+            =============================================================================
+            
+            This search engine operates entirely client-side, running a textbook Vector 
+            Space Model augmented by custom trained spectral embeddings! Here is how 
+            it works mathematically and graphically:
+
+            1. THE SPECTRAL LSA MATHEMATICAL MODEL (build-index.js):
+               -------------------------------------------------------------------------
+               * Tokenization: All pages are recursively parsed. HTML markup, scripts,
+                 and standard stop-words are eliminated to extract raw clean tokens.
+               
+               * Co-occurrence Matrix: A sliding window of size 8 slides across all page 
+                 token arrays to compute term-term co-occurrence counts.
+               
+               * PPMI Weighting: RAW counts are transformed into a Positive Pointwise Mutual 
+                 Information (PPMI) matrix:
+                     PPMI(w_i, w_j) = max(0, log2( P(w_i, w_j) / (P(w_i) * P(w_j)) ))
+                 This measures the actual semantic association between words, bypassing 
+                 high-frequency unigram biases.
+               
+               * Singular Value Decomposition (SVD): A pure Jacobi/spectral power iteration 
+                 solver with Gram-Schmidt orthogonalization and matrix deflation factorizes 
+                 the symmetric PPMI matrix:
+                     A = U * S * V^T
+                 It extracts the top 8 eigenvectors and eigenvalues (S), projecting the 
+                 300-word vocabulary into an 8-dimensional dense concept space.
+                 Word vector coordinates: w_coord = sqrt(eigenvalue) * eigenvector.
+               
+               * Document Embeddings: Page vectors are calculated by averaging the dense 
+                 vectors of their vocabulary unigrams, and then normalized to unit length:
+                     vec_doc = v / ||v||_2
+
+            2. THE RUNTIME CLIENT-SIDE CO-OCCURRENCE RETRIEVAL (script.js):
+               -------------------------------------------------------------------------
+               * Query Projection: Query strings are tokenized. Word vectors are looked 
+                 up in the pre-compiled dictionary and averaged to construct a 
+                 query vector (vec_query), which is normalized to unit length.
+               
+               * Cosine Similarity: Matching is simplified to a lightning-fast dot product 
+                 since all vectors are pre-normalized to unit magnitude (||v|| = 1):
+                     Similarity = vec_query . vec_doc = sum_{d=0}^{7} (vec_query[d] * vec_doc[d])
+               
+               * Search Cascade: Prioritizes vector matching. Falls back to a deep full-text 
+                 plain content scan if no vector overlaps are resolved.
+
+            3. SVG RADAR CHART GENERATION:
+               -------------------------------------------------------------------------
+               * 8-Dimensional Mapping: The 8 vector concept dimensions are projected on a 
+                 polar coordinate circle with radius R=28 centered at (35, 35).
+               
+               * Coordinate Geometry: The angle for axis d (d=0..7) is calculated as:
+                     theta_d = d * (2 * pi / 8) - (pi / 2)  [offset to point upward]
+               
+               * Point Projection: The 2D coordinates for the SVG polygon are:
+                     x_d = cx + R * vector[d] * cos(theta_d)
+                     y_d = cy + R * vector[d] * sin(theta_d)
+               
+               * Drawing: Renders grid boundaries using concentric circles and traces the 
+                 concept vector shape using a native HTML5 SVG <polygon>.
+            =============================================================================
+        -->
+
         <!-- PANEL 3: INTRO / BIO (CREAM) -->
         <section id="intro-scene" class="grid-panel col-7 panel-cream fade-in">
             <div>

@@ -474,28 +474,162 @@ window.addEventListener('load', () => {
         searchBtn.addEventListener('click', handleSearch);
     }
 
+    function getReadingTime(text) {
+        if (!text) return 1;
+        const words = text.trim().split(/\s+/).length;
+        return Math.max(1, Math.round(words / 200));
+    }
+
+    function generateRadarSVG(vector) {
+        if (!vector || vector.every(v => v === 0)) return '';
+        const R = 28;
+        const cx = 35;
+        const cy = 35;
+        const points = [];
+        const axesLines = [];
+        
+        for (let i = 0; i < 8; i++) {
+            const angle = (i * Math.PI) / 4 - Math.PI / 2;
+            const val = vector[i] || 0;
+            
+            // Axis line
+            const ax = cx + R * Math.cos(angle);
+            const ay = cy + R * Math.sin(angle);
+            axesLines.push(`<line x1="${cx}" y1="${cy}" x2="${ax}" y2="${ay}" stroke="var(--border-color)" stroke-width="0.5" opacity="0.3"/>`);
+            
+            // Scaled data point
+            const px = cx + R * val * Math.cos(angle);
+            const py = cy + R * val * Math.sin(angle);
+            points.push(`${px},${py}`);
+        }
+        
+        const polygonPath = points.join(' ');
+        
+        return `
+            <svg width="60" height="60" viewBox="0 0 70 70" style="margin-left: auto; flex-shrink: 0; background: rgba(0,0,0,0.03); border: 1px solid var(--border-color); border-radius: 4px;" title="Semantic Vector Profile">
+                <!-- Concentric rings -->
+                <circle cx="${cx}" cy="${cy}" r="${R * 0.5}" fill="none" stroke="var(--border-color)" stroke-width="0.5" opacity="0.15" stroke-dasharray="2"/>
+                <circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="var(--border-color)" stroke-width="0.5" opacity="0.25"/>
+                <!-- Axes -->
+                ${axesLines.join('')}
+                <!-- Radar Polygon -->
+                <polygon points="${polygonPath}" fill="var(--bg-mustard)" fill-opacity="0.3" stroke="var(--bg-wine)" stroke-width="1.5"/>
+            </svg>
+        `;
+    }
+
+    function levenshtein(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1,
+                        Math.min(
+                            matrix[i][j - 1] + 1,
+                            matrix[i - 1][j] + 1
+                        )
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    function getSpellingSuggestionHtml(query) {
+        const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+        if (terms.length === 0) return '';
+        
+        const vocabWords = Object.keys(wordVectors);
+        if (vocabWords.length === 0) return '';
+
+        const suggestions = [];
+        terms.forEach(term => {
+            if (!wordVectors[term]) {
+                let bestWord = '';
+                let bestDist = 3;
+                
+                vocabWords.forEach(vWord => {
+                    const dist = levenshtein(term, vWord);
+                    if (dist < bestDist) {
+                        bestDist = dist;
+                        bestWord = vWord;
+                    }
+                });
+                
+                if (bestWord) {
+                    suggestions.push(bestWord);
+                } else {
+                    suggestions.push(term);
+                }
+            } else {
+                suggestions.push(term);
+            }
+        });
+
+        const correctedQuery = suggestions.join(' ');
+        if (correctedQuery !== query.toLowerCase()) {
+            return `
+                <div style="font-size: 0.95rem; margin-top: 0.8rem; color: var(--text-charcoal); opacity: 0.9; width: 100%; text-align: left;">
+                    did you mean: <span class="suggestion-link" style="color: var(--bg-wine); border-bottom: 2px dashed var(--bg-wine); cursor: pointer; font-weight: bold; text-transform: lowercase;">${correctedQuery}</span>?
+                </div>
+            `;
+        }
+        return '';
+    }
+
     function renderCard(res) {
         const scoreLabel = res.isVector ? `semantic match: ${(res.score * 100).toFixed(0)}%` : `relevance score: ${(res.score * 10).toFixed(0)}`;
+        const readTime = getReadingTime(res.doc.content);
+        const radarSVG = generateRadarSVG(res.doc.vector);
+
         return `
-            <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%;">
-                <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
-                    <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
-                </h5>
-                <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
-                <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem;">${scoreLabel}</div>
+            <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                <div style="flex-grow: 1;">
+                    <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
+                        <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
+                    </h5>
+                    <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
+                    <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem; display: flex; gap: 1rem;">
+                        <span>${scoreLabel}</span>
+                        <span>•</span>
+                        <span>${readTime} min read</span>
+                    </div>
+                </div>
+                ${radarSVG}
             </div>
         `;
     }
 
     function renderSearchResults(searchPayload) {
         const resultsContainer = document.getElementById('search-results');
-        if (!resultsContainer) return;
+        const searchInput = document.getElementById('search-input');
+        if (!resultsContainer || !searchInput) return;
 
         const { results, mode } = searchPayload;
 
         if (results.length === 0) {
-            resultsContainer.innerHTML = `<div style="font-size: 1.1rem; color: var(--color-orange); font-style: italic;">no matches found. try 'space', 'chat', 'typing', or 'writing'...</div>`;
+            const suggestionHtml = getSpellingSuggestionHtml(searchInput.value.trim());
+            resultsContainer.innerHTML = `
+                <div style="font-size: 1.1rem; color: var(--color-orange); font-style: italic; width: 100%; text-align: left;">
+                    no matches found. try 'space', 'chat', 'typing', or 'writing'...
+                </div>
+                ${suggestionHtml}
+            `;
             resultsContainer.style.display = 'flex';
+
+            // Attach auto-spelling click listener
+            const suggestionLink = resultsContainer.querySelector('.suggestion-link');
+            if (suggestionLink) {
+                suggestionLink.addEventListener('click', () => {
+                    searchInput.value = suggestionLink.textContent;
+                    searchInput.dispatchEvent(new Event('input'));
+                });
+            }
             return;
         }
 
@@ -503,7 +637,6 @@ window.addEventListener('load', () => {
         let html = `<h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-gold); text-transform: uppercase; letter-spacing: 1px; width: 100%; text-align: left;">${modeTitle}</h4>`;
         
         html += `<div id="results-list" style="width: 100%;">`;
-        // Show up to 5 results initially
         const topSlice = results.slice(0, 5);
         topSlice.forEach(res => {
             html += renderCard(res);
@@ -521,7 +654,7 @@ window.addEventListener('load', () => {
         resultsContainer.innerHTML = html;
         resultsContainer.style.display = 'flex';
 
-        // Attach dynamic event listener to load remaining matches inline
+        // Attach load more click listener
         const loadMoreBtn = document.getElementById('load-more-btn');
         if (loadMoreBtn) {
             loadMoreBtn.addEventListener('click', () => {
