@@ -46,14 +46,17 @@ function extractDescription(html) {
     return match ? match[1].trim() : '';
 }
 
-function tokenize(text) {
-    const cleanText = text
+function getCleanContent(html) {
+    return html
         .replace(/<script[\s\S]*?<\/script>/gi, '')
         .replace(/<style[\s\S]*?<\/style>/gi, '')
         .replace(/<[^>]+>/g, ' ')
         .replace(/\s+/g, ' ')
-        .toLowerCase();
-    
+        .trim();
+}
+
+function tokenize(text) {
+    const cleanText = getCleanContent(text).toLowerCase();
     return (cleanText.match(/\b[a-z]{3,20}\b/g) || [])
         .filter(w => !STOP_WORDS.has(w));
 }
@@ -198,7 +201,8 @@ function buildIndex() {
             title,
             url: relativePath,
             snippet,
-            tokens
+            tokens,
+            cleanContent: getCleanContent(content)
         });
     });
 
@@ -304,7 +308,8 @@ function buildIndex() {
             url: doc.url,
             snippet: doc.snippet,
             keywords: keywords,
-            vector: docVec
+            vector: docVec,
+            content: doc.cleanContent
         });
     });
 

@@ -205,11 +205,11 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('youtube-player', {
         height: '0',
         width: '0',
-        videoId: isDesktop ? 'cVeu_189HwM' : '-vdp2AVAFn0',
+        videoId: 'fIZLgO5zLK4',
         playerVars: {
             'playsinline': 1,
             'controls': 0,
-            'start': isDesktop ? 3287 : 0
+            'start': 0
         },
         events: {
             'onReady': onPlayerReady
@@ -233,13 +233,13 @@ function onPlayerReady(event) {
         playBtn.parentElement.addEventListener('click', () => {
             if (isPlaying) {
                 player.pauseVideo();
-                playBtn.textContent = "▶ play_bgm";
-                playBtn.style.color = "var(--acc-blood)";
+                playBtn.textContent = "▶ play";
+                playBtn.parentElement.classList.remove('playing');
                 isPlaying = false;
             } else {
                 player.playVideo();
                 playBtn.textContent = "■ pause";
-                playBtn.style.color = "var(--acc-teal)";
+                playBtn.parentElement.classList.add('playing');
                 isPlaying = true;
             }
         });
@@ -396,54 +396,58 @@ window.addEventListener('load', () => {
     }
 
     function semanticSearch(query) {
-        if (!query) return [];
+        if (!query) return { results: [], mode: 'semantic' };
         const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 1);
-        if (terms.length === 0) return [];
+        if (terms.length === 0) return { results: [], mode: 'semantic' };
 
         const queryVector = computeQueryVector(query);
-        const results = [];
+        const queryVectorMagnitude = Math.sqrt(queryVector.reduce((s, v) => s + v * v, 0));
 
-        pageIndex.forEach(doc => {
-            let keywordScore = 0;
-            const docTitleLower = doc.title.toLowerCase();
-            const docSnippetLower = doc.snippet.toLowerCase();
+        let results = [];
+        let searchMode = 'semantic';
 
-            // Calculate TF/Keyword match score
-            terms.forEach(term => {
-                if (docTitleLower.includes(term)) {
-                    keywordScore += 10;
-                }
-                if (doc.keywords && doc.keywords.includes(term)) {
-                    keywordScore += 6;
-                }
-                if (docSnippetLower.includes(term)) {
-                    keywordScore += 3;
+        // 1. Prioritize Semantic Vector Search
+        if (queryVectorMagnitude > 0) {
+            pageIndex.forEach(doc => {
+                const cosSim = cosineSimilarity(queryVector, doc.vector || []);
+                let textBoost = 0;
+                const docTitleLower = doc.title.toLowerCase();
+                terms.forEach(term => {
+                    if (docTitleLower.includes(term)) textBoost += 0.2;
+                    if (doc.keywords && doc.keywords.includes(term)) textBoost += 0.1;
+                });
+                
+                const score = cosSim + textBoost;
+                if (score > 0.15) {
+                    results.push({ doc, score, isVector: true });
                 }
             });
+            results.sort((a, b) => b.score - a.score);
+        }
 
-            // Calculate Cosine Similarity to Document Vector
-            const cosSim = cosineSimilarity(queryVector, doc.vector || []);
+        // 2. Direct File Search Fallback (if Vector Search yielded 0 results)
+        if (results.length === 0) {
+            searchMode = 'file';
+            pageIndex.forEach(doc => {
+                let score = 0;
+                const docTitleLower = doc.title.toLowerCase();
+                const docSnippetLower = doc.snippet.toLowerCase();
 
-            // Normalize Keyword score to 0..1 range (max potential is around 25 for typical queries)
-            const normalizedKeywordScore = Math.min(keywordScore / 25, 1.0);
+                terms.forEach(term => {
+                    if (docTitleLower.includes(term)) score += 10;
+                    if (doc.keywords && doc.keywords.includes(term)) score += 6;
+                    if (docSnippetLower.includes(term)) score += 3;
+                    if (doc.content && doc.content.toLowerCase().includes(term)) score += 2;
+                });
 
-            // Combine scores: 40% exact/keyword match, 60% semantic vector similarity
-            // If the query didn't match any vector dimensions, fall back 100% to keyword matches!
-            const queryVectorMagnitude = Math.sqrt(queryVector.reduce((s, v) => s + v * v, 0));
-            let finalScore = 0;
-            if (queryVectorMagnitude === 0) {
-                finalScore = normalizedKeywordScore;
-            } else {
-                finalScore = (normalizedKeywordScore * 0.4) + (cosSim * 0.6);
-            }
+                if (score > 0) {
+                    results.push({ doc, score, isVector: false });
+                }
+            });
+            results.sort((a, b) => b.score - a.score);
+        }
 
-            if (finalScore > 0.05) {
-                results.push({ doc, score: finalScore });
-            }
-        });
-
-        // Sort descending by combined score
-        return results.sort((a, b) => b.score - a.score);
+        return { results, mode: searchMode };
     }
 
     function initSearch() {
@@ -461,8 +465,8 @@ window.addEventListener('load', () => {
                 resultsContainer.style.display = 'none';
                 return;
             }
-            const results = semanticSearch(query);
-            renderSearchResults(results);
+            const searchPayload = semanticSearch(query);
+            renderSearchResults(searchPayload);
         }
 
         // Live search on typing
@@ -470,28 +474,69 @@ window.addEventListener('load', () => {
         searchBtn.addEventListener('click', handleSearch);
     }
 
-    function renderSearchResults(results) {
+    function renderCard(res) {
+        const scoreLabel = res.isVector ? `semantic match: ${(res.score * 100).toFixed(0)}%` : `relevance score: ${(res.score * 10).toFixed(0)}`;
+        return `
+            <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%;">
+                <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
+                    <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
+                </h5>
+                <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
+                <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem;">${scoreLabel}</div>
+            </div>
+        `;
+    }
+
+    function renderSearchResults(searchPayload) {
         const resultsContainer = document.getElementById('search-results');
         if (!resultsContainer) return;
 
+        const { results, mode } = searchPayload;
+
         if (results.length === 0) {
-            resultsContainer.innerHTML = `<div style="font-size: 1.1rem; color: var(--color-orange); font-style: italic;">no semantic matches found. try 'space', 'chat', 'typing', or 'writing'...</div>`;
-        } else {
-            let html = '<h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-gold); text-transform: uppercase; letter-spacing: 1px;">semantic matches:</h4>';
-            results.forEach(res => {
-                html += `
-                    <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease;">
-                        <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
-                            <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
-                        </h5>
-                        <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
-                        <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem;">relevance score: ${(res.score * 10).toFixed(0)}</div>
-                    </div>
-                `;
-            });
-            resultsContainer.innerHTML = html;
+            resultsContainer.innerHTML = `<div style="font-size: 1.1rem; color: var(--color-orange); font-style: italic;">no matches found. try 'space', 'chat', 'typing', or 'writing'...</div>`;
+            resultsContainer.style.display = 'flex';
+            return;
         }
+
+        const modeTitle = mode === 'semantic' ? 'semantic vector matches:' : 'direct file matches (fallback):';
+        let html = `<h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-gold); text-transform: uppercase; letter-spacing: 1px; width: 100%; text-align: left;">${modeTitle}</h4>`;
+        
+        html += `<div id="results-list" style="width: 100%;">`;
+        // Show up to 5 results initially
+        const topSlice = results.slice(0, 5);
+        topSlice.forEach(res => {
+            html += renderCard(res);
+        });
+        html += `</div>`;
+
+        if (results.length > 5) {
+            html += `
+                <button id="load-more-btn" style="margin-top: 0.5rem; width: 100%; padding: 0.8rem; background-color: var(--bg-mustard); color: var(--text-charcoal); border: var(--border-width-thin) solid var(--border-color); font-weight: bold; font-family: 'Space Grotesk', sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: background-color 0.15s ease;">
+                    load more (${results.length - 5} remaining) ↓
+                </button>
+            `;
+        }
+
+        resultsContainer.innerHTML = html;
         resultsContainer.style.display = 'flex';
+
+        // Attach dynamic event listener to load remaining matches inline
+        const loadMoreBtn = document.getElementById('load-more-btn');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                const listContainer = document.getElementById('results-list');
+                if (listContainer) {
+                    const remainingSlice = results.slice(5);
+                    remainingSlice.forEach(res => {
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = renderCard(res);
+                        listContainer.appendChild(tempDiv.firstElementChild);
+                    });
+                }
+                loadMoreBtn.remove();
+            });
+        }
     }
 
     document.addEventListener('DOMContentLoaded', initSearch);

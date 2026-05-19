@@ -390,6 +390,11 @@ a:hover {
     right: 20px;
 }
 
+#music-control.playing {
+    background-color: var(--bg-wine);
+    color: var(--text-cream);
+}
+
 /* Modal */
 .modal {
     display: none;
