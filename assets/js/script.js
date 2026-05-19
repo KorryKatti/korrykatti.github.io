@@ -23,6 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Dark Theme Toggle
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn) {
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeBtn.textContent = '☼ light';
+        } else {
+            themeBtn.textContent = '☾ dark';
+        }
+        
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            themeBtn.textContent = isDark ? '☼ light' : '☾ dark';
+        });
+    }
+
     fetchQuote();
     fetchBlogMiniStream();
     initObserver();
@@ -139,16 +157,44 @@ async function getStatus() {
         const data = await response.json();
         const statusContainer = document.getElementById('status-container');
 
-        let statusText = `is ${data.current_status.status}`;
+        let statusHTML = '';
+        const currentStatus = data.current_status || {};
+        const status = currentStatus.status || 'offline';
+        
+        statusHTML += `<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">`;
+        statusHTML += `<span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${status === 'online' ? '#2ecc71' : '#e74c3c'}; border: 2px solid var(--border-color);"></span>`;
+        statusHTML += `<strong>${status.toUpperCase()}</strong>`;
+        statusHTML += `</div>`;
 
-        if (data.current_status.status === 'online' && data.current_status.activities.length > 0) {
-            const activity = data.current_status.activities[0];
-            const type = activity.type || activity.activity_type || 'playing';
-            statusText = `${type.toLowerCase()}: ${activity.name.toLowerCase()}`;
+        if (status === 'online' && currentStatus.activities && currentStatus.activities.length > 0) {
+            statusHTML += `<div style="display: flex; flex-direction: column; gap: 0.8rem;">`;
+            currentStatus.activities.forEach(activity => {
+                const type = activity.type || activity.activity_type || 'playing';
+                const name = activity.name || '';
+                const details = activity.details || '';
+                const state = activity.state || '';
+                
+                statusHTML += `<div style="border-left: 4px solid var(--border-color); padding-left: 0.8rem;">`;
+                statusHTML += `<div style="font-size: 0.85rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px;">${type.toLowerCase()}</div>`;
+                statusHTML += `<div style="font-size: 1.1rem; font-weight: 700;">${name.toLowerCase()}</div>`;
+                if (details) {
+                    statusHTML += `<div style="font-size: 0.95rem; font-style: italic; opacity: 0.9;">${details.toLowerCase()}</div>`;
+                }
+                if (state) {
+                    statusHTML += `<div style="font-size: 0.95rem; opacity: 0.85;">${state.toLowerCase()}</div>`;
+                }
+                statusHTML += `</div>`;
+            });
+            statusHTML += `</div>`;
+        } else if (status === 'offline') {
+            statusHTML += `<div style="opacity: 0.7; font-style: italic;">offline - out of range</div>`;
+        } else {
+            statusHTML += `<div style="opacity: 0.7; font-style: italic;">idle - drifting away</div>`;
         }
-        statusContainer.textContent = statusText;
+        
+        statusContainer.innerHTML = statusHTML;
     } catch (error) {
-        document.getElementById('status-container').textContent = 'offline';
+        document.getElementById('status-container').innerHTML = '<div style="color: var(--color-orange);">offline</div>';
     }
 }
 

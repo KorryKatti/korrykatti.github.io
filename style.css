@@ -25,6 +25,19 @@
     --acc-yellow: var(--bg-mustard);
 }
 
+body.dark-mode {
+    --bg-cream: #1A1A1A;
+    --bg-charcoal: #FFFAF0;
+    --bg-wine: #4D1A20;
+    --bg-mustard: #A68000;
+    --color-orange: #B24040;
+    
+    --text-charcoal: #FFFAF0;
+    --text-cream: #1A1A1A;
+    --text-gold: #E1AD01;
+    --border-color: #FFFAF0;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -40,6 +53,7 @@ body {
     padding: 2vw;
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Typography */
@@ -348,7 +362,7 @@ a:hover {
 }
 
 /* Controls */
-#desktop-mode-control, #music-control {
+#theme-toggle-control, #music-control {
     position: fixed;
     z-index: 100;
     background-color: var(--bg-mustard);
@@ -361,12 +375,12 @@ a:hover {
     transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-#desktop-mode-control:hover, #music-control:hover {
+#theme-toggle-control:hover, #music-control:hover {
     transform: translate(-2px, -2px);
     box-shadow: 2px 2px 0 var(--border-color);
 }
 
-#desktop-mode-control {
+#theme-toggle-control {
     bottom: 80px;
     right: 20px;
 }
