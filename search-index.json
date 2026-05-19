@@ -1,0 +1,675 @@
+[
+    {
+        "title": "untitled",
+        "url": ".well-known/discord.html",
+        "snippet": "personal static page on korry's web archive.",
+        "keywords": [],
+        "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "🛰️ C++ Uploader",
+        "url": "apps/file_upload/index.html",
+        "snippet": "body → raw binary file...",
+        "keywords": [
+            "cpp",
+            "file",
+            "upload",
+            "https",
+            "webserver",
+            "onrender",
+            "com",
+            "uploader",
+            "sharing",
+            "system",
+            "drag",
+            "click",
+            "max",
+            "awaiting",
+            "transmission"
+        ],
+        "vector": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "Apps - Small Websites Made by Me",
+        "url": "apps/index.html",
+        "snippet": "Small websites made by me...",
+        "keywords": [
+            "apps",
+            "small",
+            "websites",
+            "made",
+            "home",
+            "many",
+            "may",
+            "servers",
+            "down",
+            "temp",
+            "file",
+            "sharing",
+            "random",
+            "language",
+            "selector"
+        ],
+        "vector": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "Spin the Programming Language Wheel",
+        "url": "apps/langspinner/index.html",
+        "snippet": "personal static page on korry's web archive.",
+        "keywords": [
+            "spin",
+            "wheel",
+            "programming",
+            "language",
+            "close"
+        ],
+        "vector": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "ai",
+        "url": "apps/loca_llm/index.html",
+        "snippet": "go back...",
+        "keywords": [
+            "back",
+            "ask",
+            "thinking"
+        ],
+        "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "Number Recognition",
+        "url": "apps/mnist/index.html",
+        "snippet": "go back to index...",
+        "keywords": [
+            "number",
+            "recognition",
+            "draw",
+            "back",
+            "index",
+            "currently",
+            "innacurate",
+            "btw",
+            "loading",
+            "model",
+            "clear",
+            "predict",
+            "prediction"
+        ],
+        "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "Nexus Interface - Documentation",
+        "url": "apps/ollam_ui/features.html",
+        "snippet": "Technical specifications and capabilities for the Ollama AI UI....",
+        "keywords": [
+            "python",
+            "data",
+            "execution",
+            "logic",
+            "documentation",
+            "system",
+            "code",
+            "alpine",
+            "search",
+            "processing",
+            "nexus",
+            "capabilities",
+            "ollama",
+            "environment",
+            "linux"
+        ],
+        "vector": [
+            0.9015,
+            0,
+            0,
+            0.169,
+            0.3944,
+            0.0563,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "Ollama AI Nexus",
+        "url": "apps/ollam_ui/index.html",
+        "snippet": "History\n                    \n                        \n                            \n                                \n                                \n           ...",
+        "keywords": [
+            "code",
+            "ollama",
+            "times",
+            "mode",
+            "system",
+            "history",
+            "status",
+            "interpreter",
+            "image",
+            "alpine",
+            "python",
+            "profile",
+            "limit",
+            "user",
+            "settings"
+        ],
+        "vector": [
+            0.9874,
+            0,
+            0,
+            0.0395,
+            0.079,
+            0.0395,
+            0.0395,
+            0.1185
+        ]
+    },
+    {
+        "title": "Story Mode",
+        "url": "apps/ollam_ui/story.html",
+        "snippet": "personal static page on korry's web archive.",
+        "keywords": [
+            "story",
+            "dark",
+            "mode",
+            "notes",
+            "nbsp",
+            "light",
+            "new",
+            "back",
+            "chat",
+            "export",
+            "settings",
+            "ready",
+            "stop",
+            "tab",
+            "accept"
+        ],
+        "vector": [
+            0,
+            0.8165,
+            0.4082,
+            0,
+            0,
+            0,
+            0.4082,
+            0
+        ]
+    },
+    {
+        "title": "Self-Learning Chess AI",
+        "url": "apps/rl_chess/index.html",
+        "snippet": "Game Status: Starting......",
+        "keywords": [
+            "learning",
+            "game",
+            "move",
+            "self",
+            "chess",
+            "surrender",
+            "positions",
+            "bot",
+            "isn",
+            "working",
+            "know",
+            "white",
+            "status",
+            "starting",
+            "thinking"
+        ],
+        "vector": [
+            0.9615,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.2747
+        ]
+    },
+    {
+        "title": "sucher",
+        "url": "apps/sucher/index.html",
+        "snippet": "ultra stupid news analyzer...",
+        "keywords": [
+            "error",
+            "const",
+            "result",
+            "results",
+            "await",
+            "progress",
+            "item",
+            "content",
+            "search",
+            "pagecontents",
+            "progresstext",
+            "title",
+            "url",
+            "summarization",
+            "summary"
+        ],
+        "vector": [
+            0,
+            0.2561,
+            0,
+            0.2561,
+            0,
+            0.2561,
+            0,
+            0.8963
+        ]
+    },
+    {
+        "title": "korry // fragments // blog",
+        "url": "blog/index.html",
+        "snippet": "korry",
+        "keywords": [
+            "blog",
+            "thing",
+            "game",
+            "mode",
+            "working",
+            "year",
+            "how",
+            "mouse",
+            "want",
+            "while",
+            "many",
+            "making",
+            "strategy",
+            "file",
+            "cpp"
+        ],
+        "vector": [
+            0.4264,
+            0.6396,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.6396
+        ]
+    },
+    {
+        "title": "Hello world",
+        "url": "blog/posts/03012025.html",
+        "snippet": "hello welcome to my blog, well don't expect much technical content but don't expect 0 of it, i might (and\n                probably will) update irl updates here...",
+        "keywords": [
+            "part",
+            "blog",
+            "might",
+            "world",
+            "expect",
+            "updates",
+            "digital",
+            "random",
+            "well",
+            "don",
+            "content",
+            "blah",
+            "personal",
+            "these",
+            "into"
+        ],
+        "vector": [
+            0.2801,
+            0.5601,
+            0,
+            0.14,
+            0.7001,
+            0.14,
+            0,
+            0.2801
+        ]
+    },
+    {
+        "title": "Donuts, LiFi, and Time Travel",
+        "url": "blog/posts/03052025.html",
+        "snippet": "peak show , you must watch fr. getting to the point now , astronauts who spend too much time in space\n                move forward in time , even if by a little...",
+        "keywords": [
+            "time",
+            "light",
+            "future",
+            "message",
+            "into",
+            "donut",
+            "speed",
+            "loop",
+            "too",
+            "idea",
+            "sending",
+            "because",
+            "tube",
+            "like",
+            "not"
+        ],
+        "vector": [
+            0.0763,
+            0.1526,
+            0,
+            0.9538,
+            0.0382,
+            0.1908,
+            0.1526,
+            0
+        ]
+    },
+    {
+        "title": "how not to debug a mouse",
+        "url": "blog/posts/06032025.html",
+        "snippet": "so my mouse which i had been using since 5 years decided to stop functioning and i tried repairing it\n                [its dead now and i have ordered a new one...",
+        "keywords": [
+            "wire",
+            "mouse",
+            "well",
+            "magnetic",
+            "not",
+            "app",
+            "field",
+            "over",
+            "new",
+            "out",
+            "person",
+            "point",
+            "decided",
+            "now",
+            "work"
+        ],
+        "vector": [
+            0.2182,
+            0.4364,
+            0,
+            0.8729,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "something personal with llms",
+        "url": "blog/posts/06042026.html",
+        "snippet": "a personal set of notes on building distributed systems, identity, memory, and the idea of persistence across machines, environments, and time",
+        "keywords": [
+            "not",
+            "like",
+            "maybe",
+            "idea",
+            "feels",
+            "system",
+            "probably",
+            "space",
+            "small",
+            "think",
+            "still",
+            "version",
+            "something",
+            "data",
+            "even"
+        ],
+        "vector": [
+            0.4994,
+            0.4406,
+            0.0294,
+            0.6756,
+            0.2644,
+            0,
+            0.1469,
+            0.0881
+        ]
+    },
+    {
+        "title": "can ai think at the speed of light? a dumb idea that might actually work",
+        "url": "blog/posts/14032025.html",
+        "snippet": "so to begin , first of all i know very less of all these ml concepts kinda in still a learning phase. the\n                most i can do is make api calls to oll...",
+        "keywords": [
+            "searcher",
+            "space",
+            "light",
+            "answer",
+            "match",
+            "like",
+            "animation",
+            "idea",
+            "how",
+            "still",
+            "search",
+            "dot",
+            "random",
+            "scatter",
+            "label"
+        ],
+        "vector": [
+            0.8159,
+            0.2176,
+            0,
+            0.4895,
+            0.2176,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "My Second Hackathon Experience",
+        "url": "blog/posts/22012025.html",
+        "snippet": "This blog post is currently being prepared. Stay tuned for updates!...",
+        "keywords": [
+            "post",
+            "blog",
+            "second",
+            "hackathon",
+            "experience",
+            "dark",
+            "mode",
+            "coming",
+            "soon",
+            "currently",
+            "being",
+            "prepared",
+            "stay",
+            "tuned",
+            "updates"
+        ],
+        "vector": [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "title": "making a strategy game in one file - with cpp",
+        "url": "blog/posts/25062025.html",
+        "snippet": "consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file.\n                yes, really....",
+        "keywords": [
+            "map",
+            "region",
+            "file",
+            "grid",
+            "resources",
+            "name",
+            "size",
+            "names",
+            "next",
+            "txt",
+            "now",
+            "things",
+            "build",
+            "rows",
+            "cols"
+        ],
+        "vector": [
+            0.804,
+            0.1005,
+            0,
+            0,
+            0.3015,
+            0.3015,
+            0,
+            0.402
+        ]
+    },
+    {
+        "title": "my 2025 end of year analysis",
+        "url": "blog/posts/30122025.html",
+        "snippet": "i think first of all i will get rid of this black and red theme...",
+        "keywords": [
+            "year",
+            "time",
+            "like",
+            "now",
+            "not",
+            "work",
+            "since",
+            "new",
+            "make",
+            "college",
+            "did",
+            "too",
+            "think",
+            "how",
+            "something"
+        ],
+        "vector": [
+            0.0699,
+            0.2446,
+            0.0349,
+            0.6989,
+            0.1398,
+            0.1747,
+            0,
+            0.629
+        ]
+    },
+    {
+        "title": "Guestbook",
+        "url": "guestbook.html",
+        "snippet": "${escapeHTML(entry.message)}...",
+        "keywords": [
+            "guestbook",
+            "home",
+            "blog",
+            "submit"
+        ],
+        "vector": [
+            0,
+            0.4472,
+            0,
+            0,
+            0,
+            0,
+            0.8944,
+            0
+        ]
+    },
+    {
+        "title": "korry // blog",
+        "url": "index.html",
+        "snippet": "a personal blog",
+        "keywords": [
+            "korry",
+            "blog",
+            "collection",
+            "logs",
+            "personal",
+            "memories",
+            "codes",
+            "presence",
+            "status",
+            "checking",
+            "reality",
+            "last",
+            "update",
+            "semantic",
+            "page"
+        ],
+        "vector": [
+            0.45,
+            0.6751,
+            0,
+            0.1125,
+            0,
+            0,
+            0.5625,
+            0.1125
+        ]
+    },
+    {
+        "title": "Logs",
+        "url": "logs.html",
+        "snippet": "personal static page on korry's web archive.",
+        "keywords": [
+            "logs",
+            "back",
+            "home"
+        ],
+        "vector": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    }
+]

@@ -96,7 +96,7 @@ async function fetchBlogMiniStream() {
                 item.className = 'log-item';
                 item.style.marginBottom = '1.2rem';
                 item.innerHTML = `
-                    <a href="${fullLink}" style="display: block; font-size: 1.1rem; color: var(--text-main); line-height: 1.3;">${title}</a>
+                    <a href="${fullLink}" style="display: block; font-size: 1.1rem; color: inherit; line-height: 1.3;">${title}</a>
                     <div style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.3rem; font-family: monospace;">${date}</div>
                 `;
                 container.appendChild(item);
@@ -344,4 +344,158 @@ window.addEventListener('load', () => {
         if (loadBtn) loadBtn.addEventListener('click', fetchPage);
         fetchPage();
     });
+})();
+
+// Semantic Page Finder Engine (Frontend Only)
+(function () {
+    let pageIndex = [];
+
+    async function loadIndex() {
+        try {
+            const res = await fetch('/search-index.json');
+            pageIndex = await res.json();
+        } catch (err) {
+            console.error('Failed to load search-index.json', err);
+        }
+    }
+
+    const DIMENSIONS = {
+        code_tech: ['code', 'programming', 'developer', 'software', 'javascript', 'build', 'websockets', 'mirage', 'apps', 'technical', 'uploaded', 'uploader', 'mnist', 'ollama', 'ai', 'neural', 'interpreter', 'learning', 'chess', 'searcher', 'system', 'server', 'data'],
+        writing_philosophy: ['writing', 'blog', 'posts', 'thoughts', 'essay', 'memories', 'creative', 'catalog', 'article', 'introspection', 'notes', 'speculative', 'reality', 'mind', 'consciousness'],
+        audio_ambient: ['music', 'soundscape', 'ambient', 'audio', 'listen', 'focus', 'sound', 'lofi', 'rain', 'concentration', 'concentration', 'player', 'bgm'],
+        space_physics: ['space', 'satellite', 'orbit', 'future', 'signal', 'sky', 'earth', 'astronauts', 'time', 'speed', 'travel', 'broadcasting'],
+        privacy_minimalism: ['privacy', 'minimalist', 'data', 'screen', 'digital', 'footprint', 'security', 'platforms', 'decoupling', 'clean', 'simple'],
+        hardware_tactile: ['keyboard', 'switch', 'tactile', 'type', 'build', 'hardware', 'tech', 'physical', 'switches', 'typing'],
+        social_connection: ['guestbook', 'contact', 'chat', 'message', 'transmit', 'signals', 'visitor', 'feedback', 'signature', 'beep', 'communication'],
+        personal_history: ['yearly', 'retrospective', 'college', 'career', 'projects', 'progress', 'history', 'learn', 'failures', 'milestones', 'timeline', 'devlog']
+    };
+
+    function computeQueryVector(query) {
+        const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 1);
+        const vector = Object.keys(DIMENSIONS).map(dim => {
+            let val = 0;
+            terms.forEach(term => {
+                if (DIMENSIONS[dim].includes(term)) {
+                    val += 1.0;
+                }
+            });
+            return val;
+        });
+
+        const magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
+        if (magnitude > 0) {
+            return vector.map(v => v / magnitude);
+        }
+        return vector;
+    }
+
+    function cosineSimilarity(vecA, vecB) {
+        if (!vecA || !vecB || vecA.length !== vecB.length) return 0;
+        let dotProduct = 0;
+        for (let i = 0; i < vecA.length; i++) {
+            dotProduct += vecA[i] * vecB[i];
+        }
+        return dotProduct;
+    }
+
+    function semanticSearch(query) {
+        if (!query) return [];
+        const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 1);
+        if (terms.length === 0) return [];
+
+        const queryVector = computeQueryVector(query);
+        const results = [];
+
+        pageIndex.forEach(doc => {
+            let keywordScore = 0;
+            const docTitleLower = doc.title.toLowerCase();
+            const docSnippetLower = doc.snippet.toLowerCase();
+
+            // Calculate TF/Keyword match score
+            terms.forEach(term => {
+                if (docTitleLower.includes(term)) {
+                    keywordScore += 10;
+                }
+                if (doc.keywords && doc.keywords.includes(term)) {
+                    keywordScore += 6;
+                }
+                if (docSnippetLower.includes(term)) {
+                    keywordScore += 3;
+                }
+            });
+
+            // Calculate Cosine Similarity to Document Vector
+            const cosSim = cosineSimilarity(queryVector, doc.vector || []);
+
+            // Normalize Keyword score to 0..1 range (max potential is around 25 for typical queries)
+            const normalizedKeywordScore = Math.min(keywordScore / 25, 1.0);
+
+            // Combine scores: 40% exact/keyword match, 60% semantic vector similarity
+            // If the query didn't match any vector dimensions, fall back 100% to keyword matches!
+            const queryVectorMagnitude = Math.sqrt(queryVector.reduce((s, v) => s + v * v, 0));
+            let finalScore = 0;
+            if (queryVectorMagnitude === 0) {
+                finalScore = normalizedKeywordScore;
+            } else {
+                finalScore = (normalizedKeywordScore * 0.4) + (cosSim * 0.6);
+            }
+
+            if (finalScore > 0.05) {
+                results.push({ doc, score: finalScore });
+            }
+        });
+
+        // Sort descending by combined score
+        return results.sort((a, b) => b.score - a.score);
+    }
+
+    function initSearch() {
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        const resultsContainer = document.getElementById('search-results');
+
+        if (!searchInput || !searchBtn || !resultsContainer) return;
+
+        loadIndex();
+
+        function handleSearch() {
+            const query = searchInput.value.trim();
+            if (!query) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            const results = semanticSearch(query);
+            renderSearchResults(results);
+        }
+
+        // Live search on typing
+        searchInput.addEventListener('input', handleSearch);
+        searchBtn.addEventListener('click', handleSearch);
+    }
+
+    function renderSearchResults(results) {
+        const resultsContainer = document.getElementById('search-results');
+        if (!resultsContainer) return;
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = `<div style="font-size: 1.1rem; color: var(--color-orange); font-style: italic;">no semantic matches found. try 'space', 'chat', 'typing', or 'writing'...</div>`;
+        } else {
+            let html = '<h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-gold); text-transform: uppercase; letter-spacing: 1px;">semantic matches:</h4>';
+            results.forEach(res => {
+                html += `
+                    <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease;">
+                        <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
+                            <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
+                        </h5>
+                        <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
+                        <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem;">relevance score: ${(res.score * 10).toFixed(0)}</div>
+                    </div>
+                `;
+            });
+            resultsContainer.innerHTML = html;
+        }
+        resultsContainer.style.display = 'flex';
+    }
+
+    document.addEventListener('DOMContentLoaded', initSearch);
 })();

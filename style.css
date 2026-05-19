@@ -428,6 +428,22 @@ a:hover {
     width: 100%;
 }
 
+/* Input and Form Fields */
+input[type="text"] {
+    background-color: var(--bg-cream);
+    color: var(--text-charcoal);
+    border: var(--border-width-thin) solid var(--border-color);
+    padding: 1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    transition: outline 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
+}
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 var(--border-color);
+    transform: translate(-2px, -2px);
+}
+
 /* Fade-in Observer Support */
 .fade-in {
     opacity: 0;
@@ -443,6 +459,26 @@ a:hover {
 /* Decorative circle blur - disabled/adapted to grid */
 .circle-shape {
     display: none; /* keep pure grid geometric look */
+}
+
+/* Dark Mode Box Title Overrides */
+body.dark-mode .panel-cream h1,
+body.dark-mode .panel-cream h2,
+body.dark-mode .panel-cream h3,
+body.dark-mode .panel-mustard h1,
+body.dark-mode .panel-mustard h2,
+body.dark-mode .panel-mustard h3 {
+    color: var(--text-gold);
+}
+
+body.dark-mode .panel-charcoal h1,
+body.dark-mode .panel-charcoal h2,
+body.dark-mode .panel-charcoal h3 {
+    color: var(--bg-wine);
+}
+
+body.dark-mode .tumblr-post h4 {
+    color: var(--text-gold);
 }
 
 /* Responsive Rules */
