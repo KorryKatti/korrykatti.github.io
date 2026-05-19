@@ -348,45 +348,42 @@ window.addEventListener('load', () => {
 
 // Semantic Page Finder Engine (Frontend Only)
 (function () {
+    let wordVectors = {};
     let pageIndex = [];
 
     async function loadIndex() {
         try {
             const res = await fetch('/search-index.json');
-            pageIndex = await res.json();
+            const data = await res.json();
+            wordVectors = data.wordVectors || {};
+            pageIndex = data.documents || [];
         } catch (err) {
             console.error('Failed to load search-index.json', err);
         }
     }
 
-    const DIMENSIONS = {
-        code_tech: ['code', 'programming', 'developer', 'software', 'javascript', 'build', 'websockets', 'mirage', 'apps', 'technical', 'uploaded', 'uploader', 'mnist', 'ollama', 'ai', 'neural', 'interpreter', 'learning', 'chess', 'searcher', 'system', 'server', 'data'],
-        writing_philosophy: ['writing', 'blog', 'posts', 'thoughts', 'essay', 'memories', 'creative', 'catalog', 'article', 'introspection', 'notes', 'speculative', 'reality', 'mind', 'consciousness'],
-        audio_ambient: ['music', 'soundscape', 'ambient', 'audio', 'listen', 'focus', 'sound', 'lofi', 'rain', 'concentration', 'concentration', 'player', 'bgm'],
-        space_physics: ['space', 'satellite', 'orbit', 'future', 'signal', 'sky', 'earth', 'astronauts', 'time', 'speed', 'travel', 'broadcasting'],
-        privacy_minimalism: ['privacy', 'minimalist', 'data', 'screen', 'digital', 'footprint', 'security', 'platforms', 'decoupling', 'clean', 'simple'],
-        hardware_tactile: ['keyboard', 'switch', 'tactile', 'type', 'build', 'hardware', 'tech', 'physical', 'switches', 'typing'],
-        social_connection: ['guestbook', 'contact', 'chat', 'message', 'transmit', 'signals', 'visitor', 'feedback', 'signature', 'beep', 'communication'],
-        personal_history: ['yearly', 'retrospective', 'college', 'career', 'projects', 'progress', 'history', 'learn', 'failures', 'milestones', 'timeline', 'devlog']
-    };
-
     function computeQueryVector(query) {
         const terms = query.toLowerCase().split(/\s+/).filter(t => t.length > 1);
-        const vector = Object.keys(DIMENSIONS).map(dim => {
-            let val = 0;
-            terms.forEach(term => {
-                if (DIMENSIONS[dim].includes(term)) {
-                    val += 1.0;
+        let queryVec = new Array(8).fill(0);
+        let count = 0;
+        
+        terms.forEach(term => {
+            if (wordVectors[term]) {
+                count++;
+                const vec = wordVectors[term];
+                for (let d = 0; d < 8; d++) {
+                    queryVec[d] += vec[d];
                 }
-            });
-            return val;
+            }
         });
-
-        const magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
-        if (magnitude > 0) {
-            return vector.map(v => v / magnitude);
+        
+        if (count > 0) {
+            const magnitude = Math.sqrt(queryVec.reduce((sum, val) => sum + val * val, 0));
+            if (magnitude > 0) {
+                return queryVec.map(v => v / magnitude);
+            }
         }
-        return vector;
+        return new Array(8).fill(0);
     }
 
     function cosineSimilarity(vecA, vecB) {
