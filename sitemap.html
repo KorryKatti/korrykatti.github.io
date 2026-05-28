@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>korry // sitemap</title>
+    <meta name="description" content="sitemap - everything on this site">
+    <link rel="stylesheet" href="style.css">
+    <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
+<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+</head>
+<body>
+
+<div class="grid-container" style="max-width: 800px;">
+
+    <section class="grid-panel col-12 panel-wine">
+        <div>
+            <h1 style="margin-bottom: 1rem;">sitemap</h1>
+            <p style="font-family: 'IM Fell English', serif; font-size: 1.8rem; line-height: 1; opacity: 0.9;">everything on this site</p>
+        </div>
+        <div class="accent-block" style="background-color: var(--bg-mustard); margin: 1rem 0 0 0;"></div>
+    </section>
+
+    <section class="grid-panel col-12 panel-cream">
+        <div>
+            <h2>pages</h2>
+            <ul class="log-list">
+                <li class="log-item"><a href="/" class="log-link">home</a></li>
+                <li class="log-item"><a href="/blog/index.html" class="log-link">blog</a></li>
+                <li class="log-item"><a href="/guestbook.html" class="log-link">guestbook</a></li>
+                <li class="log-item"><a href="/logs.html" class="log-link">tumblr page</a></li>
+                <li class="log-item"><a href="/apps/index.html" class="log-link">apps</a></li>
+                <li class="log-item"><a href="/404.html" class="log-link">404</a></li>
+                <li class="log-item"><a href="/quotes.html" class="log-link">quotes</a></li>
+                <li class="log-item"><a href="/rss.xml" class="log-link">rss feed</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="grid-panel col-12 panel-charcoal">
+        <div>
+            <h2>blog posts</h2>
+            <ul class="log-list">
+                <li class="log-item"><a href="/blog/posts/06042026.html" class="log-link">something personal with llms</a> <span style="opacity:0.5; font-size:0.85rem;">06.04.2026</span></li>
+                <li class="log-item"><a href="/blog/posts/30122025.html" class="log-link">my 2025 end of year analysis</a> <span style="opacity:0.5; font-size:0.85rem;">30.12.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/25062025.html" class="log-link">making a strategy game in one file - with cpp</a> <span style="opacity:0.5; font-size:0.85rem;">25.06.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/03052025.html" class="log-link">Donuts, LiFi, and Time Travel</a> <span style="opacity:0.5; font-size:0.85rem;">03.05.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/06032025.html" class="log-link">how not to debug a mouse</a> <span style="opacity:0.5; font-size:0.85rem;">06.03.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/14032025.html" class="log-link">can ai think at the speed of light? a dumb idea that might actually work</a> <span style="opacity:0.5; font-size:0.85rem;">14.02.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/22012025.html" class="log-link">My Second Hackathon Experience</a> <span style="opacity:0.5; font-size:0.85rem;">22.01.2025</span></li>
+                <li class="log-item"><a href="/blog/posts/03012025.html" class="log-link">Hello world</a> <span style="opacity:0.5; font-size:0.85rem;">03.01.2025</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="grid-panel col-12 panel-mustard">
+        <div>
+            <h2>apps</h2>
+            <ul class="log-list">
+                <li class="log-item"><a href="/apps/file_upload/index.html" class="log-link">file upload</a></li>
+                <li class="log-item"><a href="/apps/langspinner/index.html" class="log-link">langspinner</a></li>
+                <li class="log-item"><a href="/apps/loca_llm/index.html" class="log-link">local llm</a></li>
+                <li class="log-item"><a href="/apps/mnist/index.html" class="log-link">mnist digit predictor</a></li>
+                <li class="log-item"><a href="/apps/ollam_ui/index.html" class="log-link">ollama ui</a></li>
+                <li class="log-item"><a href="/apps/rl_chess/index.html" class="log-link">chess</a></li>
+                <li class="log-item"><a href="/apps/sucher/index.html" class="log-link">sucher (search engine)</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="grid-panel col-12 panel-wine" style="text-align:center;">
+        <div>
+            <p style="margin-bottom:0;"><a href="/" style="color:var(--text-gold); border-color:var(--text-gold);">← back home</a></p>
+        </div>
+    </section>
+
+</div>
+
+<script src="assets/js/prefetch.js"></script>
+<script>
+    // dark mode toggle
+    const themeBtn = document.createElement('span');
+    themeBtn.id = 'theme-toggle-btn';
+    themeBtn.textContent = '☾ dark mode';
+    const control = document.createElement('div');
+    control.id = 'theme-toggle-control';
+    control.appendChild(themeBtn);
+    document.body.appendChild(control);
+
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeBtn.textContent = '☼ light';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeBtn.textContent = isDark ? '☼ light' : '☾ dark';
+    });
+</script>
+
+</body>
+</html>

@@ -168,7 +168,7 @@ async function getStatus() {
 
         if (status === 'online' && currentStatus.activities && currentStatus.activities.length > 0) {
             statusHTML += `<div style="display: flex; flex-direction: column; gap: 0.8rem;">`;
-            currentStatus.activities.forEach(activity => {
+            currentStatus.activities.slice(0, 3).forEach(activity => {
                 const type = activity.type || activity.activity_type || 'playing';
                 const name = activity.name || '';
                 const details = activity.details || '';

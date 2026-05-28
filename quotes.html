@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>korry // quotes</title>
+    <meta name="description" content="collected quotes">
+    <link rel="stylesheet" href="style.css">
+    <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
+<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+</head>
+<body>
+
+<div class="grid-container" style="max-width: 800px;">
+
+    <section class="grid-panel col-12 panel-wine">
+        <div>
+            <h1 style="margin-bottom: 1rem;">quotes</h1>
+            <p style="font-family: 'IM Fell English', serif; font-size: 1.8rem; line-height: 1; opacity: 0.9;">words that stuck with me</p>
+        </div>
+        <div class="accent-block" style="background-color: var(--bg-mustard); margin: 1rem 0 0 0;"></div>
+    </section>
+
+    <section class="grid-panel col-12 panel-cream">
+        <p style="text-align:center; opacity:0.6; font-style:italic;">add quotes here</p>
+        <p style="text-align:center; margin-top:1rem;"><a href="/sitemap.html" style="opacity:0.6;">← sitemap</a></p>
+    </section>
+
+</div>
+
+<script src="assets/js/prefetch.js"></script>
+<script>
+    const themeBtn = document.createElement('span');
+    themeBtn.id = 'theme-toggle-btn';
+    themeBtn.textContent = '☾ dark mode';
+    const control = document.createElement('div');
+    control.id = 'theme-toggle-control';
+    control.appendChild(themeBtn);
+    document.body.appendChild(control);
+
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeBtn.textContent = '☼ light';
+    }
+
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        themeBtn.textContent = isDark ? '☼ light' : '☾ dark';
+    });
+</script>
+
+</body>
+</html>

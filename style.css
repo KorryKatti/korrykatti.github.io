@@ -482,6 +482,10 @@ body.dark-mode .panel-charcoal h3 {
     color: var(--bg-wine);
 }
 
+body.dark-mode .panel-wine {
+    color: var(--text-charcoal);
+}
+
 body.dark-mode .tumblr-post h4 {
     color: var(--text-gold);
 }

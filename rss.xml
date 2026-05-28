@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>korry // blog</title>
+    <link>https://korrykatti.github.io/</link>
+    <description>a collection of personal memories &amp; codes</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 06 Apr 2026 00:00:00 GMT</lastBuildDate>
+    <atom:link href="https://korrykatti.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>something personal with llms</title>
+      <link>https://korrykatti.github.io/blog/posts/06042026.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/06042026.html</guid>
+      <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
+      <description>while there are many technical and other usecases for a large language mode, there is one thing i want to do with it , which is probably just a personal thing.</description>
+    </item>
+
+    <item>
+      <title>my 2025 end of year analysis</title>
+      <link>https://korrykatti.github.io/blog/posts/30122025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/30122025.html</guid>
+      <pubDate>Tue, 30 Dec 2025 00:00:00 GMT</pubDate>
+      <description>analyzing my year and some thought sharing</description>
+    </item>
+
+    <item>
+      <title>making a strategy game in one file - with cpp</title>
+      <link>https://korrykatti.github.io/blog/posts/25062025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/25062025.html</guid>
+      <pubDate>Wed, 25 Jun 2025 00:00:00 GMT</pubDate>
+      <description>devlog of me making a map game, in cpp - progress, fails, lessons, all while building a strategy game in one C++ file.</description>
+    </item>
+
+    <item>
+      <title>Donuts, LiFi, and Time Travel</title>
+      <link>https://korrykatti.github.io/blog/posts/03052025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/03052025.html</guid>
+      <pubDate>Sat, 03 May 2025 00:00:00 GMT</pubDate>
+      <description>donuts, lifi, and time travel</description>
+    </item>
+
+    <item>
+      <title>how not to debug a mouse</title>
+      <link>https://korrykatti.github.io/blog/posts/06032025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/06032025.html</guid>
+      <pubDate>Thu, 06 Mar 2025 00:00:00 GMT</pubDate>
+      <description>My mouse stopped working and I tried fixing it. Here is how it went.</description>
+    </item>
+
+    <item>
+      <title>can ai think at the speed of light? a dumb idea that might actually work</title>
+      <link>https://korrykatti.github.io/blog/posts/14032025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/14032025.html</guid>
+      <pubDate>Fri, 14 Feb 2025 00:00:00 GMT</pubDate>
+      <description>a dumb idea about thinking at the speed of light</description>
+    </item>
+
+    <item>
+      <title>My Second Hackathon Experience</title>
+      <link>https://korrykatti.github.io/blog/posts/22012025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/22012025.html</guid>
+      <pubDate>Wed, 22 Jan 2025 00:00:00 GMT</pubDate>
+      <description>coming soon</description>
+    </item>
+
+    <item>
+      <title>Hello world</title>
+      <link>https://korrykatti.github.io/blog/posts/03012025.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/03012025.html</guid>
+      <pubDate>Fri, 03 Jan 2025 00:00:00 GMT</pubDate>
+      <description>Testing out the blog functionality. First post to verify everything is working correctly.</description>
+    </item>
+
+  </channel>
+</rss>
