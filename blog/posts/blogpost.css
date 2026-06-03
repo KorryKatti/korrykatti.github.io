@@ -247,3 +247,13 @@ body.dark-mode .nav-button:hover {
 body.dark-mode .nav-button[disabled] {
     color: #444;
 }
+
+.b-letter {
+    font-weight: 515;
+    color: #2b2b2b;
+    letter-spacing: 0.01em;
+}
+
+body.dark-mode .b-letter {
+    color: #d5d5d5;
+}
