@@ -25,69 +25,71 @@
 
     <link rel="icon" href="../img/icon.jpeg">
     <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
+
 <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
 <body>
     <div class="container">
         <header class="header">
-            <button id="theme-toggle-btn">dark mode</button>
-            <div class="lab-title">blog | <a href="../index.html">home</a> | <a href="../rss.xml">rss</a></div>
+            <div class="site-info">
+                <h1 class="site-title">korry // blog</h1>
+                <nav class="nav-links">
+                    <a href="../index.html">home</a>
+                    <a href="../rss.xml">rss</a>
+                </nav>
+            </div>
+            <button id="theme-toggle-btn" aria-label="Toggle dark mode">dark_mode</button>
         </header>
 
-        <div class="post">
-            <h2 class="post-title" data-status="OPEN">Hello world</h2>
-            <div class="post-meta">03.01.2025</div>
-            <div class="post-content">
-                Testing out the blog functionality. First post to verify everything is working correctly.
-            </div>
-            <a href="posts/03012025.html" class="read-more">READ_MORE</a>
-        </div>
+        <main class="post-list">
+            <article class="post-entry">
+                <div class="post-meta">2025-01-03</div>
+                <h2 class="post-title"><a href="posts/03012025.html">Hello world</a></h2>
+                <div class="post-excerpt">
+                    Testing out the blog functionality. First post to verify everything is working correctly.
+                </div>
+            </article>
 
-        <div class="post">
-            <h2 class="post-title" data-status="OPEN">my 2025 end of year analysis</h2>
-            <div class="post-meta">30.12.2025</div>
-            <div class="post-content">
-                analyzing my year and some thought sharing
-            </div>
-            <a href="posts/30122025.html" class="read-more">READ_MORE</a>
-        </div>
+            <article class="post-entry">
+                <div class="post-meta">2025-12-30</div>
+                <h2 class="post-title"><a href="posts/30122025.html">my 2025 end of year analysis</a></h2>
+                <div class="post-excerpt">
+                    analyzing my year and some thought sharing
+                </div>
+            </article>
 
-        <div class="post">
-            <h2 class="post-title" data-status="OPEN">How not to fix a mouse</h2>
-            <div class="post-meta">06.03.2025</div>
-            <div class="post-content">
-                My mouse stopped working and I tried fixing it. Here is how it went.
-            </div>
-            <a href="posts/06032025.html" class="read-more">READ_MORE</a>
-        </div>
+            <article class="post-entry">
+                <div class="post-meta">2025-03-06</div>
+                <h2 class="post-title"><a href="posts/06032025.html">How not to fix a mouse</a></h2>
+                <div class="post-excerpt">
+                    My mouse stopped working and I tried fixing it. Here is how it went.
+                </div>
+            </article>
 
-        <div class="post">
-            <h2 class="post-title" data-status="OPEN">the one thing i want to do with llms</h2>
-            <div class="post-meta">06.04.2026</div>
-            <div class="post-content">
-                while there are many technical and other usecases for a large language mode, there is one thing i want to do with it , which is probably just a personal thing. would be good if many people did it tho , idk about consequences.
-            </div>
-            <a href="posts/06042026.html" class="read-more">READ_MORE</a>
-        </div>
+            <article class="post-entry">
+                <div class="post-meta">2026-04-06</div>
+                <h2 class="post-title"><a href="posts/06042026.html">the one thing i want to do with llms</a></h2>
+                <div class="post-excerpt">
+                    while there are many technical and other usecases for a large language mode, there is one thing i want to do with it , which is probably just a personal thing. would be good if many people did it tho , idk about consequences.
+                </div>
+            </article>
 
-        <div class="post">
-            <h2 class="post-title" data-status="OPEN">Making a strategy game in one file - with cpp</h2>
-            <div class="post-meta">25.06.2025</div>
-            <div class="post-content">
-                devlog of me making a map game, in cpp (for learning purposes). consider this a devlog. progress, fails,
-                lessons — all while building a strategy game in one C++ file.
-            </div>
-            <a href="posts/25062025.html" class="read-more">READ_MORE</a>
-        </div>
-
-
+            <article class="post-entry">
+                <div class="post-meta">2025-06-25</div>
+                <h2 class="post-title"><a href="posts/25062025.html">Making a strategy game in one file - with cpp</a></h2>
+                <div class="post-excerpt">
+                    devlog of me making a map game, in cpp (for learning purposes). consider this a devlog. progress, fails, lessons — all while building a strategy game in one C++ file.
+                </div>
+            </article>
+        </main>
     </div>
 
-    <div style="text-align: center; margin-top: 4rem; margin-bottom: 2rem; opacity: 0.7;">
-        <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
-            style="height: 18px;">
-    </div>
+    <footer class="footer">
+        <div class="visitor-counter">
+            <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter">
+        </div>
+    </footer>
 
     <script src="./theme.js"></script>
     <script src="../prefetch.js"></script>

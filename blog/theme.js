@@ -4,14 +4,14 @@
 
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-mode');
-        if (themeToggleBtn) themeToggleBtn.textContent = 'light mode';
+        if (themeToggleBtn) themeToggleBtn.textContent = 'light_mode';
     }
 
     if (themeToggleBtn) {
         themeToggleBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
-            themeToggleBtn.textContent = isDark ? 'light mode' : 'dark mode';
+            themeToggleBtn.textContent = isDark ? 'light_mode' : 'dark_mode';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
     }
@@ -32,7 +32,6 @@
 
         nodes.forEach(textNode => {
             const text = textNode.nodeValue;
-            // Match words (including single letters)
             const parts = text.split(/(\b[a-zA-Z]+\b)/g);
             if (parts.length > 1) {
                 const fragment = document.createDocumentFragment();
