@@ -94,10 +94,9 @@ async function fetchBlogMiniStream() {
 
                 const item = document.createElement('li');
                 item.className = 'log-item';
-                item.style.marginBottom = '1.2rem';
                 item.innerHTML = `
-                    <a href="${fullLink}" style="display: block; font-size: 1.1rem; color: inherit; line-height: 1.3;">${title}</a>
-                    <div style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.3rem; font-family: monospace;">${date}</div>
+                    <a href="${fullLink}" class="log-link" style="font-size: 1.4rem;">${title}</a>
+                    <div style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.3rem; font-family: monospace;">${date}</div>
                 `;
                 container.appendChild(item);
             });
@@ -162,7 +161,7 @@ async function getStatus() {
         const status = currentStatus.status || 'offline';
         
         statusHTML += `<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">`;
-        statusHTML += `<span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${status === 'online' ? '#2ecc71' : '#e74c3c'}; border: 2px solid var(--border-color);"></span>`;
+        statusHTML += `<span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${status === 'online' ? 'var(--accent)' : 'var(--text-secondary)'}; border: 1px solid var(--border-color);"></span>`;
         statusHTML += `<strong>${status.toUpperCase()}</strong>`;
         statusHTML += `</div>`;
 
@@ -174,9 +173,9 @@ async function getStatus() {
                 const details = activity.details || '';
                 const state = activity.state || '';
                 
-                statusHTML += `<div style="border-left: 4px solid var(--border-color); padding-left: 0.8rem;">`;
-                statusHTML += `<div style="font-size: 0.85rem; text-transform: uppercase; opacity: 0.7; letter-spacing: 1px;">${type.toLowerCase()}</div>`;
-                statusHTML += `<div style="font-size: 1.1rem; font-weight: 700;">${name.toLowerCase()}</div>`;
+                statusHTML += `<div style="border-left: 3px solid var(--accent); padding-left: 0.8rem;">`;
+                statusHTML += `<div style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px;">${type.toLowerCase()}</div>`;
+                statusHTML += `<div style="font-size: 1.1rem; font-weight: 700; color: var(--accent);">${name.toLowerCase()}</div>`;
                 if (details) {
                     statusHTML += `<div style="font-size: 0.95rem; font-style: italic; opacity: 0.9;">${details.toLowerCase()}</div>`;
                 }
@@ -588,13 +587,13 @@ window.addEventListener('load', () => {
         const radarSVG = generateRadarSVG(res.doc.vector);
 
         return `
-            <div style="padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+            <div style="padding: 1rem; border: var(--border-width) solid var(--border-color); background-color: var(--bg-panel); color: var(--text-primary); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
                 <div style="flex-grow: 1;">
                     <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
-                        <a href="${res.doc.url}" style="border-bottom: 2px solid currentColor; display: inline-block;">${res.doc.title}</a>
+                        <a href="${res.doc.url}" style="border-bottom: 2px solid var(--accent); display: inline-block;">${res.doc.title}</a>
                     </h5>
-                    <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left;">${res.doc.snippet}</p>
-                    <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.5; margin-top: 0.5rem; display: flex; gap: 1rem;">
+                    <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left; color: var(--text-dim);">${res.doc.snippet}</p>
+                    <div style="font-size: 0.75rem; font-family: monospace; opacity: 0.6; margin-top: 0.5rem; display: flex; gap: 1rem;">
                         <span>${scoreLabel}</span>
                         <span>•</span>
                         <span>${readTime} min read</span>

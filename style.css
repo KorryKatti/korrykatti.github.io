@@ -1,41 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Space+Grotesk:wght@500;700&display=swap');
 
 :root {
-    /* Mustard & Wine Palette */
-    --bg-cream: #FFFAF0;
-    --bg-wine: #722F37;
-    --bg-mustard: #E1AD01;
-    --bg-charcoal: #3D3D3D;
-    --color-orange: #CD5C5C;
-    
-    /* Text Colors */
-    --text-charcoal: #3D3D3D;
-    --text-cream: #FFFAF0;
-    --text-gold: #E1AD01;
-    
-    /* Outlines */
-    --border-color: #3D3D3D;
-    --border-width: 6px;
-    --border-width-thin: 3px;
-
-    /* Backward compatibility fallback */
-    --acc-blood: var(--bg-wine);
-    --acc-purple: var(--color-orange);
-    --acc-teal: var(--bg-mustard);
-    --acc-yellow: var(--bg-mustard);
+    /* Obsidian & Blue Palette */
+    --bg-deep: #0d1117;
+    --bg-panel: #1a1a1a;
+    --bg-panel-alt: #161616;
+    --text-primary: #e8e8e8;
+    --text-secondary: #a0a0a0;
+    --text-dim: #d0d0d0;
+    --accent: #64b5f6;
+    --border-color: #404040;
+    --border-width: 3px;
+    --border-width-thick: 8px;
 }
 
-body.dark-mode {
-    --bg-cream: #1A1A1A;
-    --bg-charcoal: #FFFAF0;
-    --bg-wine: #4D1A20;
-    --bg-mustard: #A68000;
-    --color-orange: #B24040;
-    
-    --text-charcoal: #FFFAF0;
-    --text-cream: #1A1A1A;
-    --text-gold: #E1AD01;
-    --border-color: #FFFAF0;
+/* Dark Theme is default now */
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 4vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 * {
@@ -44,24 +33,13 @@ body.dark-mode {
     padding: 0;
 }
 
-body {
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700; /* heavy weight sans-serif body text */
-    line-height: 1.4;
-    padding: 2vw;
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
 /* Typography */
 h1, h2, h3, h4, .serif-text {
     font-family: 'IM Fell English', Georgia, serif;
     font-weight: 400;
     line-height: 0.9;
     text-transform: lowercase;
+    color: var(--accent);
 }
 
 h1 {
@@ -81,45 +59,58 @@ h3 {
 p {
     font-size: 1.1rem;
     margin-bottom: 1rem;
-    text-align: justify; /* tightly packed vibe */
+    text-align: justify;
     hyphens: auto;
+    color: var(--text-dim);
 }
 
 /* Links */
 a {
-    color: inherit;
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 3px solid currentColor;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    border-bottom: 3px solid var(--accent);
+    transition: all 0.2s ease;
     display: inline-block;
 }
 
 a:hover {
-    background-color: var(--color-orange);
-    color: var(--text-cream);
+    background-color: var(--accent);
+    color: var(--bg-deep);
 }
 
-/* Heavy Text-Heavy Grid */
+/* Asymmetric Grid */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    gap: var(--border-width);
-    background-color: var(--border-color);
-    border: var(--border-width) solid var(--border-color);
+    gap: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    position: relative;
 }
 
 /* Panel base */
 .grid-panel {
-    background-color: var(--bg-cream);
-    padding: 2.5rem;
+    background-color: var(--bg-panel);
+    padding: 3rem;
     position: relative;
-    overflow: hidden;
+    border: var(--border-width) solid var(--border-color);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 300px;
+    min-height: 350px;
+    transition: transform 0.3s ease;
+}
+
+/* Broken Grid Effects */
+.rotate-right { transform: rotate(1.5deg); z-index: 2; }
+.rotate-left { transform: rotate(-1.5deg); z-index: 2; }
+.offset-up { margin-top: -2rem; }
+.offset-down { margin-top: 2rem; }
+.layer-top { z-index: 10; }
+
+.grid-panel:hover {
+    transform: translate(-4px, -4px) rotate(0deg);
+    border-color: var(--accent);
 }
 
 /* Column sizes */
@@ -131,248 +122,154 @@ a:hover {
 .col-4 { grid-column: span 4; }
 .col-3 { grid-column: span 3; }
 
-/* Panel themes (alternating blocks) */
-.panel-wine {
-    background-color: var(--bg-wine);
-    color: var(--text-cream);
-}
-.panel-wine h1, .panel-wine h2, .panel-wine h3 {
-    color: var(--text-gold);
-}
-.panel-wine a:hover {
-    background-color: var(--bg-mustard);
-    color: var(--bg-wine);
+/* Specific Panel Themes */
+.panel-alt { background-color: var(--bg-panel-alt); }
+.panel-deep { background-color: var(--bg-deep); }
+
+.brand-header {
+    border-bottom: var(--border-width-thick) solid var(--accent);
+    background-color: var(--bg-panel-alt);
 }
 
-.panel-charcoal {
-    background-color: var(--bg-charcoal);
-    color: var(--text-cream);
-}
-.panel-charcoal h1, .panel-charcoal h2, .panel-charcoal h3 {
-    color: var(--text-gold);
-}
+.brand-header h1 { color: var(--accent); }
+.brand-header p { color: var(--text-secondary); }
 
-.panel-mustard {
-    background-color: var(--bg-mustard);
-    color: var(--text-charcoal);
-}
-.panel-mustard h1, .panel-mustard h2, .panel-mustard h3 {
-    color: var(--bg-wine);
-}
-
-.panel-cream {
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-}
-.panel-cream h1, .panel-cream h2, .panel-cream h3 {
-    color: var(--bg-wine);
-}
-
-/* Diagonal stripe pattern card */
-.panel-stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        var(--bg-wine),
-        var(--bg-wine) 20px,
-        var(--color-orange) 20px,
-        var(--color-orange) 40px
-    );
-    color: var(--text-cream);
-}
-
-/* Spacers and frames */
-.geometric-frame {
-    border: 3px solid currentColor;
-    padding: 1.5rem;
-    margin-top: 1rem;
-    position: relative;
-}
-
-.accent-block {
-    height: 12px;
-    background-color: var(--color-orange);
-    width: 100%;
-    margin: 1.5rem 0;
-}
-
-.vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    position: absolute;
-    right: 1.5rem;
-    top: 1.5rem;
-    font-size: 1.5rem;
-    color: currentColor;
-    opacity: 0.8;
-}
-
-/* Status Badge */
-.status-badge {
-    font-family: 'IM Fell English', serif;
+.status-label {
+    text-transform: uppercase;
+    letter-spacing: 2px;
     font-size: 1rem;
-    color: var(--text-gold);
-    background-color: var(--bg-charcoal);
-    border: var(--border-width-thin) solid var(--text-gold);
-    padding: 0.4rem 1rem;
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    transform: rotate(-3deg);
-    width: fit-content;
-}
-.panel-wine .status-badge {
-    background-color: var(--bg-charcoal);
-    border-color: var(--text-gold);
-    color: var(--text-gold);
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
-/* Projects & Lists */
-.project-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-top: 2rem;
+.status-text {
+    font-size: 1.4rem;
+    color: var(--accent);
 }
 
-.project-item {
-    display: flex;
-    flex-direction: column;
-    padding: 1.5rem;
-    border: var(--border-width-thin) solid var(--border-color);
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+/* Search Bar */
+.search-container {
+    width: 100%;
 }
 
-.project-item:hover {
-    transform: translate(-6px, -6px);
-    box-shadow: 6px 6px 0 var(--border-color);
-    background-color: var(--bg-mustard);
-    color: var(--text-charcoal);
+input[type="text"] {
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    border: var(--border-width) solid var(--border-color);
+    padding: 1.2rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    flex: 1;
 }
 
-.project-title {
-    font-size: 1.8rem;
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+#search-btn {
+    background-color: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    padding: 1rem 2rem;
     font-family: 'IM Fell English', serif;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
-.project-desc {
-    font-size: 0.95rem;
-    font-style: italic;
-    opacity: 0.85;
+/* Artifacts */
+.project-item {
+    padding: 1.5rem 0;
+    border-bottom: var(--border-width) solid var(--border-color);
+    display: block;
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }
 
-/* Logs Lists */
-.log-list {
-    list-style: none;
-    margin-top: 1.5rem;
-}
-
-.log-item {
-    padding: 1rem 0;
-    border-bottom: var(--border-width-thin) solid currentColor;
-}
-.log-item:last-child {
+.project-item:last-child {
     border-bottom: none;
 }
 
+.project-item:hover {
+    background-color: transparent;
+    border-bottom-color: var(--accent);
+}
+
+.project-title {
+    font-size: 2rem;
+    color: var(--text-primary);
+    display: block;
+}
+
+.project-desc {
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Lists */
+.log-list { list-style: none; }
+.log-item {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
 .log-link {
     font-family: 'IM Fell English', serif;
     font-size: 1.8rem;
     border-bottom: none;
 }
 
-/* Quote display container */
-.quote-container {
-    font-family: 'IM Fell English', serif;
-    font-size: 2.2rem;
-    line-height: 1.1;
-    text-align: center;
-    padding: 2rem;
-    border: var(--border-width-thin) solid currentColor;
-}
-
-.small-text {
-    font-size: 1.2rem;
-    display: block;
-    margin-top: 1rem;
-}
-
-/* Stream / Tumblr posts */
+/* Tumblr Card Grid */
 #tumblr-posts {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
+    gap: 2rem;
 }
 
 .tumblr-post {
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-    border: var(--border-width-thin) solid var(--border-color);
+    background-color: var(--bg-panel);
+    border: var(--border-width) solid var(--border-color);
     padding: 1.5rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.tumblr-post:hover {
-    transform: translate(-4px, -4px);
-    box-shadow: 4px 4px 0 var(--border-color);
 }
 
 .tumblr-post h4 {
-    font-size: 1.8rem;
-    margin-bottom: 0.8rem;
-    color: var(--bg-wine);
+    color: var(--accent);
 }
 
-.post-meta {
-    font-family: monospace;
-    font-size: 0.85rem;
-    opacity: 0.6;
-    margin-bottom: 1rem;
-}
-
-.post-body img {
-    max-width: 100%;
-    height: auto;
-    filter: grayscale(100%) contrast(120%);
-    border: var(--border-width-thin) solid var(--border-color);
+.tumblr-post img {
+    filter: grayscale(100%);
+    border: var(--border-width) solid var(--border-color);
     margin-top: 1rem;
-    transition: filter 0.3s ease;
+    width: 100%;
 }
 
 .tumblr-post:hover img {
-    filter: grayscale(0%) contrast(100%);
+    filter: grayscale(0%);
 }
 
 #load-more-btn {
-    background-color: var(--bg-mustard);
-    color: var(--text-charcoal);
-    border: var(--border-width-thin) solid var(--border-color);
-    padding: 0.8rem 2rem;
+    background-color: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    padding: 1rem 3rem;
     font-family: 'IM Fell English', serif;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-#load-more-btn:hover {
-    transform: translate(-4px, -4px);
-    box-shadow: 4px 4px 0 var(--border-color);
+    font-size: 1.8rem;
 }
 
 /* Controls */
 #theme-toggle-control, #music-control {
     position: fixed;
     z-index: 100;
-    background-color: var(--bg-mustard);
-    color: var(--text-charcoal);
-    border: var(--border-width-thin) solid var(--border-color);
+    background-color: var(--bg-panel);
+    border: var(--border-width) solid var(--accent);
+    color: var(--accent);
     padding: 0.5rem 1rem;
     font-family: 'IM Fell English', serif;
     font-size: 1.1rem;
     box-shadow: 4px 4px 0 var(--border-color);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
 }
 
 #theme-toggle-control:hover, #music-control:hover {
@@ -391,8 +288,8 @@ a:hover {
 }
 
 #music-control.playing {
-    background-color: var(--bg-wine);
-    color: var(--text-cream);
+    background-color: var(--accent);
+    color: var(--bg-deep);
 }
 
 /* Modal */
@@ -403,7 +300,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(61, 61, 61, 0.85);
+    background-color: rgba(13, 17, 23, 0.9);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -411,119 +308,37 @@ a:hover {
 }
 
 .modal-content {
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-    border: var(--border-width) solid var(--border-color);
-    box-shadow: 12px 12px 0 var(--bg-wine);
-    padding: 2.5rem;
+    background-color: var(--bg-panel);
+    border: var(--border-width-thick) solid var(--border-color);
+    color: var(--text-primary);
+    padding: 3rem;
     width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+.modal-content h3 { 
+    color: var(--accent); 
+    font-size: 2.5rem;
 }
 
 .modal-content button {
-    background-color: var(--bg-mustard);
-    border: var(--border-width-thin) solid var(--border-color);
+    background-color: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    padding: 1rem;
     font-family: 'IM Fell English', serif;
     font-size: 1.2rem;
-    padding: 0.5rem 1rem;
     cursor: pointer;
-    width: 100%;
 }
 
-/* Input and Form Fields */
-input[type="text"] {
-    background-color: var(--bg-cream);
-    color: var(--text-charcoal);
-    border: var(--border-width-thin) solid var(--border-color);
-    padding: 1rem;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    transition: outline 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
-}
-input[type="text"]:focus {
-    outline: none;
-    box-shadow: 4px 4px 0 var(--border-color);
-    transform: translate(-2px, -2px);
-}
-
-/* Fade-in Observer Support */
-.fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Decorative circle blur - disabled/adapted to grid */
-.circle-shape {
-    display: none; /* keep pure grid geometric look */
-}
-
-/* Dark Mode Box Title Overrides */
-body.dark-mode .panel-cream h1,
-body.dark-mode .panel-cream h2,
-body.dark-mode .panel-cream h3,
-body.dark-mode .panel-mustard h1,
-body.dark-mode .panel-mustard h2,
-body.dark-mode .panel-mustard h3 {
-    color: var(--text-gold);
-}
-
-body.dark-mode .panel-charcoal h1,
-body.dark-mode .panel-charcoal h2,
-body.dark-mode .panel-charcoal h3 {
-    color: var(--bg-wine);
-}
-
-body.dark-mode .panel-wine {
-    color: var(--text-charcoal);
-}
-
-body.dark-mode .tumblr-post h4 {
-    color: var(--text-gold);
-}
-
-/* Responsive Rules */
-@media (max-width: 992px) {
-    .col-8, .col-7, .col-5, .col-4 {
-        grid-column: span 6;
-    }
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 1rem;
-    }
-    
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: var(--border-width);
-    }
-    
-    .col-12, .col-8, .col-7, .col-6, .col-5, .col-4, .col-3 {
-        grid-column: span 12;
-    }
-    
-    .grid-panel {
-        padding: 1.5rem;
-        min-height: auto;
-    }
-    
-    h1 {
-        font-size: 3.5rem;
-    }
-    
-    .vertical-text {
-        position: static;
-        writing-mode: horizontal-tb;
-        margin-top: 1rem;
-        font-size: 1.2rem;
-    }
+/* Responsive */
+@media (max-width: 900px) {
+    .grid-container { grid-template-columns: 1fr; }
+    .col-12, .col-8, .col-7, .col-6, .col-5, .col-4 { grid-column: span 1; }
+    .rotate-right, .rotate-left { transform: none; }
+    .offset-up, .offset-down { margin-top: 0; }
 }

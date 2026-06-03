@@ -33,129 +33,61 @@
 
     <div class="grid-container">
         
-        <!-- PANEL 1: BRAND HEADER (WINE) -->
-        <header class="grid-panel col-6 panel-wine fade-in">
+        <!-- PANEL 1: BRAND HEADER -->
+        <header class="grid-panel col-6 brand-header fade-in">
             <div>
-                <h1 style="margin-bottom: 1rem;">korry.</h1>
-                <p style="font-family: 'IM Fell English', serif; font-size: 1.8rem; line-height: 1; opacity: 0.9;">blog // a collection of personal memories & codes</p>
+                <h1>korry.</h1>
+                <p>blog // a collection of personal memories & codes</p>
             </div>
-            <div class="accent-block" style="background-color: var(--bg-mustard); margin: 1rem 0 0 0;"></div>
         </header>
 
-        <!-- PANEL 2: STATUS & REALITY (MUSTARD) -->
-        <section class="grid-panel col-6 panel-mustard fade-in">
+        <!-- PANEL 2: STATUS & REALITY -->
+        <section class="grid-panel col-6 panel-alt fade-in">
             <div>
-                <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1.5rem; opacity: 0.8;">presence / status</h3>
-                <div id="status-container" style="font-size: 1.1rem; line-height: 1.5; font-family: 'Space Grotesk', sans-serif;">
-                    checking reality...
+                <div class="status-label">presence / status</div>
+                <div id="status-container" class="status-text">
+                    exists & thinking
                 </div>
-                <div class="vertical-text">私について</div>
             </div>
-            <div style="margin-top: 1.5rem; border-top: 3px solid var(--border-color); padding-top: 1rem;">
-                <p style="font-size: 0.95rem; margin-bottom: 0;">
-                    last update:<br><span id="last-updated" style="font-family: monospace; font-size: 0.9rem;">...</span>
+            <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--text-secondary);">
+                    last update: <span id="last-updated" style="font-family: monospace;">...</span>
                 </p>
             </div>
         </section>
 
-        <!-- PANEL: SEMANTIC PAGE FINDER (CHARCOAL) -->
-        <section class="grid-panel col-12 panel-charcoal fade-in">
-            <div style="width: 100%;">
-                <h3 style="margin-bottom: 1.5rem; color: var(--text-gold);">semantic page finder</h3>
+        <!-- PANEL 3: SEMANTIC PAGE FINDER -->
+        <section class="grid-panel col-12 panel-deep fade-in">
+            <div class="search-container">
+                <h3 style="margin-bottom: 1.5rem;">semantic page finder</h3>
                 <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                    <input type="text" id="search-input" placeholder="type a topic or keyword (e.g. 'keyboard', 'space', 'writing')..." style="flex: 1; min-width: 250px; padding: 1rem; border: var(--border-width-thin) solid var(--border-color); background-color: var(--bg-cream); color: var(--text-charcoal); font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700;">
-                    <button id="search-btn" style="background-color: var(--bg-mustard); color: var(--text-charcoal); border: var(--border-width-thin) solid var(--border-color); padding: 1rem 2rem; font-family: 'IM Fell English', serif; font-size: 1.4rem; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.1s ease;">find</button>
+                    <input type="text" id="search-input" placeholder="find something...">
+                    <button id="search-btn">find</button>
                 </div>
-                <div id="search-results" style="display: none; flex-direction: column; gap: 1rem; border-top: 3px solid var(--border-color); padding-top: 1.5rem;">
-                    <!-- Results populated by JS -->
+                <div id="search-results" style="display: none; flex-direction: column; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
                 </div>
             </div>
         </section>
 
-        <!-- 
-            =============================================================================
-             UNDER THE HOOD - CLIENT-SIDE SEMANTIC SEARCH ENGINE - OFC AI GENERATED
-            =============================================================================
-            
-            This search engine operates entirely client-side, running a textbook Vector 
-            Space Model augmented by custom trained spectral embeddings! Here is how 
-            it works mathematically and graphically:
-
-            1. THE SPECTRAL LSA MATHEMATICAL MODEL (build-index.js):
-               -------------------------------------------------------------------------
-               * Tokenization: All pages are recursively parsed. HTML markup, scripts,
-                 and standard stop-words are eliminated to extract raw clean tokens.
-               
-               * Co-occurrence Matrix: A sliding window of size 8 slides across all page 
-                 token arrays to compute term-term co-occurrence counts.
-               
-               * PPMI Weighting: RAW counts are transformed into a Positive Pointwise Mutual 
-                 Information (PPMI) matrix:
-                     PPMI(w_i, w_j) = max(0, log2( P(w_i, w_j) / (P(w_i) * P(w_j)) ))
-                 This measures the actual semantic association between words, bypassing 
-                 high-frequency unigram biases.
-               
-               * Singular Value Decomposition (SVD): A pure Jacobi/spectral power iteration 
-                 solver with Gram-Schmidt orthogonalization and matrix deflation factorizes 
-                 the symmetric PPMI matrix:
-                     A = U * S * V^T
-                 It extracts the top 8 eigenvectors and eigenvalues (S), projecting the 
-                 300-word vocabulary into an 8-dimensional dense concept space.
-                 Word vector coordinates: w_coord = sqrt(eigenvalue) * eigenvector.
-               
-               * Document Embeddings: Page vectors are calculated by averaging the dense 
-                 vectors of their vocabulary unigrams, and then normalized to unit length:
-                     vec_doc = v / ||v||_2
-
-            2. THE RUNTIME CLIENT-SIDE CO-OCCURRENCE RETRIEVAL (script.js):
-               -------------------------------------------------------------------------
-               * Query Projection: Query strings are tokenized. Word vectors are looked 
-                 up in the pre-compiled dictionary and averaged to construct a 
-                 query vector (vec_query), which is normalized to unit length.
-               
-               * Cosine Similarity: Matching is simplified to a lightning-fast dot product 
-                 since all vectors are pre-normalized to unit magnitude (||v|| = 1):
-                     Similarity = vec_query . vec_doc = sum_{d=0}^{7} (vec_query[d] * vec_doc[d])
-               
-               * Search Cascade: Prioritizes vector matching. Falls back to a deep full-text 
-                 plain content scan if no vector overlaps are resolved.
-
-            3. SVG RADAR CHART GENERATION:
-               -------------------------------------------------------------------------
-               * 8-Dimensional Mapping: The 8 vector concept dimensions are projected on a 
-                 polar coordinate circle with radius R=28 centered at (35, 35).
-               
-               * Coordinate Geometry: The angle for axis d (d=0..7) is calculated as:
-                     theta_d = d * (2 * pi / 8) - (pi / 2)  [offset to point upward]
-               
-               * Point Projection: The 2D coordinates for the SVG polygon are:
-                     x_d = cx + R * vector[d] * cos(theta_d)
-                     y_d = cy + R * vector[d] * sin(theta_d)
-               
-               * Drawing: Renders grid boundaries using concentric circles and traces the 
-                 concept vector shape using a native HTML5 SVG <polygon>.
-            =============================================================================
-        -->
-
-        <!-- PANEL 3: INTRO / BIO (CREAM) -->
-        <section id="intro-scene" class="grid-panel col-7 panel-cream fade-in">
+        <!-- PANEL 4: INTRO / BIO -->
+        <section id="intro-scene" class="grid-panel col-8 rotate-left fade-in">
             <div>
                 <h2 style="margin-bottom: 1.5rem;">hello.</h2>
                 <p>hello, korry here.</p>
                 <p>this website is well, forever wip cuz i keep changing it, but this is a collection of my work i like to show and some other stuff which i think are cool.</p>
-                <p style="color: var(--bg-wine); margin-bottom: 0;">i am still in college and learning and yeah thats it.</p>
+                <p>i am still in college and learning and yeah thats it.</p>
             </div>
         </section>
 
-        <!-- PANEL 4: THOUGHTS / QUOTE (CHARCOAL) -->
-        <section class="grid-panel col-5 panel-charcoal fade-in" style="justify-content: center;">
-            <div id="quote-display" class="quote-container">
+        <!-- PANEL 5: THOUGHTS / QUOTE -->
+        <section class="grid-panel col-4 rotate-right offset-up panel-deep fade-in" style="justify-content: center;">
+            <div id="quote-display" style="font-family: 'IM Fell English', serif; font-size: 1.8rem; text-align: center;">
                 <!-- Populated by JS -->
             </div>
         </section>
 
-        <!-- PANEL 5: ARTIFACTS / PROJECTS (CREAM) -->
-        <section class="grid-panel col-8 panel-cream fade-in">
+        <!-- PANEL 6: ARTIFACTS / PROJECTS -->
+        <section class="grid-panel col-8 rotate-right fade-in">
             <div>
                 <h2 style="margin-bottom: 2rem;">artifacts.</h2>
                 <div class="project-list">
@@ -177,23 +109,23 @@
             </div>
         </section>
 
-        <!-- PANEL 6: RECENT POSTS (WINE) -->
-        <section class="grid-panel col-4 panel-wine fade-in">
+        <!-- PANEL 7: RECENT POSTS -->
+        <section class="grid-panel col-6 rotate-left offset-up panel-alt fade-in">
             <div>
-                <h3 style="letter-spacing: 2px; text-transform: uppercase; font-weight: bold; font-size: 1.4rem; margin-bottom: 1.5rem;">recent posts</h3>
-                <ul id="blog-mini-stream" class="log-list" style="margin-top: 0;">
+                <h3 style="margin-bottom: 1.5rem;">recent posts</h3>
+                <ul id="blog-mini-stream" class="log-list">
                     <li class="log-item" style="opacity: 0.5; font-size: 0.8rem;">receiving signal...</li>
                 </ul>
             </div>
-            <div>
-                <a href="/blog/index.html" style="font-size: 1.1rem; border-bottom: 3px solid currentColor; margin-top: 1rem;">archive →</a>
+            <div style="margin-top: 2rem;">
+                <a href="/blog/index.html">archive →</a>
             </div>
         </section>
 
-        <!-- PANEL 7: LOGS (CHARCOAL) -->
-        <section class="grid-panel col-6 panel-charcoal fade-in">
+        <!-- PANEL 8: LOGS -->
+        <section class="grid-panel col-4 rotate-right panel-alt fade-in">
             <div>
-                <h2 style="margin-bottom: 1.5rem;">logs.</h2>
+                <h3 style="margin-bottom: 1.5rem;">logs.</h3>
                 <ul class="log-list">
                     <li class="log-item"><a href="/blog/index.html" class="log-link">blog</a></li>
                     <li class="log-item"><a href="/rss.xml" class="log-link">rss</a></li>
@@ -202,24 +134,24 @@
             </div>
         </section>
 
-        <!-- PANEL 8: CONNECT (CREAM) -->
-        <section class="grid-panel col-6 panel-cream fade-in">
+        <!-- PANEL 9: CONNECT -->
+        <section class="grid-panel col-6 rotate-left fade-in">
             <div>
-                <h2 style="margin-bottom: 1.5rem;">connect.</h2>
+                <h3 style="margin-bottom: 1.5rem;">connect.</h3>
                 <ul class="log-list">
                     <li class="log-item"><a href="/sitemap.html" class="log-link">sitemap</a></li>
                     <li class="log-item"><a href="/guestbook.html" class="log-link">guestbook</a></li>
                     <li class="log-item"><a href="https://github.com/korrykatti" class="log-link">github</a></li>
-                    <li class="log-item" style="text-decoration: line-through; opacity: 0.6;"><a href="https://x.com/dunkelkron" class="log-link">X</a> <span style="font-size: 0.8rem;">(suspended 1 june 2026 for no reason)</span></li>
-                    <li class="log-item"><a href="#" id="open-modal-btn" class="log-link" style="color: var(--bg-wine);">transmit msg</a></li>
+                    <li class="log-item" style="opacity: 0.5; text-decoration: line-through;"><a href="https://x.com/dunkelkron" class="log-link">X</a> <span style="font-size: 0.8rem;">(suspended 1 june 2026)</span></li>
+                    <li class="log-item"><a href="#" id="open-modal-btn" class="log-link">transmit msg</a></li>
                 </ul>
             </div>
         </section>
 
-        <!-- PANEL 9: TUMBLR FEED (MUSTARD) -->
-        <section class="grid-panel col-12 panel-mustard fade-in">
+        <!-- PANEL 10: TUMBLR FEED -->
+        <section class="grid-panel col-12 panel-alt fade-in">
             <div style="width: 100%;">
-                <h2 style="margin-bottom: 2.5rem; border-bottom: 6px solid var(--border-color); padding-bottom: 1rem;">tumblr feed <span style="font-size: 1.5rem; opacity: 0.8; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">(social stream)</span></h2>
+                <h2 style="margin-bottom: 2.5rem; border-bottom: 3px solid var(--accent); padding-bottom: 1rem;">tumblr feed</h2>
                 
                 <div id="tumblr-posts">
                     <!-- Tumblr content -->
@@ -228,7 +160,7 @@
                 <div style="text-align: center; margin-top: 4rem;">
                     <button id="load-more-btn">more...</button>
                 </div>
-                <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0; font-family: 'IM Fell English', serif; font-size: 1.5rem;">seeking...</div>
+                <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0; font-family: 'IM Fell English', serif; font-size: 1.5rem; color: var(--accent);">seeking...</div>
             </div>
         </section>
         
