@@ -16,7 +16,7 @@
         });
     }
 
-    function highlightFirstLetters(element) {
+    function applyBionicReading(element) {
         const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
         const nodes = [];
         let node;
@@ -32,18 +32,31 @@
 
         nodes.forEach(textNode => {
             const text = textNode.nodeValue;
-            // Match words with 2 or more letters
-            const parts = text.split(/(\b[a-zA-Z][a-zA-Z]+\b)/g);
+            // Match words (including single letters)
+            const parts = text.split(/(\b[a-zA-Z]+\b)/g);
             if (parts.length > 1) {
                 const fragment = document.createDocumentFragment();
                 parts.forEach(part => {
-                    const match = part.match(/^([a-zA-Z])([a-zA-Z]+)$/);
-                    if (match) {
+                    if (/^[a-zA-Z]+$/.test(part)) {
+                        const len = part.length;
+                        let highlightCount = 1;
+                        
+                        if (len <= 3) {
+                            highlightCount = 1; 
+                        } else {
+                            highlightCount = Math.floor(len * 0.4) || 1;
+                        }
+                        
+                        const boldPart = part.substring(0, highlightCount);
+                        const restPart = part.substring(highlightCount);
+                        
                         const span = document.createElement('span');
                         span.className = 'b-letter';
-                        span.textContent = match[1];
+                        span.textContent = boldPart;
                         fragment.appendChild(span);
-                        fragment.appendChild(document.createTextNode(match[2]));
+                        if (restPart) {
+                            fragment.appendChild(document.createTextNode(restPart));
+                        }
                     } else {
                         fragment.appendChild(document.createTextNode(part));
                     }
@@ -54,5 +67,5 @@
     }
 
     const postContents = document.querySelectorAll('.post-content');
-    postContents.forEach(highlightFirstLetters);
+    postContents.forEach(applyBionicReading);
 })();
