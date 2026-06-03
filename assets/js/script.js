@@ -1,27 +1,29 @@
 // Modal functionality
 document.addEventListener('DOMContentLoaded', () => {
     const openModalBtn = document.getElementById('open-modal-btn');
-    const modal = document.getElementById('modal');
+    const modal = document.getElementById('chatbox-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
 
-    if (openModalBtn) {
+    if (openModalBtn && modal) {
         openModalBtn.addEventListener('click', (e) => {
             e.preventDefault();
             modal.style.display = 'flex';
         });
     }
 
-    if (closeModalBtn) {
+    if (closeModalBtn && modal) {
         closeModalBtn.addEventListener('click', () => {
             modal.style.display = 'none';
         });
     }
 
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
 
     // Dark Theme Toggle
     const themeBtn = document.getElementById('theme-toggle-btn');
@@ -512,7 +514,7 @@ window.addEventListener('load', () => {
                 <!-- Axes -->
                 ${axesLines.join('')}
                 <!-- Radar Polygon -->
-                <polygon points="${polygonPath}" fill="var(--bg-mustard)" fill-opacity="0.3" stroke="var(--bg-wine)" stroke-width="1.5"/>
+                <polygon points="${polygonPath}" fill="var(--accent)" fill-opacity="0.3" stroke="var(--accent)" stroke-width="1.5"/>
             </svg>
         `;
     }

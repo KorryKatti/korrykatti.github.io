@@ -24,7 +24,7 @@
     <meta name="twitter:image" content="https://korrykatti.github.io/assets/img/main-image.png">
 
     <link rel="icon" href="assets/img/icon.jpeg">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.1">
     <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
     <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
@@ -171,7 +171,7 @@
 
     <div style="text-align: center; margin-bottom: 4rem; opacity: 0.9;">
         <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
-            style="border: var(--border-width-thin) solid var(--border-color); padding: 5px; background: var(--bg-cream); max-width: 250px;">
+            style="border: var(--border-width) solid var(--border-color); padding: 5px; background: var(--bg-panel-alt); max-width: 250px;">
     </div>
 
     <!-- Theme Toggle Control -->
@@ -186,13 +186,13 @@
     <div id="youtube-player" style="display:none;"></div>
 
     <!-- Modal -->
-    <div id="modal" class="modal">
+    <div id="chatbox-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h3 style="color: var(--bg-wine); font-size: 2.2rem;">direct_line</h3>
-            <p style="margin-bottom: 1rem; color: var(--text-charcoal); font-weight: 700;">leave a message after the beep.</p>
+            <h3>direct_line</h3>
+            <p style="margin-bottom: 1rem; color: var(--text-secondary); font-weight: 400;">leave a message after the beep.</p>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="300" frameBorder="0"
-                style="border: var(--border-width-thin) solid var(--border-color);"></iframe>
-            <button id="close-modal-btn" style="margin-top: 1rem; width: 100%;">
+                style="border: var(--border-width) solid var(--border-color);"></iframe>
+            <button id="close-modal-btn">
                 terminate connection
             </button>
         </div>
