@@ -24,172 +24,162 @@
     <meta name="twitter:image" content="https://korrykatti.github.io/assets/img/main-image.png">
 
     <link rel="icon" href="assets/img/icon.jpeg">
-    <link rel="stylesheet" href="style.css?v=2.1">
+    <link rel="stylesheet" href="style.css?v=2.2">
     <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
     <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
 <body>
+    <div id="scroll-progress" style="position: fixed; top: 0; left: 0; width: 0%; height: 2px; background: var(--accent); z-index: 9999; transition: width 0.1s ease;"></div>
 
-    <div class="grid-container">
-        
-        <!-- PANEL 1: BRAND HEADER -->
-        <header class="grid-panel col-6 brand-header fade-in">
-            <div>
-                <h1>korry.</h1>
-                <p>blog // a collection of personal memories & codes</p>
+    <div class="app-container">
+        <!-- Top Bar: Consolidated Data Strip -->
+        <nav class="top-bar fade-in" style="margin-bottom: 4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; font-family: monospace; font-size: 0.8rem;">
+                <div id="status-container" style="display: flex; align-items: center; gap: 0.5rem;">
+                    stat: thinking
+                </div>
+                <div style="opacity: 0.3;">::</div>
+                <div id="wakatime-display">
+                    telemetry_off
+                </div>
+                <div style="opacity: 0.3;">::</div>
+                <div id="github-display">
+                    signal_lost
+                </div>
+                <div style="opacity: 0.3;">::</div>
+                <div id="last-updated">
+                    ...
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero: Header & Intro -->
+        <header class="section fade-in" id="intro-scene">
+            <h1>korry.</h1>
+            <p style="font-size: 1.4rem; color: var(--accent); margin-bottom: 2rem; font-family: 'IM Fell English', serif;">blog // a collection of personal memories & codes</p>
+            
+            <div style="max-width: 700px;">
+                <p>hello, korry here. this website is a collection of my work and some other stuff i think are cool.</p>
+                <p>it's forever a work in progress, much like myself. currently in college, learning, and building.</p>
             </div>
         </header>
 
-        <!-- PANEL 2: STATUS & REALITY -->
-        <section class="grid-panel col-6 panel-alt fade-in">
-            <div>
-                <div class="status-label">presence / status</div>
-                <div id="status-container" class="status-text">
-                    exists & thinking
-                </div>
-            </div>
-            <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
-                <p style="font-size: 0.9rem; margin-bottom: 0; color: var(--text-secondary);">
-                    last update: <span id="last-updated" style="font-family: monospace;">...</span>
-                </p>
-            </div>
-        </section>
+        <div class="editorial-grid">
+            <!-- Main Content Area -->
+            <main class="main-content">
+                
+                <!-- Artifacts / Projects -->
+                <section class="section fade-in">
+                    <h2>artifacts.</h2>
+                    <div class="project-list">
+                        <a href="apps/index.html" class="project-item">
+                            <span class="project-title">smol apps</span>
+                            <span class="project-desc">tiny tools for daily use</span>
+                        </a>
 
-        <!-- PANEL 3: SEMANTIC PAGE FINDER -->
-        <section class="grid-panel col-12 panel-deep fade-in">
-            <div class="search-container">
-                <h3 style="margin-bottom: 1.5rem;">semantic page finder</h3>
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
+                            <span class="project-title">image_board</span>
+                            <span class="project-desc">visual memory storage</span>
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Recent Posts -->
+                <section class="section fade-in">
+                    <h2>recent posts.</h2>
+                    <ul id="blog-mini-stream" class="log-list">
+                        <li class="log-item" style="opacity: 0.5;">receiving signal...</li>
+                    </ul>
+                    <div style="margin-top: 2rem;">
+                        <a href="/blog/index.html" class="serif-text" style="font-size: 1.4rem;">archive →</a>
+                    </div>
+                </section>
+
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                
+                <!-- Semantic Page Finder -->
+                <div class="sidebar-module search-container fade-in">
+                    <h3>finder</h3>
                     <input type="text" id="search-input" placeholder="find something...">
                     <button id="search-btn">find</button>
+                    <div id="search-results" style="display: none; margin-top: 1.5rem; flex-direction: column; gap: 1rem;"></div>
                 </div>
-                <div id="search-results" style="display: none; flex-direction: column; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+
+                <!-- Logs -->
+                <div class="sidebar-module fade-in">
+                    <h3>logs</h3>
+                    <ul class="log-list">
+                        <li class="log-item"><a href="/blog/index.html" class="log-link serif-text">blog</a></li>
+                        <li class="log-item"><a href="/rss.xml" class="log-link serif-text">rss</a></li>
+                        <li class="log-item"><a href="logs.html" class="log-link serif-text">tumblr page</a></li>
+                    </ul>
                 </div>
-            </div>
-        </section>
 
-        <!-- PANEL 4: INTRO / BIO -->
-        <section id="intro-scene" class="grid-panel col-8 rotate-left fade-in">
-            <div>
-                <h2 style="margin-bottom: 1.5rem;">hello.</h2>
-                <p>hello, korry here.</p>
-                <p>this website is well, forever wip cuz i keep changing it, but this is a collection of my work i like to show and some other stuff which i think are cool.</p>
-                <p>i am still in college and learning and yeah thats it.</p>
-            </div>
-        </section>
+                <!-- Connect -->
+                <div class="sidebar-module fade-in">
+                    <h3>connect</h3>
+                    <ul class="log-list">
+                        <li class="log-item"><a href="/sitemap.html" class="log-link serif-text">sitemap</a></li>
+                        <li class="log-item"><a href="/guestbook.html" class="log-link serif-text">guestbook</a></li>
+                        <li class="log-item"><a href="https://github.com/korrykatti" class="log-link serif-text">github</a></li>
+                        <li class="log-item"><a href="https://x.com/dunkelkron" class="log-link serif-text">X</a></li>
+                        <li class="log-item"><a href="#" id="open-modal-btn" class="log-link serif-text">transmit msg</a></li>
+                    </ul>
+                </div>
 
-        <!-- PANEL 5: THOUGHTS / QUOTE -->
-        <section class="grid-panel col-4 rotate-right offset-up panel-deep fade-in" style="justify-content: center;">
-            <div id="quote-display" style="font-family: 'IM Fell English', serif; font-size: 1.8rem; text-align: center;">
+                <!-- Quote Display -->
+                <div class="quote-container fade-in">
+                    <div id="quote-display">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+
+        <!-- Tumblr Feed -->
+        <section class="tumblr-section fade-in">
+            <h2>tumblr feed.</h2>
+            <div id="tumblr-posts">
                 <!-- Populated by JS -->
             </div>
-        </section>
-
-        <!-- PANEL 6: ARTIFACTS / PROJECTS -->
-        <section class="grid-panel col-8 rotate-right fade-in">
-            <div>
-                <h2 style="margin-bottom: 2rem;">artifacts.</h2>
-                <div class="project-list">
-                    <a href="apps/index.html" class="project-item">
-                        <span class="project-title">smol apps</span>
-                        <span class="project-desc">tiny tools for daily use</span>
-                    </a>
-
-                    <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
-                        <span class="project-title">image_board</span>
-                        <span class="project-desc">visual memory storage</span>
-                    </a>
-
-
-                </div>
+            <div style="text-align: center; margin-top: 4rem;">
+                <button id="load-more-btn" class="control-btn">more...</button>
+                <div id="loader" style="opacity: 0; margin-top: 1rem; font-family: 'IM Fell English', serif; color: var(--accent);">seeking...</div>
             </div>
         </section>
 
-        <!-- PANEL 7: RECENT POSTS -->
-        <section class="grid-panel col-6 rotate-left offset-up panel-alt fade-in">
-            <div>
-                <h3 style="margin-bottom: 1.5rem;">recent posts</h3>
-                <ul id="blog-mini-stream" class="log-list">
-                    <li class="log-item" style="opacity: 0.5; font-size: 0.8rem;">receiving signal...</li>
-                </ul>
+        <!-- Footer Info -->
+        <footer style="margin-top: 8rem; padding-bottom: 4rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 4rem;">
+            <div style="margin-bottom: 2rem;">
+                <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
+                    style="border: 1px solid var(--border-color); padding: 5px; background: var(--bg-panel-alt); max-width: 200px;">
             </div>
-            <div style="margin-top: 2rem;">
-                <a href="/blog/index.html">archive →</a>
-            </div>
-        </section>
-
-        <!-- PANEL 8: LOGS -->
-        <section class="grid-panel col-4 rotate-right panel-alt fade-in">
-            <div>
-                <h3 style="margin-bottom: 1.5rem;">logs.</h3>
-                <ul class="log-list">
-                    <li class="log-item"><a href="/blog/index.html" class="log-link">blog</a></li>
-                    <li class="log-item"><a href="/rss.xml" class="log-link">rss</a></li>
-                    <li class="log-item"><a href="logs.html" class="log-link">tumblr page</a></li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- PANEL 9: CONNECT -->
-        <section class="grid-panel col-6 rotate-left fade-in">
-            <div>
-                <h3 style="margin-bottom: 1.5rem;">connect.</h3>
-                <ul class="log-list">
-                    <li class="log-item"><a href="/sitemap.html" class="log-link">sitemap</a></li>
-                    <li class="log-item"><a href="/guestbook.html" class="log-link">guestbook</a></li>
-                    <li class="log-item"><a href="https://github.com/korrykatti" class="log-link">github</a></li>
-                    <li class="log-item" style="opacity: 0.5; text-decoration: line-through;"><a href="https://x.com/dunkelkron" class="log-link">X</a> <span style="font-size: 0.8rem;">(suspended 1 june 2026)</span></li>
-                    <li class="log-item"><a href="#" id="open-modal-btn" class="log-link">transmit msg</a></li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- PANEL 10: TUMBLR FEED -->
-        <section class="grid-panel col-12 panel-alt fade-in">
-            <div style="width: 100%;">
-                <h2 style="margin-bottom: 2.5rem; border-bottom: 3px solid var(--accent); padding-bottom: 1rem;">tumblr feed</h2>
-                
-                <div id="tumblr-posts">
-                    <!-- Tumblr content -->
-                </div>
-
-                <div style="text-align: center; margin-top: 4rem;">
-                    <button id="load-more-btn">more...</button>
-                </div>
-                <div id="loader" style="text-align: center; margin-top: 20px; opacity: 0; font-family: 'IM Fell English', serif; font-size: 1.5rem; color: var(--accent);">seeking...</div>
-            </div>
-        </section>
-        
+            <p style="font-size: 0.8rem; opacity: 0.5;">&copy; 2026 korry. all rights reserved.</p>
+        </footer>
     </div>
 
-    <!-- Bottom Spacing & Counter -->
-    <div style="height: 10vh;"></div>
-
-    <div style="text-align: center; margin-bottom: 4rem; opacity: 0.9;">
-        <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
-            style="border: var(--border-width) solid var(--border-color); padding: 5px; background: var(--bg-panel-alt); max-width: 250px;">
+    <!-- Fixed Controls -->
+    <div class="fixed-controls">
+        <div id="music-control">
+            <span id="play-btn" class="control-btn">▶ play</span>
+        </div>
     </div>
 
-    <!-- Theme Toggle Control -->
-    <div id="theme-toggle-control">
-        <span id="theme-toggle-btn">☾ dark mode</span>
-    </div>
-
-    <!-- Music Player Control -->
-    <div id="music-control">
-        <span id="play-btn">▶ play</span>
-    </div>
     <div id="youtube-player" style="display:none;"></div>
 
-    <!-- Modal -->
-    <div id="chatbox-modal" class="modal" style="display: none;">
+    <!-- Direct Line Modal -->
+    <div id="chatbox-modal" class="modal">
         <div class="modal-content">
             <h3>direct_line</h3>
-            <p style="margin-bottom: 1rem; color: var(--text-secondary); font-weight: 400;">leave a message after the beep.</p>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">leave a message after the beep.</p>
             <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="300" frameBorder="0"
-                style="border: var(--border-width) solid var(--border-color);"></iframe>
-            <button id="close-modal-btn">
+                style="border: 1px solid var(--border-color); margin-bottom: 2rem;"></iframe>
+            <button id="close-modal-btn" class="control-btn" style="width: 100%;">
                 terminate connection
             </button>
         </div>

@@ -1,226 +1,233 @@
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Space+Grotesk:wght@300;500;700&display=swap');
 
 :root {
-    /* Obsidian & Blue Palette */
-    --bg-deep: #0d1117;
-    --bg-panel: #1a1a1a;
-    --bg-panel-alt: #161616;
-    --text-primary: #e8e8e8;
-    --text-secondary: #a0a0a0;
-    --text-dim: #d0d0d0;
-    --accent: #64b5f6;
-    --border-color: #404040;
-    --border-width: 3px;
-    --border-width-thick: 8px;
+    /* Solarized Dark Editorial Palette */
+    --bg-deep: #002b36;     /* Base03 */
+    --bg-panel: #073642;    /* Base02 */
+    --bg-panel-alt: #00212b; /* Slightly darker than Base03 */
+    --text-primary: #839496;  /* Base0 */
+    --text-secondary: #586e75; /* Base01 */
+    --text-dim: #657b83;     /* Base00 */
+    --accent: #2aa198;       /* Cyan */
+    --accent-alt: #268bd2;   /* Blue */
+    --border-color: rgba(38, 139, 210, 0.15);
+    --border-width: 1px;
+    --transition-smooth: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Dark Theme is default now */
-body {
-    background-color: var(--bg-deep);
-    color: var(--text-primary);
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    line-height: 1.4;
-    padding: 4vw;
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+.dark-mode {
+    /* Optional: adjustments for dark mode if it differs from default */
 }
 
+/* Base Styles */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+body {
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+/* Layout */
+.app-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+}
+
+.editorial-grid {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr;
+    gap: 6rem;
+    margin-top: 4rem;
+}
+
+@media (max-width: 900px) {
+    .editorial-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    .app-container {
+        padding: 2rem 1.5rem;
+    }
+}
+
 /* Typography */
 h1, h2, h3, h4, .serif-text {
     font-family: 'IM Fell English', Georgia, serif;
     font-weight: 400;
-    line-height: 0.9;
+    line-height: 1.1;
     text-transform: lowercase;
     color: var(--accent);
 }
 
 h1 {
-    font-size: clamp(3.5rem, 8vw, 7.5rem);
-    letter-spacing: -2px;
+    font-size: clamp(4rem, 12vw, 9rem);
+    letter-spacing: -3px;
+    margin-bottom: 0.5rem;
 }
 
 h2 {
-    font-size: clamp(2.5rem, 6vw, 5rem);
-    letter-spacing: -1.5px;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 2rem;
 }
 
 h3 {
-    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
 p {
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    text-align: justify;
-    hyphens: auto;
+    font-size: 1.15rem;
+    margin-bottom: 1.5rem;
     color: var(--text-dim);
+}
+
+/* Navigation / Top Bar */
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+}
+
+/* Sections */
+.section {
+    margin-bottom: 6rem;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.section:hover {
+    background: rgba(42, 161, 152, 0.03); /* Subtle accent tint */
 }
 
 /* Links */
 a {
     color: var(--accent);
     text-decoration: none;
-    border-bottom: 3px solid var(--accent);
-    transition: all 0.2s ease;
-    display: inline-block;
+    transition: var(--transition-smooth);
+    border-bottom: 1px solid transparent;
 }
 
 a:hover {
-    background-color: var(--accent);
-    color: var(--bg-deep);
+    border-bottom-color: var(--accent);
+    opacity: 0.8;
 }
 
-/* Asymmetric Grid */
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
-    position: relative;
-}
-
-/* Panel base */
-.grid-panel {
-    background-color: var(--bg-panel);
-    padding: 3rem;
-    position: relative;
-    border: var(--border-width) solid var(--border-color);
+/* Project List */
+.project-list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 350px;
-    transition: transform 0.3s ease;
+    gap: 2rem;
 }
 
-/* Broken Grid Effects */
-.rotate-right { transform: rotate(1.5deg); z-index: 2; }
-.rotate-left { transform: rotate(-1.5deg); z-index: 2; }
-.offset-up { margin-top: -2rem; }
-.offset-down { margin-top: 2rem; }
-.layer-top { z-index: 10; }
-
-.grid-panel:hover {
-    transform: translate(-4px, -4px) rotate(0deg);
-    border-color: var(--accent);
-}
-
-/* Column sizes */
-.col-12 { grid-column: span 12; }
-.col-8 { grid-column: span 8; }
-.col-7 { grid-column: span 7; }
-.col-6 { grid-column: span 6; }
-.col-5 { grid-column: span 5; }
-.col-4 { grid-column: span 4; }
-.col-3 { grid-column: span 3; }
-
-/* Specific Panel Themes */
-.panel-alt { background-color: var(--bg-panel-alt); }
-.panel-deep { background-color: var(--bg-deep); }
-
-.brand-header {
-    border-bottom: var(--border-width-thick) solid var(--accent);
-    background-color: var(--bg-panel-alt);
-}
-
-.brand-header h1 { color: var(--accent); }
-.brand-header p { color: var(--text-secondary); }
-
-.status-label {
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-size: 1rem;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-}
-
-.status-text {
-    font-size: 1.4rem;
-    color: var(--accent);
-}
-
-/* Search Bar */
-.search-container {
-    width: 100%;
-}
-
-input[type="text"] {
-    background-color: var(--bg-deep);
-    color: var(--text-primary);
-    border: var(--border-width) solid var(--border-color);
-    padding: 1.2rem;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.2rem;
-    flex: 1;
-}
-
-input[type="text"]:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-#search-btn {
-    background-color: var(--accent);
-    color: var(--bg-deep);
-    border: none;
-    padding: 1rem 2rem;
-    font-family: 'IM Fell English', serif;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-/* Artifacts */
 .project-item {
-    padding: 1.5rem 0;
-    border-bottom: var(--border-width) solid var(--border-color);
     display: block;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-}
-
-.project-item:last-child {
-    border-bottom: none;
+    padding: 2rem;
+    background: var(--bg-panel);
+    border: var(--border-width) solid var(--border-color);
+    transition: var(--transition-smooth);
+    border-bottom: var(--border-width) solid var(--border-color); /* override default a tag */
 }
 
 .project-item:hover {
-    background-color: transparent;
-    border-bottom-color: var(--accent);
+    transform: translateY(-5px);
+    background: var(--bg-panel-alt);
+    border-color: var(--accent);
+    opacity: 1;
 }
 
 .project-title {
-    font-size: 2rem;
-    color: var(--text-primary);
+    font-family: 'IM Fell English', serif;
+    font-size: 2.2rem;
     display: block;
+    margin-bottom: 0.5rem;
 }
 
 .project-desc {
+    font-size: 1rem;
     color: var(--text-secondary);
-    font-weight: 400;
+    font-weight: 300;
 }
 
-/* Lists */
-.log-list { list-style: none; }
+/* Sidebar Components */
+.sidebar-module {
+    margin-bottom: 4rem;
+}
+
+.search-container input {
+    width: 100%;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.search-container button {
+    width: 100%;
+    background: var(--accent);
+    color: var(--bg-deep);
+    border: none;
+    padding: 0.8rem;
+    font-family: 'IM Fell English', serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.search-container button:hover {
+    filter: brightness(1.1);
+}
+
+/* Log / Post Lists */
+.log-list {
+    list-style: none;
+}
+
 .log-item {
-    padding: 0.8rem 0;
+    padding: 1rem 0;
     border-bottom: 1px solid var(--border-color);
 }
+
 .log-link {
-    font-family: 'IM Fell English', serif;
-    font-size: 1.8rem;
-    border-bottom: none;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
-/* Tumblr Card Grid */
+/* Status Panel */
+.status-card {
+    padding: 1.5rem;
+    background: var(--bg-panel-alt);
+    border-left: 4px solid var(--accent);
+    font-size: 0.95rem;
+}
+
+/* Tumblr Feed */
+.tumblr-section {
+    margin-top: 8rem;
+    padding-top: 4rem;
+    border-top: 1px solid var(--border-color);
+}
+
 #tumblr-posts {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -228,67 +235,51 @@ input[type="text"]:focus {
 }
 
 .tumblr-post {
-    background-color: var(--bg-panel);
-    border: var(--border-width) solid var(--border-color);
-    padding: 1.5rem;
+    background: var(--bg-panel);
+    padding: 2rem;
+    border: 1px solid var(--border-color);
 }
 
-.tumblr-post h4 {
-    color: var(--accent);
+.tumblr-post h4 a {
+    font-size: 1.5rem;
+    border-bottom: none;
 }
 
-.tumblr-post img {
-    filter: grayscale(100%);
-    border: var(--border-width) solid var(--border-color);
-    margin-top: 1rem;
-    width: 100%;
-}
-
-.tumblr-post:hover img {
-    filter: grayscale(0%);
-}
-
-#load-more-btn {
-    background-color: var(--accent);
-    color: var(--bg-deep);
-    border: none;
-    padding: 1rem 3rem;
-    font-family: 'IM Fell English', serif;
-    font-size: 1.8rem;
+.tumblr-post .post-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
 }
 
 /* Controls */
-#theme-toggle-control, #music-control {
+.fixed-controls {
     position: fixed;
-    z-index: 100;
-    background-color: var(--bg-panel);
-    border: var(--border-width) solid var(--accent);
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    z-index: 1000;
+}
+
+.control-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--accent);
     color: var(--accent);
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     font-family: 'IM Fell English', serif;
-    font-size: 1.1rem;
-    box-shadow: 4px 4px 0 var(--border-color);
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
     cursor: pointer;
+    transition: var(--transition-smooth);
+    box-shadow: 4px 4px 0 rgba(96, 165, 250, 0.2);
 }
 
-#theme-toggle-control:hover, #music-control:hover {
+.control-btn:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 2px 2px 0 var(--border-color);
+    box-shadow: 6px 6px 0 rgba(96, 165, 250, 0.3);
 }
 
-#theme-toggle-control {
-    bottom: 80px;
-    right: 20px;
-}
-
-#music-control {
-    bottom: 20px;
-    right: 20px;
-}
-
-#music-control.playing {
-    background-color: var(--accent);
+.control-btn.playing {
+    background: var(--accent);
     color: var(--bg-deep);
 }
 
@@ -300,45 +291,64 @@ input[type="text"]:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(13, 17, 23, 0.9);
-    z-index: 1000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: 2rem;
 }
 
 .modal-content {
-    background-color: var(--bg-panel);
-    border: var(--border-width-thick) solid var(--border-color);
-    color: var(--text-primary);
-    padding: 3rem;
+    background: var(--bg-panel);
     width: 100%;
     max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    padding: 3rem;
+    border: 1px solid var(--accent);
 }
 
-.modal-content h3 { 
-    color: var(--accent); 
-    font-size: 2.5rem;
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.modal-content button {
-    background-color: var(--accent);
-    color: var(--bg-deep);
-    border: none;
-    padding: 1rem;
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mini Quote */
+.quote-container {
+    margin-top: 4rem;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+#quote-display {
+    font-size: 1.4rem;
     font-family: 'IM Fell English', serif;
-    font-size: 1.2rem;
-    cursor: pointer;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-    .grid-container { grid-template-columns: 1fr; }
-    .col-12, .col-8, .col-7, .col-6, .col-5, .col-4 { grid-column: span 1; }
-    .rotate-right, .rotate-left { transform: none; }
-    .offset-up, .offset-down { margin-top: 0; }
+.small-text {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+{
+    margin-top: 4rem;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+#quote-display {
+    font-size: 1.4rem;
+    font-family: 'IM Fell English', serif;
+}
+
+.small-text {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }

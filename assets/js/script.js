@@ -25,28 +25,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Dark Theme Toggle
-    const themeBtn = document.getElementById('theme-toggle-btn');
-    if (themeBtn) {
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeBtn.textContent = '☼ light';
-        } else {
-            themeBtn.textContent = '☾ dark';
-        }
-        
-        themeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            themeBtn.textContent = isDark ? '☼ light' : '☾ dark';
-        });
-    }
-
     fetchQuote();
     fetchBlogMiniStream();
+    fetchWakaTime();
+    fetchGitHubActivity();
+    initScrollProgress();
     initObserver();
 });
+
+// Scroll Progress Tracker
+function initScrollProgress() {
+    window.addEventListener('scroll', () => {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById('scroll-progress');
+        if (progressBar) progressBar.style.width = scrolled + '%';
+    });
+}
+
+// WakaTime Fetcher (JSONP)
+function fetchWakaTime() {
+    const url = 'https://wakatime.com/share/@korrykatti/30d50027-2319-42d1-bfba-f0bff30eb412.json';
+    const callbackName = 'wakatimeCallback';
+    
+    window[callbackName] = function(response) {
+        const container = document.getElementById('wakatime-display');
+        if (container && response.data && response.data.length > 0) {
+            const topLang = response.data[0];
+            container.innerHTML = `top language: <span style="color: var(--accent);">${topLang.name.toLowerCase()}</span> (${topLang.percent}%)`;
+        }
+        delete window[callbackName];
+        document.body.removeChild(script);
+    };
+
+    const script = document.createElement('script');
+    script.src = `${url}?callback=${callbackName}`;
+    document.body.appendChild(script);
+}
+
+// GitHub Activity Fetcher
+async function fetchGitHubActivity() {
+    try {
+        const response = await fetch('https://api.github.com/users/KorryKatti/repos?sort=pushed&per_page=1');
+        const repos = await response.json();
+        const container = document.getElementById('github-display');
+        
+        if (container && repos.length > 0) {
+            const repo = repos[0];
+            let name = repo.name.toLowerCase();
+            if (name.length > 15) name = name.substring(0, 12) + '...';
+            const url = repo.html_url;
+            container.innerHTML = `push: <a href="${url}" target="_blank" style="border-bottom: 1px solid var(--accent);">${name}</a>`;
+        }
+    } catch (e) {
+        console.error('GitHub fetch failed', e);
+    }
+}
 
 // Gentle Observer
 function initObserver() {
@@ -80,15 +115,16 @@ async function fetchBlogMiniStream() {
         const html = await response.text();
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
-        const posts = doc.querySelectorAll('.post');
+        const posts = doc.querySelectorAll('.post-entry');
         const container = document.getElementById('blog-mini-stream');
 
         if (container && posts.length > 0) {
             container.innerHTML = '';
-            // Get latest 3 posts
+            // Get latest 5 posts
             Array.from(posts).slice(0, 5).forEach(post => {
-                const title = post.querySelector('.post-title').textContent.toLowerCase();
-                const link = post.querySelector('.read-more').getAttribute('href');
+                const titleLink = post.querySelector('.post-title a');
+                const title = titleLink.textContent.toLowerCase();
+                const link = titleLink.getAttribute('href');
                 const date = post.querySelector('.post-meta').textContent;
 
                 // Adjust link since we are in root and link is for blog/index.html
@@ -146,7 +182,7 @@ async function getLastCommit() {
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         document.getElementById('last-updated').textContent =
-            `updated ${diffDays} days ago`;
+            `upd: ${diffDays}d ago`;
     } catch (error) {
         document.getElementById('last-updated').textContent = "";
     }
@@ -162,35 +198,35 @@ async function getStatus() {
         const currentStatus = data.current_status || {};
         const status = currentStatus.status || 'offline';
         
-        statusHTML += `<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">`;
-        statusHTML += `<span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: ${status === 'online' ? 'var(--accent)' : 'var(--text-secondary)'}; border: 1px solid var(--border-color);"></span>`;
-        statusHTML += `<strong>${status.toUpperCase()}</strong>`;
-        statusHTML += `</div>`;
+        let label = status.toUpperCase();
+        let activityContent = '';
 
         if (status === 'online' && currentStatus.activities && currentStatus.activities.length > 0) {
-            statusHTML += `<div style="display: flex; flex-direction: column; gap: 0.8rem;">`;
-            currentStatus.activities.slice(0, 3).forEach(activity => {
-                const type = activity.type || activity.activity_type || 'playing';
-                const name = activity.name || '';
-                const details = activity.details || '';
-                const state = activity.state || '';
-                
-                statusHTML += `<div style="border-left: 3px solid var(--accent); padding-left: 0.8rem;">`;
-                statusHTML += `<div style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px;">${type.toLowerCase()}</div>`;
-                statusHTML += `<div style="font-size: 1.1rem; font-weight: 700; color: var(--accent);">${name.toLowerCase()}</div>`;
-                if (details) {
-                    statusHTML += `<div style="font-size: 0.95rem; font-style: italic; opacity: 0.9;">${details.toLowerCase()}</div>`;
-                }
-                if (state) {
-                    statusHTML += `<div style="font-size: 0.95rem; opacity: 0.85;">${state.toLowerCase()}</div>`;
-                }
-                statusHTML += `</div>`;
-            });
-            statusHTML += `</div>`;
+            const activity = currentStatus.activities[0];
+            const isSpotify = activity.activity_type === 'spotify' || activity.name.toLowerCase() === 'spotify';
+            
+            if (isSpotify) {
+                label = 'LISTEN';
+                let track = `${activity.title || ''} - ${activity.artist || ''}`.toLowerCase();
+                if (track.length > 15) track = track.substring(0, 12) + '...';
+                activityContent = track;
+            } else {
+                let name = (activity.name || '').toLowerCase();
+                if (name.length > 15) name = name.substring(0, 12) + '...';
+                activityContent = name;
+            }
+        }
+
+        statusHTML += `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${status === 'online' ? 'var(--accent)' : 'var(--text-secondary)'};"></span>`;
+        statusHTML += `<span style="font-weight: 700; letter-spacing: 1px;">${label}</span>`;
+
+        if (activityContent) {
+            statusHTML += `<span style="opacity: 0.5; margin: 0 0.5rem;">//</span>`;
+            statusHTML += `<span style="color: var(--accent);">${activityContent}</span>`;
         } else if (status === 'offline') {
-            statusHTML += `<div style="opacity: 0.7; font-style: italic;">offline - out of range</div>`;
+            statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">off</span>`;
         } else {
-            statusHTML += `<div style="opacity: 0.7; font-style: italic;">idle - drifting away</div>`;
+            statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">idle</span>`;
         }
         
         statusContainer.innerHTML = statusHTML;

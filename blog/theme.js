@@ -1,20 +1,5 @@
 (function () {
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const savedTheme = localStorage.getItem('theme');
-
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        if (themeToggleBtn) themeToggleBtn.textContent = 'light_mode';
-    }
-
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            themeToggleBtn.textContent = isDark ? 'light_mode' : 'dark_mode';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
-    }
+    // Theme toggle removed - Solarized Dark is fixed default.
 
     function applyBionicReading(element) {
         const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
