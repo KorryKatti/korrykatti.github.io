@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="blogpost.css">
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is"
+        data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="zig, text editor, kilo, terminal, low level, programming, learning">
+    <meta property="og:title" content="writing a text editor in zig">
+    <meta property="og:description"
+        content="notes on porting kilo, a minimal text editor, from C to Zig and learning way too much about terminal escape sequences">
+    <meta property="og:type" content="article">
+    <meta name="description"
+        content="a personal log of building a text editor in Zig, the frustrations, the learning, and why I never want to do this again">
+    <meta name="author" content="korry">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="post-title">writing a text editor in zig</h1>
+        <div class="post-meta">
+            <span>15.06.2026</span>
+            <button id="theme-toggle-btn">dark_mode</button>
+        </div>
+
+        <div class="post-content">
+
+            <p>i wish i have to never do this again this is so frustrating.</p>
+
+            <p>but here we are. i wrote a text editor. in Zig. ported from kilo, the tiny C editor by antirez. </p>
+
+            <h2>why even do this</h2>
+
+            <p>kilo is about 1000 lines of C. it does syntax highlighting, search, cursor movement, all directly
+                emitting VT100 escape sequences. no ncurses. no libraries. just raw bytes to stdout.</p>
+
+            <p>i thought porting it to Zig would be a weekend project. i was wrong. the Zig compiler has opinions. many
+                opinions. and it will not let you get away with anything.</p>
+
+            <h2>what i learned</h2>
+
+            <h3>terminal escape sequences are hell</h3>
+
+            <p>every terminal emulates <a href="https://en.wikipedia.org/wiki/VT100" target="_blank">VT100</a> differently. cursor positioning, colors, hiding the cursor, showing it
+                again. all of it is just "please do this thing" followed by "maybe it worked."</p>
+
+            <h3>zig's type system is a strict teacher</h3>
+
+            <p>in C you can just cast things around and hope for the best. in Zig, the compiler asks you very politely
+                to explain yourself. <code>@intCast</code> everywhere. error unions that you must handle. optional types
+                that force you to deal with null properly.</p>
+
+            <p>it's annoying. it's also correct. every single time.</p>
+
+            <h3>memory management is not a joke</h3>
+
+            <p>the editor allocates memory for rows, for the render buffer, for the highlight array. every allocation
+                needs a matching free. Zig doesn't have a garbage collector. neither does C, but at least in C you can
+                pretend memory leaks don't exist until your program eats 4GB of RAM.</p>
+
+            <p>in Zig you get <code>defer</code>. it's beautiful and it's terrifying because it means you actually have
+                to think about cleanup.</p>
+
+            <h3>syntax highlighting is surprisingly complex</h3>
+
+            <p>it starts simple. "if character is digit, color it red." then you add strings. then comments. then
+                multi-line comments that span across rows. then you realize you need to track whether the previous row
+                ended inside a comment. then keywords. then escaped quotes inside strings.</p>
+
+            <p>by the end of it you've written a parser and you didn't even realize it.</p>
+
+            <h2>short learning notes</h2>
+
+            <blockquote>
+                things i wish someone told me before i started
+            </blockquote>
+
+            <p><strong>[1]</strong> <code>editorUpdateSyntax</code> is the most important function in the entire
+                editor. it's where all the highlighting logic lives. the order of checks matters a lot. comments before
+                strings before numbers before keywords.</p>
+
+            <p><strong>[2]</strong> zig's <code>std.mem.eql</code> is your best friend for string comparison. forget
+                <code>strncmp</code>. just use it.</p>
+
+            <p><strong>[3]</strong> the <code>hl_open_comment</code> flag on each row is the key to multi-line comment
+                highlighting. when a row's comment state changes, you have to propagate that change to all subsequent
+                rows. it's recursive and it's beautiful and it made me want to cry.</p>
+
+            <p><strong>[4]</strong> nonprintable characters will mess up your rendering if you don't handle them. Ctrl-A
+                through Ctrl-Z should display as <code>^A</code> through <code>^Z</code> with inverted colors. otherwise
+                your terminal beeps at you every time you press a key.</p>
+
+            <p><strong>[5]</strong> the <code>current_color</code> optimization in <code>editorDrawRows</code> saves a
+                lot of unnecessary escape sequences. instead of writing <code>\x1b[39m</code> before every single normal
+                character, track the current color and only emit when it changes.</p>
+
+            <p><strong>[6]</strong> search highlighting needs to save and restore the hl array. otherwise the blue
+                highlights from your search query stay forever. static variables and <code>malloc</code>/<code>free</code>
+                do the job, even if it feels ugly.</p>
+
+            <p><strong>[7]</strong> the keyword system uses a pipe <code>|</code> character at the end of secondary
+                keywords to distinguish them from primary keywords. <code>"int|"</code> vs <code>"if"</code>. it's a
+                hack but it works and it's clever.</p>
+
+            <p><strong>[8]</strong> apparently every thing inserted or deleted needs the whole row remade and shit , never thought so much work went into just writing text ngl.</p>
+
+            <h2>the zig specifics that got me</h2>
+
+            <p><code>@intFromEnum</code> to convert enums to integers. <code>@intCast</code> to convert between integer
+                types. <code>@as(usize, @intCast(...))</code> every time you need an array index. the compiler will
+                catch overflow bugs that would silently corrupt memory in C.</p>
+
+            <p>error unions mean you can't just ignore failures. <code>try</code> or <code>catch</code>. no middle
+                ground. it's exhausting and it's the right way to write software.</p>
+
+            <p>optional types (<code>?[]u8</code>) replace nullable pointers. <code>orelse</code> replaces null
+                checks. it's cleaner but it means you can't just pretend null doesn't exist.</p>
+
+            <h2>could i do it again?</h2>
+            <p>could i build this from scratch without a guide? probably. but it'd take longer ( maybe 2-3 months). this time i leaned on the kilo reference. next time i'd move faster, but also next time i'm not doing it.</p>
+
+            <h2>would i do it again</h2>
+
+            <p>no. absolutely not. never.</p>
+
+            <p>but i'm glad i did it once. building a text editor from scratch teaches you things you didn't know you
+                didn't know. how the terminal works. how memory works. how parsing works. how even the simplest programs
+                are actually deeply complex systems of interacting parts.</p>
+
+            <p>and zig, for all its strictness, is a good language for this kind of thing. it makes you think about
+                every byte, every allocation, every error. you come out the other side a better programmer, even if you
+                want to throw your laptop into the sea by the end.</p>
+
+            <p>i wish i have to never do this again this is so frustrating.</p>
+
+            <p>but hey, at least now i have a text editor.</p>
+
+            <hr>
+
+            <p><em>the code is at <a href="https://github.com/KorryKatti/kilo-zig" target="_blank">kilo-zig</a> on
+                    github. it compiles. it runs. it highlights syntax. i'll probably rewrite it in an easier language (nim or golang maybe) or just fork something smaller. either way, the agent-driven editor is coming next.</em></p>
+
+        </div>
+
+        <p><a href="../index.html">← Back to Blog Index</a></p>
+
+        <div class="navigation">
+            <a href="06042026.html" class="nav-button">Previous Post</a>
+            <a href="#" class="nav-button" disabled>Next Post</a>
+        </div>
+    </div>
+    <script src="../theme.js"></script>
+</body>
+
+</html>
