@@ -84,6 +84,12 @@ body {
     border-color: var(--fg);
 }
 
+.site-note {
+    color: var(--dim);
+    font-size: 0.85rem;
+    margin-bottom: 3rem;
+}
+
 /* Post List */
 .post-list {
     display: grid;
