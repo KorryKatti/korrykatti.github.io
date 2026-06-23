@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>colophon</title>
+    <link rel="icon" href="assets/img/icon.jpeg">
+    <link rel="stylesheet" href="style.css?v=2.2">
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <nav class="top-bar fade-in">
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; font-family: monospace; font-size: 0.8rem;">
+                <a href="index.html" style="color: var(--accent);">home</a>
+                <span style="opacity: 0.3;">::</span>
+                <span>colophon</span>
+            </div>
+        </nav>
+
+        <header class="section fade-in">
+            <h1>colophon.</h1>
+            <p style="font-size: 1.2rem; color: var(--text-secondary);">how this site is made</p>
+        </header>
+
+        <main style="max-width: 650px;">
+            <section class="section fade-in">
+                <h2>fonts</h2>
+                <p><strong style="color: var(--accent);">IM Fell English</strong> — headers, quotes, and serif accents. a revival of types cut by john fell in the 1690s.</p>
+                <p><strong style="color: var(--accent);">Space Grotesk</strong> — body text and ui. a proportional variant of space mono.</p>
+            </section>
+
+            <section class="section fade-in">
+                <h2>colors</h2>
+                <p>solarized dark palette. base03 through base0, with cyan and blue accents.</p>
+            </section>
+
+            <section class="section fade-in">
+                <h2>stack</h2>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">html, css, vanilla js</li>
+                    <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">flask (python) — guestbook api</li>
+                    <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">github pages — hosting</li>
+                    <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">umami — analytics</li>
+                    <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">mayu visitor counter</li>
+                </ul>
+            </section>
+
+            <section class="section fade-in">
+                <h2>keyboard shortcuts</h2>
+                <p>press <strong style="color: var(--accent);">?</strong> anywhere on the site to see available shortcuts.</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        });
+    </script>
+</body>
+
+</html>

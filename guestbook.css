@@ -104,6 +104,21 @@ button:hover {
     margin-bottom: 10px;
     font-size: 0.9rem;
     color: #b07070;
+    padding: 10px;
+}
+
+#charCount {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+#entryCount {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 12px;
 }
 
 /* Guestbook entries */

@@ -17,11 +17,15 @@
     <h1>Guestbook</h1>
     <form id="guestbookForm">
         <input type="text" id="nameInput" placeholder="Your Name" required>
-        <textarea id="messageInput" placeholder="Your Message" required></textarea>
+        <input type="url" id="websiteInput" placeholder="Your Website (optional)">
+        <textarea id="messageInput" placeholder="Your Message" maxlength="280" required></textarea>
+        <div id="charCount">0/280</div>
         <div id="captchaQuestion"></div>
         <input type="text" id="captchaAnswer" placeholder="Your Answer" required>
+        <input type="text" id="websiteConfirm" name="website_confirm" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;">
         <button type="submit">Submit</button>
     </form>
+    <div id="entryCount"></div>
     <div id="entries"></div>
     <script src="assets/js/prefetch.js"></script>
     <script>
@@ -31,6 +35,7 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const entries = await response.json();
                 const entriesContainer = document.getElementById('entries');
+                const countContainer = document.getElementById('entryCount');
 
                 const escapeHTML = (str) => {
                     const div = document.createElement('div');
@@ -38,33 +43,46 @@
                     return div.innerHTML;
                 };
 
-                entriesContainer.innerHTML = entries.reverse().map(entry => `
+                countContainer.textContent = `${entries.length} signature${entries.length !== 1 ? 's' : ''}`;
+                entriesContainer.innerHTML = entries.reverse().map(entry => {
+                    const nameDisplay = entry.website
+                        ? `<a href="${escapeHTML(entry.website)}" target="_blank" rel="noopener">${escapeHTML(entry.name)}</a>`
+                        : escapeHTML(entry.name);
+                    return `
                     <div class="entry">
-                        <strong>${escapeHTML(entry.name)}</strong>
+                        <strong>${nameDisplay}</strong>
                         <p>${escapeHTML(entry.message)}</p>
                     </div>
-                `).join('');
+                `}).join('');
             } catch (error) {
                 console.error('Error loading entries:', error);
                 document.getElementById('entries').innerHTML = 'Error loading entries. Please try again later.';
             }
         }
 
-        function generateCaptcha() {
-            const num1 = Math.floor(Math.random() * 10);
-            const num2 = Math.floor(Math.random() * 10);
-            const question = `What is ${num1} + ${num2}?`;
-            document.getElementById('captchaQuestion').textContent = question;
-            return num1 + num2;
+        function numberToWord(n) {
+            const words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+            return words[n];
         }
 
-        let correctAnswer = generateCaptcha();
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const question = `What is ${numberToWord(num1)} plus ${numberToWord(num2)}?`;
+            document.getElementById('captchaQuestion').textContent = question;
+            return { num1, num2, answer: num1 + num2 };
+        }
+
+        let captcha = generateCaptcha();
 
         async function submitMessage(event) {
             event.preventDefault();
             const nameInput = document.getElementById('nameInput');
             const messageInput = document.getElementById('messageInput');
-            const userAnswer = parseInt(document.getElementById('captchaAnswer').value, 10);
+            const websiteInput = document.getElementById('websiteInput');
+            const userAnswer = document.getElementById('captchaAnswer').value.trim().toLowerCase();
+            const wordAnswer = numberToWord(captcha.answer);
 
             const lastSubmission = localStorage.getItem('lastSubmission');
             const currentTime = Date.now();
@@ -75,9 +93,9 @@
                 return;
             }
 
-            if (userAnswer !== correctAnswer) {
+            if (userAnswer !== wordAnswer && userAnswer !== String(captcha.answer)) {
                 alert('Incorrect answer to the CAPTCHA. Please try again.');
-                correctAnswer = generateCaptcha();
+                captcha = generateCaptcha();
                 return;
             }
 
@@ -89,7 +107,8 @@
                     },
                     body: new URLSearchParams({
                         name: nameInput.value.trim(),
-                        message: messageInput.value.trim()
+                        message: messageInput.value.trim(),
+                        website: websiteInput.value.trim()
                     })
                 });
 
@@ -99,8 +118,9 @@
                     localStorage.setItem('lastSubmission', currentTime);
                     nameInput.value = '';
                     messageInput.value = '';
+                    websiteInput.value = '';
                     document.getElementById('captchaAnswer').value = '';
-                    correctAnswer = generateCaptcha();
+                    captcha = generateCaptcha();
                     loadEntries();
                 } else {
                     console.error('Error submitting message:', result.message);
@@ -112,7 +132,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             loadEntries();
-            generateCaptcha();
+            captcha = generateCaptcha();
+
+            const messageInput = document.getElementById('messageInput');
+            const charCount = document.getElementById('charCount');
+            messageInput.addEventListener('input', () => {
+                charCount.textContent = `${messageInput.value.length}/280`;
+            });
 
             const images = [
                 'preview.png',
@@ -120,7 +146,8 @@
                 'preview(3).png',
                 'preview(4).png',
                 'preview(5).png',
-                'preview(6).png'
+                'preview(6).png',
+                'preview(7).png'
             ];
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const container = document.getElementById('random-image-container');

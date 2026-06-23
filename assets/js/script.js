@@ -35,13 +35,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Scroll Progress Tracker
 function initScrollProgress() {
+    const scrollTopBtn = document.getElementById('scroll-top-btn');
     window.addEventListener('scroll', () => {
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
         const progressBar = document.getElementById('scroll-progress');
         if (progressBar) progressBar.style.width = scrolled + '%';
+        if (scrollTopBtn) {
+            scrollTopBtn.style.display = winScroll > 400 ? 'block' : 'none';
+        }
     });
+    if (scrollTopBtn) {
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 }
 
 // WakaTime Fetcher (JSONP)
@@ -188,6 +197,27 @@ async function getLastCommit() {
     }
 }
 
+// Site Uptime (from first commit)
+function getUptime() {
+    const firstCommitDate = new Date('2024-02-03T04:25:10Z');
+    function update() {
+        const now = new Date();
+        const diffMs = now - firstCommitDate;
+        const days = Math.floor(diffMs / 86400000);
+        const years = Math.floor(days / 365);
+        const remainingDays = days % 365;
+        const hours = Math.floor((diffMs % 86400000) / 3600000);
+        const minutes = Math.floor((diffMs % 3600000) / 60000);
+        const seconds = Math.floor((diffMs % 60000) / 1000);
+        const container = document.getElementById('uptime-display');
+        if (container) {
+            container.textContent = `uptime: ${years}y ${remainingDays}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+    }
+    update();
+    setInterval(update, 1000);
+}
+
 async function getStatus() {
     try {
         const response = await fetch('https://duinogame.pythonanywhere.com/statusget');
@@ -287,6 +317,7 @@ function onPlayerReady(event) {
 window.addEventListener('load', () => {
     getLastCommit();
     getStatus();
+    getUptime();
 
     // Inject YouTube API
     var tag = document.createElement('script');
@@ -710,4 +741,49 @@ window.addEventListener('load', () => {
     }
 
     document.addEventListener('DOMContentLoaded', initSearch);
+})();
+
+// Keyboard Shortcuts
+(function () {
+    document.addEventListener('keydown', (e) => {
+        const target = e.target;
+        const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
+        const shortcutsModal = document.getElementById('shortcuts-modal');
+        const chatboxModal = document.getElementById('chatbox-modal');
+        const anyModalOpen = (shortcutsModal && shortcutsModal.style.display === 'flex') ||
+                             (chatboxModal && chatboxModal.style.display === 'flex');
+
+        if (e.key === 'Escape') {
+            if (shortcutsModal) shortcutsModal.style.display = 'none';
+            if (chatboxModal) chatboxModal.style.display = 'none';
+            return;
+        }
+
+        if (isInput || anyModalOpen) return;
+
+        if (e.key === '?') {
+            e.preventDefault();
+            if (shortcutsModal) shortcutsModal.style.display = 'flex';
+        } else if (e.key === '/') {
+            e.preventDefault();
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) searchInput.focus();
+        } else if (e.key === 'g') {
+            window.location.href = '/guestbook.html';
+        } else if (e.key === 'b') {
+            window.location.href = '/blog/index.html';
+        } else if (e.key === 'h') {
+            window.location.href = '/index.html';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const closeShortcutsBtn = document.getElementById('close-shortcuts-btn');
+        const shortcutsModal = document.getElementById('shortcuts-modal');
+        if (closeShortcutsBtn && shortcutsModal) {
+            closeShortcutsBtn.addEventListener('click', () => {
+                shortcutsModal.style.display = 'none';
+            });
+        }
+    });
 })();
