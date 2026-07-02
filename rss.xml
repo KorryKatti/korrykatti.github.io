@@ -5,8 +5,16 @@
     <link>https://korrykatti.github.io/</link>
     <description>a collection of personal memories &amp; codes</description>
     <language>en</language>
-    <lastBuildDate>Mon, 06 Apr 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Mon, 15 Jun 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://korrykatti.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>writing a text editor in zig</title>
+      <link>https://korrykatti.github.io/blog/posts/15062026.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/15062026.html</guid>
+      <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
+      <description>a personal log of building a text editor in Zig, the frustrations, the learning, and why I never want to do this again</description>
+    </item>
 
     <item>
       <title>something personal with llms</title>

@@ -8,6 +8,11 @@
     <meta name="description" content="a personal website">
     <meta name="author" content="korry">
 
+    <link rel="preconnect" href="https://api.github.com">
+    <link rel="preconnect" href="https://wakatime.com">
+    <link rel="preconnect" href="https://mayu.due.moe">
+    <link rel="preconnect" href="https://duinogame.pythonanywhere.com">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://korrykatti.github.io/">
@@ -33,114 +38,66 @@
     <div id="scroll-progress" style="position: fixed; top: 0; left: 0; width: 0%; height: 2px; background: var(--accent); z-index: 9999; transition: width 0.1s ease;"></div>
 
     <div class="app-container">
-        <!-- Top Bar: Consolidated Data Strip -->
-        <nav class="top-bar fade-in" style="margin-bottom: 4rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
-            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; font-family: monospace; font-size: 0.8rem;">
-                <div id="status-container" style="display: flex; align-items: center; gap: 0.5rem;">
-                    stat: thinking
-                </div>
-                <div style="opacity: 0.3;">::</div>
-                <div id="wakatime-display">
-                    telemetry_off
-                </div>
-                <div style="opacity: 0.3;">::</div>
-                <div id="github-display">
-                    signal_lost
-                </div>
-                <div style="opacity: 0.3;">::</div>
-                <div id="last-updated">
-                    ...
-                </div>
-            </div>
+        <nav style="display: flex; gap: 0.75rem; font-size: 0.9rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: baseline;">
+            <div id="status-container">status: fetching status</div>
+            <span style="opacity: 0.3;">::</span>
+            <div id="wakatime-display">telemetry_off</div>
+            <span style="opacity: 0.3;">::</span>
+            <div id="github-display">signal_lost</div>
+            <span style="opacity: 0.3;">::</span>
+            <div id="last-updated">...</div>
         </nav>
 
+        <nav style="display: flex; gap: 0.75rem; font-size: 0.9rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: baseline;">
+            <a href="/blog/index.html">blog</a>
+            <span style="opacity: 0.3;">::</span>
+            <a href="/guestbook.html">guestbook</a>
+            <span style="opacity: 0.3;">::</span>
+            <a href="https://x.com/dunkelkron">x</a>
+            <span style="opacity: 0.3;">::</span>
+            <a href="https://github.com/korrykatti">github</a>
+        </nav>
+        <nav style="display: flex; gap: 0.75rem; font-size: 0.9rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: baseline;">
+            <a href="https://korrykatti.pythonanywhere.com/">image board</a>
+            <span style="opacity: 0.3;">::</span>
+            <a href="/apps/index.html">small apps</a>
+            <span style="opacity: 0.3;">::</span>
+            <a href="/rss.xml">rss</a>
+        </nav>
+        <a href="https://github.com/korryKatti/minimal_blog" target="_blank" style="font-size: 0.9rem; display: block; margin-bottom: 1rem;">working on :: api yet to be released</a>
+
+        <div class="sidebar-module search-container fade-in" style="margin-bottom: 3rem;">
+            <input type="text" id="search-input" placeholder="find something..." style="width: 300px; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; font-family: inherit; font-size: 0.85rem;">
+            <div id="search-results" style="display: none; margin-top: 1.5rem; flex-direction: column; gap: 1rem;"></div>
+        </div>
+
         <!-- Hero: Header & Intro -->
-        <header class="section fade-in" id="intro-scene">
-            <h1>korry.</h1>
-            <p style="font-size: 1.4rem; color: var(--accent); margin-bottom: 2rem; font-family: 'IM Fell English', serif;">blog // a collection of personal memories & codes</p>
+        <header class="section fade-in" id="intro-scene" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 2rem; margin-bottom: 3rem; margin-top: -1rem;">
             
             <div style="max-width: 700px;">
                 <p>hello, korry here. this website is a collection of my work and some other stuff i think are cool.</p>
                 <p>it's forever a work in progress, much like myself. currently in college, learning, and building.</p>
-            </div>
-        </header>
+                <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 1rem; margin-bottom: 0.5rem;">this site is made primarily for desktop view. might break on mobile.</p>
+                <a href="#" id="open-modal-btn-inline" class="log-link serif-text" style="border: 1px solid var(--border-color); padding: 0.5rem 1rem; display: inline-block;">chatroom</a>
 
-        <div class="editorial-grid">
-            <!-- Main Content Area -->
-            <main class="main-content">
-                
-                <!-- Artifacts / Projects -->
-                <section class="section fade-in">
-                    <h2>artifacts.</h2>
-                    <div class="project-list">
-                        <a href="apps/index.html" class="project-item">
-                            <span class="project-title">smol apps</span>
-                            <span class="project-desc">tiny tools for daily use</span>
-                        </a>
-
-                        <a href="https://korrykatti.pythonanywhere.com/" class="project-item">
-                            <span class="project-title">image_board</span>
-                            <span class="project-desc">visual memory storage</span>
-                        </a>
-                    </div>
-                </section>
-
-                <!-- Recent Posts -->
-                <section class="section fade-in">
+                <section style="margin-top: 3rem;">
                     <h2>recent posts.</h2>
                     <ul id="blog-mini-stream" class="log-list">
                         <li class="log-item" style="opacity: 0.5;">receiving signal...</li>
                     </ul>
                     <div style="margin-top: 2rem;">
-                        <a href="/blog/index.html" class="serif-text" style="font-size: 1.4rem;">archive →</a>
+                        <a href="/blog/index.html" class="serif-text" style="font-size: 1.1rem;">archive →</a>
                     </div>
                 </section>
+            </div>
 
-            </main>
-
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                
-                <!-- Semantic Page Finder -->
-                <div class="sidebar-module search-container fade-in">
-                    <h3>finder</h3>
-                    <input type="text" id="search-input" placeholder="find something...">
-                    <button id="search-btn">find</button>
-                    <div id="search-results" style="display: none; margin-top: 1.5rem; flex-direction: column; gap: 1rem;"></div>
+            <div class="quote-container" style="flex-shrink: 0; max-width: 300px;">
+                <div id="quote-display"></div>
+                <div style="margin-top: 1rem;">
+                    <video src="assets/video/jblow.mp4" controls loading="lazy" title="this is me being talked about" style="width: 100%; height: auto; border: 1px solid var(--border-color);"></video>
                 </div>
-
-                <!-- Logs -->
-                <div class="sidebar-module fade-in">
-                    <h3>logs</h3>
-                    <ul class="log-list">
-                        <li class="log-item"><a href="/blog/index.html" class="log-link serif-text">blog</a></li>
-                        <li class="log-item"><a href="/rss.xml" class="log-link serif-text">rss</a></li>
-                        <li class="log-item"><a href="logs.html" class="log-link serif-text">tumblr page</a></li>
-                        <li class="log-item"><a href="/colophon.html" class="log-link serif-text">colophon</a></li>
-                    </ul>
-                </div>
-
-                <!-- Connect -->
-                <div class="sidebar-module fade-in">
-                    <h3>connect</h3>
-                    <ul class="log-list">
-                        <li class="log-item"><a href="/sitemap.html" class="log-link serif-text">sitemap</a></li>
-                        <li class="log-item"><a href="/guestbook.html" class="log-link serif-text">guestbook</a></li>
-                        <li class="log-item"><a href="https://github.com/korrykatti" class="log-link serif-text">github</a></li>
-                        <li class="log-item"><a href="https://x.com/dunkelkron" class="log-link serif-text">X</a></li>
-                        <li class="log-item"><a href="#" id="open-modal-btn" class="log-link serif-text">transmit msg</a></li>
-                    </ul>
-                </div>
-
-                <!-- Quote Display -->
-                <div class="quote-container fade-in">
-                    <div id="quote-display">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-            </aside>
-        </div>
+            </div>
+        </header>
 
         <!-- Tumblr Feed -->
         <section class="tumblr-section fade-in">
@@ -150,7 +107,7 @@
             </div>
             <div style="text-align: center; margin-top: 4rem;">
                 <button id="load-more-btn" class="control-btn">more...</button>
-                <div id="loader" style="opacity: 0; margin-top: 1rem; font-family: 'IM Fell English', serif; color: var(--accent);">seeking...</div>
+                <div id="loader" style="opacity: 0; margin-top: 1rem; font-family: Georgia, serif; color: var(--text-primary);">seeking...</div>
             </div>
         </section>
 
@@ -162,6 +119,7 @@
             </div>
             <p style="font-size: 1rem; opacity: 0.7; color: var(--text-dim);">&copy; 2026 korry. all rights reserved.</p>
             <p id="uptime-display" style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem; font-family: monospace; color: var(--text-dim);"></p>
+            <p id="load-time" style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.5rem; font-family: monospace;"></p>
         </footer>
     </div>
 
@@ -170,6 +128,7 @@
         <div id="music-control">
             <span id="play-btn" class="control-btn">▶ play</span>
         </div>
+        <button id="theme-toggle-btn" class="control-btn">dark_mode</button>
         <button id="scroll-top-btn" class="control-btn" style="display: none;">↑ top</button>
     </div>
 
@@ -195,30 +154,40 @@
             <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
                     <span style="color: var(--text-dim);">focus search</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">/</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">/</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
                     <span style="color: var(--text-dim);">go to guestbook</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">g</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">g</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
                     <span style="color: var(--text-dim);">go to blog</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">b</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">b</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
                     <span style="color: var(--text-dim);">go home</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">h</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">h</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
                     <span style="color: var(--text-dim);">show shortcuts</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">?</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">?</kbd>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
                     <span style="color: var(--text-dim);">close modal</span>
-                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--accent);">Esc</kbd>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">Esc</kbd>
                 </div>
             </div>
             <button id="close-shortcuts-btn" class="control-btn" style="width: 100%; margin-top: 2rem;">
+                close
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden Modal -->
+    <div id="hidden-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <iframe id="hidden-video" width="100%" height="400" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="margin-bottom: 1.5rem;"></iframe>
+            <button id="close-hidden-btn" class="control-btn" style="width: 100%;">
                 close
             </button>
         </div>

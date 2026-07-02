@@ -1,6 +1,85 @@
+// Theme toggle functionality
+(function() {
+    const THEME_KEY = 'preferred-theme';
+    const DARK_CLASS = 'dark-mode';
+    const btn = document.getElementById('theme-toggle-btn');
+
+    function applyTheme(isDark) {
+        document.body.classList.toggle(DARK_CLASS, isDark);
+        if (btn) btn.textContent = isDark ? 'light_mode' : 'dark_mode';
+        try { localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
+    }
+
+    function initTheme() {
+        let stored = null;
+        try { stored = localStorage.getItem(THEME_KEY); } catch (e) {}
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = stored ? stored === 'dark' : prefersDark;
+        applyTheme(isDark);
+    }
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const isDark = document.body.classList.contains(DARK_CLASS);
+            applyTheme(!isDark);
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 't' && !e.ctrlKey && !e.metaKey && !e.altKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            const isDark = document.body.classList.contains(DARK_CLASS);
+            applyTheme(!isDark);
+        }
+    });
+
+    initTheme();
+})();
+
+// Load time display
+(function() {
+    const loadTimeEl = document.getElementById('load-time');
+    if (loadTimeEl) {
+        const loadTime = performance.now() / 1000;
+        loadTimeEl.textContent = `loaded in ${loadTime.toFixed(2)}s`;
+    }
+})();
+
+// Hidden modal
+(function() {
+    const VIDEO_ID = '2g6qHTAjw90';
+    const modal = document.getElementById('hidden-modal');
+    const video = document.getElementById('hidden-video');
+    const closeBtn = document.getElementById('close-hidden-btn');
+
+    function openModal() {
+        if (!modal || !video) return;
+        video.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1`;
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        if (!modal || !video) return;
+        modal.style.display = 'none';
+        video.src = '';
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'l' && !e.ctrlKey && !e.metaKey && !e.altKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            openModal();
+        }
+    });
+})();
+
 // Modal functionality
 document.addEventListener('DOMContentLoaded', () => {
-    const openModalBtn = document.getElementById('open-modal-btn');
+    const openModalBtn = document.getElementById('open-modal-btn-inline');
     const modal = document.getElementById('chatbox-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
 
@@ -62,7 +141,7 @@ function fetchWakaTime() {
         const container = document.getElementById('wakatime-display');
         if (container && response.data && response.data.length > 0) {
             const topLang = response.data[0];
-            container.innerHTML = `top language: <span style="color: var(--accent);">${topLang.name.toLowerCase()}</span> (${topLang.percent}%)`;
+            container.innerHTML = `top language (week): <span>${topLang.name.toLowerCase()}</span> (${topLang.percent}%)`;
         }
         delete window[callbackName];
         document.body.removeChild(script);
@@ -85,7 +164,7 @@ async function fetchGitHubActivity() {
             let name = repo.name.toLowerCase();
             if (name.length > 15) name = name.substring(0, 12) + '...';
             const url = repo.html_url;
-            container.innerHTML = `push: <a href="${url}" target="_blank" style="border-bottom: 1px solid var(--accent);">${name}</a>`;
+            container.innerHTML = `last push: <a href="${url}" target="_blank" style="border-bottom: 1px solid var(--border-color);">${name}</a>`;
         }
     } catch (e) {
         console.error('GitHub fetch failed', e);
@@ -135,6 +214,7 @@ async function fetchBlogMiniStream() {
                 const title = titleLink.textContent.toLowerCase();
                 const link = titleLink.getAttribute('href');
                 const date = post.querySelector('.post-meta').textContent;
+                const excerpt = post.querySelector('.post-excerpt');
 
                 // Adjust link since we are in root and link is for blog/index.html
                 const fullLink = link.startsWith('http') ? link : `blog/${link.replace(/^\.\//, '')}`;
@@ -142,8 +222,9 @@ async function fetchBlogMiniStream() {
                 const item = document.createElement('li');
                 item.className = 'log-item';
                 item.innerHTML = `
-                    <a href="${fullLink}" class="log-link" style="font-size: 1.4rem;">${title}</a>
-                    <div style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.3rem; font-family: monospace;">${date}</div>
+                    <a href="${fullLink}" class="log-link" style="font-size: 1.1rem;">${title}</a>
+                    <div style="font-size: 0.8rem; opacity: 0.5; margin-top: 0.3rem;">${excerpt ? excerpt.textContent.trim() : ''}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.2rem; font-family: monospace;">${date}</div>
                 `;
                 container.appendChild(item);
             });
@@ -238,11 +319,11 @@ async function getStatus() {
             if (isSpotify) {
                 label = 'LISTEN';
                 let track = `${activity.title || ''} - ${activity.artist || ''}`.toLowerCase();
-                if (track.length > 15) track = track.substring(0, 12) + '...';
+                if (track.length > 30) track = track.substring(0, 27) + '...';
                 activityContent = track;
             } else {
                 let name = (activity.name || '').toLowerCase();
-                if (name.length > 15) name = name.substring(0, 12) + '...';
+            if (name.length > 25) name = name.substring(0, 22) + '...';
                 activityContent = name;
             }
         }
@@ -252,7 +333,7 @@ async function getStatus() {
 
         if (activityContent) {
             statusHTML += `<span style="opacity: 0.5; margin: 0 0.5rem;">//</span>`;
-            statusHTML += `<span style="color: var(--accent);">${activityContent}</span>`;
+            statusHTML += `<span>${activityContent}</span>`;
         } else if (status === 'offline') {
             statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">off</span>`;
         } else {
@@ -261,7 +342,7 @@ async function getStatus() {
         
         statusContainer.innerHTML = statusHTML;
     } catch (error) {
-        document.getElementById('status-container').innerHTML = '<div style="color: var(--color-orange);">offline</div>';
+        document.getElementById('status-container').innerHTML = '<div style="color: var(--text-dim);">offline</div>';
     }
 }
 
@@ -520,10 +601,9 @@ window.addEventListener('load', () => {
 
     function initSearch() {
         const searchInput = document.getElementById('search-input');
-        const searchBtn = document.getElementById('search-btn');
         const resultsContainer = document.getElementById('search-results');
 
-        if (!searchInput || !searchBtn || !resultsContainer) return;
+        if (!searchInput || !resultsContainer) return;
 
         loadIndex();
 
@@ -539,7 +619,6 @@ window.addEventListener('load', () => {
 
         // Live search on typing
         searchInput.addEventListener('input', handleSearch);
-        searchBtn.addEventListener('click', handleSearch);
     }
 
     function getReadingTime(text) {
@@ -658,7 +737,7 @@ window.addEventListener('load', () => {
         return `
             <div style="padding: 1rem; border: var(--border-width) solid var(--border-color); background-color: var(--bg-panel); color: var(--text-primary); margin-bottom: 0.8rem; transition: transform 0.15s ease; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
                 <div style="flex-grow: 1;">
-                    <h5 style="font-size: 1.3rem; font-family: 'IM Fell English', serif; margin-bottom: 0.3rem;">
+                    <h5 style="font-size: 1.3rem; font-family: Georgia, serif; margin-bottom: 0.3rem;">
                         <a href="${res.doc.url}" style="border-bottom: 2px solid var(--accent); display: inline-block;">${res.doc.title}</a>
                     </h5>
                     <p style="font-size: 0.95rem; margin-bottom: 0; opacity: 0.9; text-align: left; color: var(--text-dim);">${res.doc.snippet}</p>

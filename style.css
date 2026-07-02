@@ -1,22 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Space+Grotesk:wght@300;500;700&display=swap');
-
 :root {
-    /* Solarized Dark Editorial Palette */
-    --bg-deep: #002b36;     /* Base03 */
-    --bg-panel: #073642;    /* Base02 */
-    --bg-panel-alt: #00212b; /* Slightly darker than Base03 */
-    --text-primary: #839496;  /* Base0 */
-    --text-secondary: #586e75; /* Base01 */
-    --text-dim: #657b83;     /* Base00 */
-    --accent: #2aa198;       /* Cyan */
-    --accent-alt: #268bd2;   /* Blue */
-    --border-color: rgba(38, 139, 210, 0.15);
+    --bg-deep: #ffffff;
+    --bg-panel: #f5f5f5;
+    --bg-panel-alt: #fafafa;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-dim: #555555;
+    --accent: #000000;
+    --accent-alt: #333333;
+    --border-color: #000000;
     --border-width: 1px;
     --transition-smooth: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .dark-mode {
-    /* Optional: adjustments for dark mode if it differs from default */
+    --bg-deep: #0a0a0a;
+    --bg-panel: #1a1a1a;
+    --bg-panel-alt: #111111;
+    --text-primary: #e0e0e0;
+    --text-secondary: #aaaaaa;
+    --text-dim: #888888;
+    --accent: #ffffff;
+    --accent-alt: #cccccc;
+    --border-color: #444444;
 }
 
 /* Base Styles */
@@ -44,18 +49,7 @@ body {
     padding: 4rem 2rem;
 }
 
-.editorial-grid {
-    display: grid;
-    grid-template-columns: 2.5fr 1fr;
-    gap: 6rem;
-    margin-top: 4rem;
-}
-
 @media (max-width: 900px) {
-    .editorial-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-    }
     .app-container {
         padding: 2rem 1.5rem;
     }
@@ -63,7 +57,7 @@ body {
 
 /* Typography */
 h1, h2, h3, h4, .serif-text {
-    font-family: 'IM Fell English', Georgia, serif;
+    font-family: Georgia, serif;
     font-weight: 400;
     line-height: 1.1;
     text-transform: lowercase;
@@ -77,8 +71,8 @@ h1 {
 }
 
 h2 {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    margin-bottom: 2rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin-bottom: 1.5rem;
 }
 
 h3 {
@@ -114,7 +108,7 @@ p {
 }
 
 .section:hover {
-    background: rgba(42, 161, 152, 0.03); /* Subtle accent tint */
+    background: rgba(0, 0, 0, 0.03);
 }
 
 /* Links */
@@ -154,7 +148,7 @@ a:hover {
 }
 
 .project-title {
-    font-family: 'IM Fell English', serif;
+    font-family: Georgia, serif;
     font-size: 2.2rem;
     display: block;
     margin-bottom: 0.5rem;
@@ -188,7 +182,7 @@ a:hover {
     color: var(--bg-deep);
     border: none;
     padding: 0.8rem;
-    font-family: 'IM Fell English', serif;
+    font-family: Georgia, serif;
     font-size: 1.2rem;
     cursor: pointer;
     transition: var(--transition-smooth);
@@ -267,15 +261,15 @@ a:hover {
     border: 1px solid var(--accent);
     color: var(--accent);
     padding: 0.6rem 1.2rem;
-    font-family: 'IM Fell English', serif;
+    font-family: Georgia, serif;
     cursor: pointer;
     transition: var(--transition-smooth);
-    box-shadow: 4px 4px 0 rgba(96, 165, 250, 0.2);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .control-btn:hover {
     transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 rgba(96, 165, 250, 0.3);
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
 .control-btn.playing {
@@ -328,23 +322,7 @@ a:hover {
 
 #quote-display {
     font-size: 1.4rem;
-    font-family: 'IM Fell English', serif;
-}
-
-.small-text {
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-{
-    margin-top: 4rem;
-    font-style: italic;
-    opacity: 0.8;
-}
-
-#quote-display {
-    font-size: 1.4rem;
-    font-family: 'IM Fell English', serif;
+    font-family: Georgia, serif;
 }
 
 .small-text {
