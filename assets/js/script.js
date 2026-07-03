@@ -6,7 +6,7 @@
 
     function applyTheme(isDark) {
         document.body.classList.toggle(DARK_CLASS, isDark);
-        if (btn) btn.textContent = isDark ? 'light_mode' : 'dark_mode';
+        if (btn) btn.textContent = isDark ? '☀ light' : '🌙 dark';
         try { localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
     }
 
@@ -328,14 +328,15 @@ async function getStatus() {
             }
         }
 
-        statusHTML += `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${status === 'online' ? 'var(--accent)' : 'var(--text-secondary)'};"></span>`;
-        statusHTML += `<span style="font-weight: 700; letter-spacing: 1px;">${label}</span>`;
+        const dotColor = status === 'online' ? '#16a34a' : '#dc2626';
+        statusHTML += `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${dotColor}; flex-shrink: 0;"></span>`;
+        statusHTML += `<span style="font-weight: 600; font-size: inherit; letter-spacing: 0.5px; color: ${dotColor};">${label}</span>`;
 
         if (activityContent) {
             statusHTML += `<span style="opacity: 0.5; margin: 0 0.5rem;">//</span>`;
             statusHTML += `<span>${activityContent}</span>`;
         } else if (status === 'offline') {
-            statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">off</span>`;
+            statusHTML += `<span style="opacity: 0.5; margin-left: 0.5rem; color: #dc2626;">off</span>`;
         } else {
             statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">idle</span>`;
         }
