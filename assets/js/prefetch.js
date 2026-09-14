@@ -1,42 +1,128 @@
-// Prefetching functionality to make the website load faster
-// It loads internal HTML pages when a user hovers over a link
+// Just-in-time prefetching — preload pages right before the user clicks
+// Based on instant.page's approach with 65ms hover delay, touch support,
+// speculation rules, and viewport preloading
 (function () {
-    const prefetched = new Set();
+    'use strict';
 
-    const prefetch = (url) => {
-        if (!url || prefetched.has(url)) return;
+    const DELAY_ON_HOVER = 65;
+    const MAX_TOUCH_DURATION = 2500;
 
+    const preloaded = new Set();
+    let lastTouchstartEvent = null;
+    let mouseoverTimer = null;
+
+    // Browser support: need prefetch support + modern APIs
+    const supportsPrefetch = (() => {
         try {
-            const urlObj = new URL(url, window.location.href);
-            // Only prefetch internal links
-            if (urlObj.origin !== window.location.origin) return;
-
-            // Check if it's likely an HTML page
-            const path = urlObj.pathname;
-            // Avoid prefetching the current page
-            if (urlObj.href === window.location.href) return;
-
-            if (path.endsWith('.html') || path.endsWith('/') || !path.includes('.')) {
-                const link = document.createElement('link');
-                link.rel = 'prefetch';
-                link.href = url;
-                document.head.appendChild(link);
-                prefetched.add(url);
-                console.log('Prefetched:', url);
-            }
-        } catch (e) {
-            // Invalid URL
+            return document.createElement('link').relList.supports('prefetch');
+        } catch {
+            return false;
         }
-    };
+    })();
 
-    const init = () => {
-        document.addEventListener('mouseover', (e) => {
-            const anchor = e.target.closest('a');
-            if (anchor && anchor.href) {
-                prefetch(anchor.href);
+    if (!supportsPrefetch) return;
+
+    const supportsSpeculationRules = HTMLScriptElement.supports &&
+        HTMLScriptElement.supports('speculationrules');
+
+    function isPreloadable(anchor) {
+        if (!anchor || !anchor.href) return false;
+        if (anchor.origin !== location.origin) return false;
+        if (!['http:', 'https:'].includes(anchor.protocol)) return false;
+        if (anchor.protocol === 'http:' && location.protocol === 'https:') return false;
+        if (anchor.pathname + anchor.search === location.pathname + location.search) return false;
+        if ('noInstant' in anchor.dataset) return false;
+        if (anchor.dataset.instant === '') { /* whitelist */ }
+        return true;
+    }
+
+    function preload(url, priority) {
+        if (preloaded.has(url)) return;
+
+        if (supportsSpeculationRules) {
+            const script = document.createElement('script');
+            script.type = 'speculationrules';
+            script.textContent = JSON.stringify({
+                prefetch: [{ source: 'list', urls: [url] }]
+            });
+            document.head.appendChild(script);
+        } else {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = url;
+            link.as = 'document';
+            if (priority === 'high') link.fetchPriority = 'high';
+            document.head.appendChild(link);
+        }
+
+        preloaded.add(url);
+    }
+
+    function isLikelyTouchEvent(event) {
+        if (!lastTouchstartEvent || !event) return false;
+        if (event.target !== lastTouchstartEvent.target) return false;
+        return (event.timeStamp - lastTouchstartEvent.timeStamp) < MAX_TOUCH_DURATION;
+    }
+
+    function mouseoverListener(event) {
+        if (isLikelyTouchEvent(event)) return;
+        if (!('closest' in event.target)) return;
+
+        const anchor = event.target.closest('a');
+        if (!isPreloadable(anchor)) return;
+
+        anchor.addEventListener('mouseout', mouseoutListener, { passive: true });
+
+        mouseoverTimer = setTimeout(() => {
+            preload(anchor.href, 'high');
+            mouseoverTimer = null;
+        }, DELAY_ON_HOVER);
+    }
+
+    function mouseoutListener(event) {
+        if (event.relatedTarget && event.target.closest('a') === event.relatedTarget.closest('a')) return;
+        if (mouseoverTimer) {
+            clearTimeout(mouseoverTimer);
+            mouseoverTimer = null;
+        }
+    }
+
+    function touchstartListener(event) {
+        lastTouchstartEvent = event;
+        const anchor = event.target.closest('a');
+        if (isPreloadable(anchor)) preload(anchor.href, 'high');
+    }
+
+    function mousedownListener(event) {
+        if (isLikelyTouchEvent(event)) return;
+        const anchor = event.target.closest('a');
+        if (isPreloadable(anchor)) preload(anchor.href, 'high');
+    }
+
+    function init() {
+        document.addEventListener('touchstart', touchstartListener, { capture: true, passive: true });
+        document.addEventListener('mouseover', mouseoverListener, { capture: true, passive: true });
+        document.addEventListener('mousedown', mousedownListener, { capture: true, passive: true });
+
+        if (document.body.dataset.instantIntensity === 'viewport') {
+            const saveData = navigator.connection && navigator.connection.saveData;
+            if (!saveData) {
+                requestIdleCallback(() => {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                observer.unobserve(entry.target);
+                                preload(entry.target.href);
+                            }
+                        });
+                    });
+                    document.querySelectorAll('a[href]').forEach((anchor) => {
+                        if (isPreloadable(anchor)) observer.observe(anchor);
+                    });
+                }, { timeout: 1500 });
             }
-        }, { passive: true });
-    };
+        }
+    }
 
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
