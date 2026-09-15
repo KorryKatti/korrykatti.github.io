@@ -133,6 +133,27 @@ img {
     margin: 3rem 0;
 }
 
+/* Audio Player */
+.audio-player {
+    margin-bottom: 1.5rem;
+}
+
+.audio-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--dim);
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.audio-btn:hover {
+    color: var(--fg);
+    border-color: var(--fg);
+}
+
 /* Navigation */
 .navigation {
     margin-top: 5rem;

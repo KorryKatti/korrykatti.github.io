@@ -5,8 +5,16 @@
     <link>https://korrykatti.github.io/</link>
     <description>a collection of personal memories &amp; codes</description>
     <language>en</language>
-    <lastBuildDate>Mon, 15 Jun 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 15 Sep 2026 00:00:00 GMT</lastBuildDate>
     <atom:link href="https://korrykatti.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>tiramisu and other things</title>
+      <link>https://korrykatti.github.io/blog/posts/15092026.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/15092026.html</guid>
+      <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
+      <description>first time trying tiramisu and not liking it, watching the secret life of walter mitty and rush, and then crying for 2 hours over maquia: when the promised flower blooms</description>
+    </item>
 
     <item>
       <title>writing a text editor in zig</title>

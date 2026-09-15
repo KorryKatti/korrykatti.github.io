@@ -238,7 +238,7 @@ async function fetchBlogMiniStream() {
 // Quote Fetcher
 async function fetchQuote() {
     try {
-        const response = await fetch('https://yurippe.vercel.app/api/quotes?show=Steins;Gate,%20monogatari&random=1');
+        const response = await fetch('https://yurippe.vercel.app/api/quotes?show=Steins;Gate,monogatari,Maquia:%20When%20the%20Promised%20Flower%20Bloomsa&random=1');
         const data = await response.json();
         if (data && data.length > 0) {
             const quoteText = data[0].quote;
