@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+
 :root {
     --bg-deep: #ffffff;
     --bg-panel: #f5f5f5;
@@ -5,23 +7,23 @@
     --text-primary: #000000;
     --text-secondary: #333333;
     --text-dim: #555555;
-    --accent: #000000;
-    --accent-alt: #333333;
+    --accent: #c45d3e;
+    --accent-alt: #a04a30;
     --border-color: #000000;
     --border-width: 1px;
     --transition-smooth: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .dark-mode {
-    --bg-deep: #0a0a0a;
-    --bg-panel: #1a1a1a;
-    --bg-panel-alt: #111111;
-    --text-primary: #e0e0e0;
-    --text-secondary: #aaaaaa;
-    --text-dim: #888888;
-    --accent: #ffffff;
-    --accent-alt: #cccccc;
-    --border-color: #444444;
+    --bg-deep: #0e0d0c;
+    --bg-panel: #1a1918;
+    --bg-panel-alt: #131211;
+    --text-primary: #e0dcd8;
+    --text-secondary: #aa9e96;
+    --text-dim: #887e76;
+    --accent: #d4c5b9;
+    --accent-alt: #b8a99d;
+    --border-color: #3d3835;
 }
 
 /* Base Styles */
@@ -44,7 +46,7 @@ body {
 
 /* Layout */
 .app-container {
-    max-width: 1100px;
+    max-width: 780px;
     margin: 0 auto;
     padding: 4rem 2rem;
 }
@@ -103,12 +105,14 @@ p {
 /* Sections */
 .section {
     margin-bottom: 6rem;
+    padding-bottom: 4rem;
     position: relative;
     transition: var(--transition-smooth);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.section:hover {
-    background: rgba(0, 0, 0, 0.03);
+.section:last-of-type {
+    border-bottom: none;
 }
 
 /* Links */
@@ -200,6 +204,11 @@ a:hover {
 .log-item {
     padding: 1rem 0;
     border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-smooth);
+}
+
+.log-item:hover {
+    padding-left: 0.5rem;
 }
 
 .log-link {

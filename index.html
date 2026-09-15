@@ -54,14 +54,16 @@
 
         <!-- Search -->
         <div class="sidebar-module search-container fade-in" style="margin-bottom: 3rem;">
-            <input type="text" id="search-input" placeholder="find something..." style="width: 300px; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; font-family: inherit; font-size: 0.85rem;">
+            <input type="text" id="search-input" placeholder="find something..." style="max-width: 400px; width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; font-family: inherit; font-size: 0.85rem;">
             <div id="search-results" style="display: none; margin-top: 1.5rem; flex-direction: column; gap: 1rem;"></div>
         </div>
 
         <!-- Hero: Intro + Blog -->
         <section class="section fade-in" style="margin-bottom: 5rem;">
             <p style="margin-bottom: 0.5rem;">hello, korry here. currently in college, learning, and building.</p>
-            <p style="font-size: 0.85rem; opacity: 0.4; margin-bottom: 2.5rem;">this site is a collection of my work and stuff i think are cool. forever a work in progress.</p>
+            <p style="font-size: 0.85rem; opacity: 0.4; margin-bottom: 2rem;">this site is a collection of my work and stuff i think are cool. forever a work in progress.</p>
+
+            <img src="assets/img/main-image.png" alt="moodboard" style="width: 100%; height: auto; border: 1px solid var(--border-color); margin-bottom: 2.5rem; opacity: 0.9;">
 
             <h2>recent posts.</h2>
             <ul id="blog-mini-stream" class="log-list">
@@ -106,9 +108,47 @@
         <!-- Projects -->
         <section class="section fade-in" style="margin-bottom: 4rem;">
             <h2>projects.</h2>
-            <ul id="github-projects" class="project-list" style="margin-top: 1rem;">
-                <li class="project-item" style="opacity: 0.5;">loading projects...</li>
+            <ul class="project-list" style="margin-top: 1rem;">
+                <li class="project-item">
+                    <a href="https://github.com/korrykatti/precious" target="_blank" class="project-title">precious</a>
+                    <p class="project-desc">custom programming language for learning, written in c++</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.5; font-family: monospace;">
+                        <span>c++</span>
+                    </div>
+                </li>
+                <li class="project-item">
+                    <a href="https://github.com/korrykatti/Thunder" target="_blank" class="project-title">thunder</a>
+                    <p class="project-desc">python apps installer + launcher</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.5; font-family: monospace;">
+                        <span>javascript</span>
+                        <span>★ 2</span>
+                    </div>
+                </li>
+                <li class="project-item">
+                    <a href="https://github.com/korrykatti/ocean_circuit" target="_blank" class="project-title">ocean_circuit</a>
+                    <p class="project-desc">wip game built in odin</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.5; font-family: monospace;">
+                        <span>odin</span>
+                    </div>
+                </li>
+                <li class="project-item">
+                    <a href="https://github.com/korrykatti/minimal_blog" target="_blank" class="project-title">minimal_blog</a>
+                    <p class="project-desc">backend for this blog, written in go</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.5; font-family: monospace;">
+                        <span>go</span>
+                    </div>
+                </li>
+                <li class="project-item">
+                    <a href="https://github.com/korrykatti/game" target="_blank" class="project-title">game</a>
+                    <p class="project-desc">multiplayer game in c++ with sockets</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.5; font-family: monospace;">
+                        <span>c++</span>
+                    </div>
+                </li>
             </ul>
+            <div style="margin-top: 2rem;">
+                <a href="https://github.com/korrykatti?tab=repositories" target="_blank" class="serif-text" style="font-size: 1rem;">all repos →</a>
+            </div>
         </section>
 
         <!-- Footer -->
@@ -204,7 +244,6 @@
 
     <script src="assets/js/prefetch.js"></script>
     <script src="assets/js/script.js"></script>
-    <script src="assets/js/github-projects.js"></script>
 </body>
 
 </html>
