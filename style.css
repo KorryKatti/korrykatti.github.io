@@ -215,36 +215,6 @@ a:hover {
     font-size: 0.95rem;
 }
 
-/* Tumblr Feed */
-.tumblr-section {
-    margin-top: 8rem;
-    padding-top: 4rem;
-    border-top: 1px solid var(--border-color);
-}
-
-#tumblr-posts {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-}
-
-.tumblr-post {
-    background: var(--bg-panel);
-    padding: 2rem;
-    border: 1px solid var(--border-color);
-}
-
-.tumblr-post h4 a {
-    font-size: 1.5rem;
-    border-bottom: none;
-}
-
-.tumblr-post .post-meta {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
-}
-
 /* Controls */
 .fixed-controls {
     position: fixed;

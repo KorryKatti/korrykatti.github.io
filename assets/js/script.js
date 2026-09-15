@@ -238,7 +238,7 @@ async function fetchBlogMiniStream() {
 // Quote Fetcher
 async function fetchQuote() {
     try {
-        const response = await fetch('https://yurippe.vercel.app/api/quotes?show=Steins;Gate&random=1');
+        const response = await fetch('https://yurippe.vercel.app/api/quotes?show=Steins;Gate,%20monogatari&random=1');
         const data = await response.json();
         if (data && data.length > 0) {
             const quoteText = data[0].quote;
@@ -407,94 +407,6 @@ window.addEventListener('load', () => {
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 });
-
-// Paginated Tumblr loader
-(function () {
-    var start = 0;
-    var perPage = 3;
-    var loading = false;
-    var endpoint = 'https://korrykatti.tumblr.com/api/read/json';
-
-    window.renderTumblr = function (data) {
-        var container = document.getElementById('tumblr-posts');
-        var loadBtn = document.getElementById('load-more-btn');
-        var loader = document.getElementById('loader');
-        if (!container) return;
-
-        loading = false;
-        if (loader) loader.style.opacity = '0';
-
-        var posts = (data && (data.posts || (data.tumblr_api_read && data.tumblr_api_read.posts))) || [];
-
-        if (!posts || posts.length === 0) {
-            if (start === 0) container.textContent = '';
-            if (loadBtn) loadBtn.style.display = 'none';
-            return;
-        }
-        if (start === 0) container.innerHTML = '';
-
-        posts.forEach(function (post) {
-            var title = post['regular-title'] || post['title'] || post['photo-caption'] || post['video-caption'] || post['quote-text'] || '';
-            var date = post['date'] || (post['timestamp'] ? new Date(post.timestamp * 1000).toLocaleString() : '');
-            var body = post['regular-body'] || post['photo-caption'] || post['video-caption'] || post['quote-text'] || post['description'] || post['video-player'] || '';
-            var url = post['url-with-slug'] || post['url'] || '#';
-
-            var article = document.createElement('article');
-            article.className = 'tumblr-post fade-in';
-
-            let contentHtml = '';
-            if (title) contentHtml += `<h4><a href="${url}" target="_blank">${title.toLowerCase()}</a></h4>`;
-            contentHtml += `<div class="post-meta">${date.toLowerCase()}</div>`;
-            contentHtml += `<div class="post-body">${body}</div>`;
-
-            article.innerHTML = contentHtml;
-            container.appendChild(article);
-
-            try {
-                var imgs = article.querySelectorAll('.post-body img');
-                imgs.forEach(function (img) {
-                    img.removeAttribute('width');
-                    img.removeAttribute('height');
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.display = 'block';
-                });
-            } catch (e) { }
-
-            // Observe this new element for fade in
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            });
-            observer.observe(article);
-        });
-
-        if (posts.length < perPage && loadBtn) loadBtn.style.display = 'none';
-    };
-
-    function fetchPage() {
-        if (loading) return;
-        loading = true;
-
-        var loader = document.getElementById('loader');
-        if (loader) loader.style.opacity = '1';
-
-        var script = document.createElement('script');
-        script.src = endpoint + '?start=' + start + '&num=' + perPage + '&callback=renderTumblr';
-        script.async = true;
-        document.body.appendChild(script);
-        start += perPage;
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var loadBtn = document.getElementById('load-more-btn');
-        if (loadBtn) loadBtn.addEventListener('click', fetchPage);
-        fetchPage();
-    });
-})();
 
 // Semantic Page Finder Engine (Frontend Only)
 (function () {
