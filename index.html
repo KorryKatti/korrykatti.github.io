@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://korrykatti.github.io/assets/img/main-image.png">
 
     <link rel="icon" href="assets/img/icon.jpeg">
-    <link rel="stylesheet" href="style.css?v=2.2">
+    <link rel="stylesheet" href="style.css?v=2.3">
     <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
     <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
@@ -63,7 +63,12 @@
             <p style="margin-bottom: 0.5rem;">hello, korry here. currently in college, learning, and building.</p>
             <p style="font-size: 0.85rem; opacity: 0.4; margin-bottom: 2rem;">this site is a collection of my work and stuff i think are cool. forever a work in progress.</p>
 
-            <img src="assets/img/main-image.png" alt="moodboard" style="width: 100%; height: auto; border: 1px solid var(--border-color); margin-bottom: 2.5rem; opacity: 0.9;">
+            <picture>
+                <source srcset="assets/img/main-image.avif" type="image/avif">
+                <source srcset="assets/img/main-image.webp" type="image/webp">
+                <img src="assets/img/main-image.png" alt="moodboard"
+                    style="width: 100%; height: auto; border: 1px solid var(--border-color); margin-bottom: 2.5rem; opacity: 0.9;">
+            </picture>
 
             <h2>recent posts.</h2>
             <ul id="blog-mini-stream" class="log-list">

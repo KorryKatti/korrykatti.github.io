@@ -1,4 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+/* Space Grotesk, self-hosted.
+
+   This used to be an @import of a Google Fonts stylesheet, which serialises
+   the critical path (this file -> the Google sheet -> the woff2) and puts a
+   third party in the critical path of every page that loads this file. The
+   weight axis is declared as a range because the family ships as a variable
+   font, so two files cover all three weights in use. */
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('assets/fonts/space-grotesk-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212,
+        U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Space Grotesk';
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+    src: url('assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+        U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+        U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 :root {
     --bg-deep: #ffffff;
@@ -7,11 +34,25 @@
     --text-primary: #000000;
     --text-secondary: #333333;
     --text-dim: #555555;
+    --text-faint: #8a8a8a;
     --accent: #c45d3e;
     --accent-alt: #a04a30;
     --border-color: #000000;
     --border-width: 1px;
-    --transition-smooth: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    --border-width-thin: 1px;
+
+    /* Referenced by the search renderer in script.js. Kept in step with the
+       palette above so results never fall back to an unset colour. */
+    --color-orange: #c45d3e;
+    --text-gold: #555555;
+    --bg-mustard: #e9e9e9;
+    --bg-wine: #c45d3e;
+    --text-charcoal: #333333;
+
+    /* osu-style: menus answer in ~2 frames. The old 0.4s ease-on-everything
+       read as lag. Slow motion is reserved for rare, deliberate moves. */
+    --transition-smooth: 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-slow: 0.32s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .dark-mode {
@@ -21,9 +62,16 @@
     --text-primary: #e0dcd8;
     --text-secondary: #aa9e96;
     --text-dim: #887e76;
+    --text-faint: #5f5751;
     --accent: #d4c5b9;
     --accent-alt: #b8a99d;
     --border-color: #3d3835;
+
+    --color-orange: #d4c5b9;
+    --text-gold: #aa9e96;
+    --bg-mustard: #26231f;
+    --bg-wine: #d4c5b9;
+    --text-charcoal: #e0dcd8;
 }
 
 /* Base Styles */
@@ -128,6 +176,22 @@ a:hover {
     opacity: 0.8;
 }
 
+/* Keyboard users drive this site by keys, so the focus ring is a first-class
+   affordance rather than a fallback. */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Pressed state, declared after every :hover rule so it wins the cascade on
+   equal specificity. Without this a click feels like it silently misses. */
+a:active,
+.project-item:active,
+.log-item:active,
+.control-btn:active {
+    transform: translate(1px, 1px);
+}
+
 /* Project List */
 .project-list {
     display: flex;
@@ -178,6 +242,44 @@ a:hover {
     font-family: inherit;
     font-size: 1rem;
     margin-bottom: 1rem;
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(196, 93, 62, 0.22);
+}
+
+/* --- Layout stability ---------------------------------------------------
+   The live-data slots fill in from six independent network calls. Reserving
+   their final height up front stops the page reflowing under the reader,
+   which is most of what makes a slow page feel slow. */
+#blog-mini-stream {
+    min-height: 14rem;
+}
+
+#quote-display {
+    min-height: 4.5rem;
+}
+
+#status-container,
+#wakatime-display,
+#github-display,
+#last-updated {
+    display: inline-block;
+    min-height: 1.25em;
+}
+
+/* Intrinsic ratio of assets/img/main-image.png (1244x700). Declaring it lets
+   the browser reserve the box before the image lands, whichever source
+   <picture> picked. display:block stops <picture> adding a baseline gap. */
+.app-container picture {
+    display: block;
+}
+
+.app-container img[src*="main-image"] {
+    aspect-ratio: 1244 / 700;
+    height: auto;
 }
 
 .search-container button {
@@ -251,6 +353,10 @@ a:hover {
     box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
 }
 
+.control-btn:active {
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
 .control-btn.playing {
     background: var(--accent);
     color: var(--bg-deep);
@@ -308,4 +414,251 @@ a:hover {
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* --- Cursor -------------------------------------------------------------
+   The crosshair lives in assets/img/pointer-32.png (downscaled from the
+   512px original), hotspot at the centre dot. `cursor` is inherited, so
+   declaring it on <body> covers the whole tree and interactive elements
+   below opt back into the platform pointer to keep their affordance.
+
+   Flip body.no-custom-cursor from the settings panel to restore stock
+   cursors without touching this file. */
+:root {
+    --cursor-default: url('assets/img/pointer-32.png') 16 16, crosshair;
+    --cursor-pointer: pointer;
+    --cursor-text: text;
+}
+
+body {
+    cursor: var(--cursor-default);
+}
+
+body.no-custom-cursor {
+    --cursor-default: auto;
+    --cursor-pointer: auto;
+    --cursor-text: auto;
+}
+
+a,
+button,
+summary,
+label,
+input[type='button'],
+input[type='submit'],
+input[type='checkbox'],
+input[type='radio'],
+.control-btn,
+.switch,
+.swatch,
+.project-item,
+.log-item {
+    cursor: var(--cursor-pointer);
+}
+
+input:not([type='button']):not([type='submit']):not([type='checkbox']):not([type='radio']),
+textarea,
+[contenteditable] {
+    cursor: var(--cursor-text);
+}
+
+/* --- Keyboard selection cursor -----------------------------------------
+   The osu! menu model: one row is always selected, you move it with keys, and
+   the highlight stays visible. Deliberately off by default so the minimal
+   layout reads as-is until someone actually reaches for the keyboard; once
+   engaged it also follows manual scrolling. */
+.kb-target {
+    position: relative;
+    transition: background-color var(--transition-smooth),
+        box-shadow var(--transition-smooth);
+}
+
+.kb-target.kb-selected {
+    background-color: var(--bg-panel);
+    box-shadow: inset 4px 0 0 var(--accent);
+    opacity: 1;
+}
+
+/* Nav links are inline; a filled block would wreck the row, so the selection
+   reads as an underline plus full opacity instead. */
+.kb-target.kb-selected.kb-target-nav {
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom-color: var(--accent);
+    opacity: 1;
+}
+
+section.kb-target.kb-selected {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+section.kb-target.kb-selected::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent);
+}
+
+.kb-target.kb-selected .log-link,
+.kb-target.kb-selected .project-title {
+    color: var(--accent);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* --- Motion preferences -------------------------------------------------
+   Two ways in: the OS setting, and the in-page toggle. Once the visitor has
+   made an explicit choice their body carries .motion-explicit, which opts
+   them out of the media block below so "full motion" can override a
+   reduce-preference OS. Scripted scrolling asks Motion.behaviour() in
+   script.js, because CSS cannot override an explicit behaviour:'smooth'. */
+@media (prefers-reduced-motion: reduce) {
+    body:not(.motion-explicit) *,
+    body:not(.motion-explicit) *::before,
+    body:not(.motion-explicit) *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+
+    body:not(.motion-explicit) .fade-in {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+body.no-motion *,
+body.no-motion *::before,
+body.no-motion *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+}
+
+body.no-motion .fade-in {
+    opacity: 1;
+    transform: none;
+}
+
+/* --- Settings panel -----------------------------------------------------
+   Injected by script.js into the existing shortcuts modal, so index.html
+   stays untouched. */
+.settings-block {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.settings-row:last-child {
+    border-bottom: none;
+}
+
+.settings-row-label {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+}
+
+.shortcut-group {
+    font-family: Georgia, serif;
+    font-size: 1rem;
+    color: var(--accent);
+    text-transform: lowercase;
+    letter-spacing: 1px;
+    margin: 1.75rem 0 0.25rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.shortcut-group:first-child {
+    margin-top: 1.25rem;
+}
+
+.kbd-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+}
+
+.kbd {
+    background: var(--bg-panel-alt);
+    border: 1px solid var(--border-color);
+    padding: 0.25rem 0.6rem;
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    min-width: 1.9rem;
+    text-align: center;
+}
+
+.kbd-sep {
+    color: var(--text-faint);
+    font-size: 0.8rem;
+}
+
+.switch {
+    border: 1px solid var(--border-color);
+    background: var(--bg-panel-alt);
+    color: var(--text-dim);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    min-width: 4.5rem;
+    transition: var(--transition-smooth);
+}
+
+.switch:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.switch[aria-checked="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg-deep);
+}
+
+.swatch-row {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.swatch {
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    padding: 0;
+    transition: var(--transition-smooth);
+}
+
+.swatch[aria-pressed="true"] {
+    border-color: var(--text-primary);
+    transform: scale(1.15);
 }

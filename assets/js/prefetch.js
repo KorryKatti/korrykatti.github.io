@@ -99,10 +99,34 @@
         if (isPreloadable(anchor)) preload(anchor.href, 'high');
     }
 
+    // Hover prefetch only fires for people using a mouse. Once the browser is
+    // idle, warm the handful of destinations the nav offers so keyboard and
+    // touch visitors get the same head start.
+    const IDLE_ROUTES = [
+        '/blog/index.html',
+        '/guestbook.html',
+        '/apps/index.html',
+        '/colophon.html'
+    ];
+
+    function idlePrefetch() {
+        if (!supportsPrefetch) return;
+        if (navigator.connection && navigator.connection.saveData) return;
+
+        const run = function () {
+            IDLE_ROUTES.forEach(function (route) { preload(route); });
+        };
+
+        if (window.requestIdleCallback) requestIdleCallback(run, { timeout: 4000 });
+        else setTimeout(run, 2500);
+    }
+
     function init() {
         document.addEventListener('touchstart', touchstartListener, { capture: true, passive: true });
         document.addEventListener('mouseover', mouseoverListener, { capture: true, passive: true });
         document.addEventListener('mousedown', mousedownListener, { capture: true, passive: true });
+
+        window.addEventListener('load', idlePrefetch, { once: true });
 
         if (document.body.dataset.instantIntensity === 'viewport') {
             const saveData = navigator.connection && navigator.connection.saveData;
