@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ektara // terminal music player</title>
+    <meta name="description" content="Ektara is a terminal music player for Linux. Play the mp3s you own, stream from YouTube when you don't, and let Discord show what you're listening to.">
+    <meta name="author" content="korry">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://korrykatti.github.io/ektara/">
+    <meta property="og:title" content="ektara // terminal music player">
+    <meta property="og:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, and a Discord rich presence.">
+    <meta property="og:image" content="https://korrykatti.github.io/ektara/ektara-dark-poster.webp">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@dunkelkron">
+    <meta name="twitter:title" content="ektara // terminal music player">
+    <meta name="twitter:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, and a Discord rich presence.">
+    <meta name="twitter:image" content="https://korrykatti.github.io/ektara/ektara-dark-poster.webp">
+
+    <link rel="icon" href="/assets/img/icon.jpeg">
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('/assets/fonts/space-grotesk-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+1E00-1E9F, U+1EF2-1EFF,
+                U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        :root {
+            --bg-deep: #ffffff;
+            --bg-panel: #f5f5f5;
+            --bg-panel-alt: #fafafa;
+            --text-primary: #000000;
+            --text-dim: #555555;
+            --text-faint: #8a8a8a;
+            --accent: #c45d3e;
+            --border-color: #000000;
+        }
+
+        .dark-mode {
+            --bg-deep: #0e0d0c;
+            --bg-panel: #1a1918;
+            --bg-panel-alt: #131211;
+            --text-primary: #e0dcd8;
+            --text-dim: #887e76;
+            --text-faint: #5f5751;
+            --accent: #d4c5b9;
+            --border-color: #3d3835;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            line-height: 1.65;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        nav .sep {
+            opacity: 0.3;
+        }
+
+        a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        h1, h2, h3 {
+            font-family: Georgia, serif;
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: lowercase;
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 7vw, 3.4rem);
+            letter-spacing: -1px;
+            margin-bottom: 0.75rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            margin-bottom: 1.25rem;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        code, pre {
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+        }
+
+        code {
+            font-size: 0.85em;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 0.1rem 0.35rem;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            font-size: 0.85rem;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.25rem;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        /* the garden sits straight on the page, no border: the dark frame's
+           own background is the page's dark colour, the light frame is keyed
+           to transparent over white, so either way it reads as part of the page */
+        .garden {
+            margin-bottom: 2rem;
+        }
+
+        .garden video {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .garden video.garden-light {
+            display: none;
+        }
+
+        body:not(.dark-mode) .garden video.garden-light {
+            display: block;
+        }
+
+        body:not(.dark-mode) .garden video.garden-dark {
+            display: none;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 1.25rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            margin-bottom: 3.5rem;
+            align-items: baseline;
+        }
+
+        .tags .note {
+            color: var(--accent);
+            border: 1px solid var(--border-color);
+            padding: 0.15rem 0.6rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tags .icon {
+            width: 0.95rem;
+            height: 0.95rem;
+            fill: currentColor;
+        }
+
+        .tags .stack {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        section {
+            margin-bottom: 3.5rem;
+        }
+
+        /* a plain list reads better than a grid of boxes for something this small */
+        .plain-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .plain-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .plain-list li::before {
+            content: '::';
+            position: absolute;
+            left: 0;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .keys {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .keys td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.55rem 0.5rem 0.55rem 0;
+            vertical-align: top;
+            color: var(--text-dim);
+        }
+
+        .keys td:first-child {
+            width: 8.5rem;
+            white-space: nowrap;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .keys tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn {
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            background: var(--bg-panel-alt);
+        }
+
+        .btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .cta {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-faint);
+        }
+
+        footer .credit {
+            flex-basis: 100%;
+            border-bottom: none;
+            font-size: 0.78rem;
+            color: var(--text-faint);
+        }
+
+        footer .credit:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        #theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.75rem;
+            background: var(--bg-panel-alt);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.7rem;
+            cursor: pointer;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .garden video {
+                visibility: hidden;
+            }
+
+            .garden {
+                min-height: 160px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button id="theme-toggle" type="button">🌙 dark</button>
+
+    <div class="wrap">
+        <nav>
+            <a href="/index.html">home</a>
+            <span class="sep">::</span>
+            <a href="/blog/index.html">blog</a>
+            <span class="sep">::</span>
+            <a href="/apps/index.html">apps</a>
+        </nav>
+
+        <div class="garden">
+            <video class="garden-dark" autoplay loop muted playsinline poster="ektara-dark-poster.webp">
+                <source src="ektara-garden-dark.webm" type="video/webm">
+                <source src="ektara-garden-dark.mp4" type="video/mp4">
+            </video>
+            <video class="garden-light" autoplay loop muted playsinline poster="ektara-light-poster.webp">
+                <source src="ektara-garden-light.webm" type="video/webm">
+                <source src="ektara-garden-light.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <h1>Ektara</h1>
+        <p class="tagline">A music player that lives in your terminal. Play the mp3s you already own, stream anything from YouTube when you don't, and let Discord quietly tell people what's playing.</p>
+
+        <div class="tags">
+            <span class="stack"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true"><title>Go</title><path d="M1.811 10.231c-.047 0-.058-.023-.035-.059l.246-.315c.023-.035.081-.058.128-.058h4.172c.046 0 .058.035.035.07l-.199.303c-.023.036-.082.07-.117.07zM.047 11.306c-.047 0-.059-.023-.035-.058l.245-.316c.023-.035.082-.058.129-.058h5.328c.047 0 .07.035.058.07l-.093.28c-.012.047-.058.07-.105.07zm2.828 1.075c-.047 0-.059-.035-.035-.07l.163-.292c.023-.035.07-.07.117-.07h2.337c.047 0 .07.035.07.082l-.023.28c0 .047-.047.082-.082.082zm12.129-2.36c-.736.187-1.239.327-1.963.514-.176.046-.187.058-.34-.117-.174-.199-.303-.327-.548-.444-.737-.362-1.45-.257-2.115.175-.795.514-1.204 1.274-1.192 2.22.011.935.654 1.706 1.577 1.835.795.105 1.46-.175 1.987-.77.105-.13.198-.27.315-.434H10.47c-.245 0-.304-.152-.222-.35.152-.362.432-.97.596-1.274a.315.315 0 01.292-.187h4.253c-.023.316-.023.631-.07.947a4.983 4.983 0 01-.958 2.29c-.841 1.11-1.94 1.8-3.33 1.986-1.145.152-2.209-.07-3.143-.77-.865-.655-1.356-1.52-1.484-2.595-.152-1.274.222-2.419.993-3.424.83-1.086 1.928-1.776 3.272-2.02 1.098-.2 2.15-.07 3.096.571.62.41 1.063.97 1.356 1.648.07.105.023.164-.117.2m3.868 6.461c-1.064-.024-2.034-.328-2.852-1.029a3.665 3.665 0 01-1.262-2.255c-.21-1.32.152-2.489.947-3.529.853-1.122 1.881-1.706 3.272-1.95 1.192-.21 2.314-.095 3.33.595.923.63 1.496 1.484 1.648 2.605.198 1.578-.257 2.863-1.344 3.962-.771.783-1.718 1.273-2.805 1.495-.315.06-.63.07-.934.106zm2.78-4.72c-.011-.153-.011-.27-.034-.387-.21-1.157-1.274-1.81-2.384-1.554-1.087.245-1.788.935-2.045 2.033-.21.912.234 1.835 1.075 2.21.643.28 1.285.244 1.905-.07.923-.48 1.425-1.228 1.484-2.233z"/></svg>Go</span>
+            <span class="note"><svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true"><title>Linux</title><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0-.02.006-.04.006-.06v.105a.086.086 0 01-.004-.021l-.004-.024a1.807 1.807 0 01-.15.706.953.953 0 01-.213.335.71.71 0 00-.088-.042c-.104-.045-.198-.064-.284-.133a1.312 1.312 0 00-.22-.066c.05-.06.146-.133.183-.198.053-.128.082-.264.088-.402v-.02a1.21 1.21 0 00-.061-.4c-.045-.134-.101-.2-.183-.333-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 00-.205.334 1.18 1.18 0 00-.09.4v.019c.002.089.008.179.02.267-.193-.067-.438-.135-.607-.202a1.635 1.635 0 01-.018-.2v-.02a1.772 1.772 0 01.15-.768c.082-.22.232-.406.43-.533a.985.985 0 01.594-.2zm-2.962.059h.036c.142 0 .27.048.399.135.146.129.264.288.344.465.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024-.152.055-.274.135-.393.2.012-.09.013-.18.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.613.613 0 00-.166-.267.248.248 0 00-.183-.064h-.021c-.071.006-.13.04-.186.132a.552.552 0 00-.12.27.944.944 0 00-.023.33v.015c.012.135.037.2.08.334.046.134.098.2.166.268.01.009.02.018.034.024-.07.057-.117.07-.176.136a.304.304 0 01-.131.068 2.62 2.62 0 01-.275-.402 1.772 1.772 0 01-.155-.667 1.759 1.759 0 01.08-.668 1.43 1.43 0 01.283-.535c.128-.133.26-.2.418-.2zm1.37 1.706c.332 0 .733.065 1.216.399.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.571.571 0 01.016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465-.276.135-.588.292-1.012.267a1.139 1.139 0 01-.448-.067 3.566 3.566 0 01-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71-.07-.268-.005-.47.193-.6.224-.135.38-.271.483-.336.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473.286.534.855 1.659 1.102 3.024.156-.005.33.018.513.064.646-1.671-.546-3.467-1.089-3.966-.22-.2-.232-.335-.123-.335.59.534 1.365 1.572 1.646 2.757.13.535.16 1.104.021 1.67.067.028.135.06.205.067 1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224-.915-.4-1.646-.336-1.77.465-.008.043-.013.066-.018.135-.068.023-.139.053-.209.064-.43.268-.662.669-.793 1.187-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35-1.5 1.072-3.58 1.538-5.348.334a2.645 2.645 0 00-.402-.533 1.45 1.45 0 00-.275-.333c.182 0 .338-.03.465-.067a.615.615 0 00.314-.334c.108-.267 0-.697-.345-1.163-.345-.467-.931-.995-1.788-1.521-.63-.4-.986-.87-1.15-1.396-.165-.534-.143-1.085-.015-1.645.245-1.07.873-2.11 1.274-2.763.107-.065.037.135-.408.974-.396.751-1.14 2.497-.122 3.854a8.123 8.123 0 01.647-2.876c.564-1.278 1.743-3.504 1.836-5.268.048.036.217.135.289.202.218.133.38.333.59.465.21.201.477.335.876.335.039.003.075.006.11.006.412 0 .73-.134.997-.268.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876.085.4.154.78.409 1.066.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595-.63.401-1.746.712-2.457 1.57-.618.737-1.37 1.14-2.036 1.191-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69.176-.668.428-1.344.463-1.897.037-.714.076-1.335.195-1.814.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01c.053 0 .105.005.157.014.376.055.706.333 1.023.752l.91 1.664.003.003c.243.533.754 1.064 1.189 1.637.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294-.645.135-1.52.002-2.395-.464-.968-.536-2.118-.469-2.857-.602-.369-.066-.61-.2-.723-.4-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118-.055-.401-.083-.71.043-.94.16-.334.396-.4.69-.533.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838.19-.201.38-.336.663-.336zm7.159-9.074c-.435.201-.945.535-1.488.535-.542 0-.97-.267-1.28-.466-.154-.134-.28-.268-.373-.335-.164-.134-.144-.333-.074-.333.109.016.129.134.199.2.096.066.215.2.36.333.292.2.68.467 1.167.467.485 0 1.053-.267 1.398-.466.195-.135.445-.334.648-.467.156-.136.149-.267.279-.267.128.016.034.134-.147.332a8.097 8.097 0 01-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05.074-.043.18-.027.26.004.063 0 .16.067.15.135-.006.049-.085.066-.135.066-.055 0-.092-.043-.141-.068-.052-.018-.146-.008-.163-.065zm-.551 0c-.02.058-.113.049-.166.066-.047.025-.086.068-.14.068-.05 0-.13-.02-.136-.068-.01-.066.088-.133.15-.133.08-.031.184-.047.259-.005.019.009.036.03.03.05v.02h.003z"/></svg>works on Linux</span>
+        </div>
+
+        <section>
+            <h2>Why Ektara?</h2>
+            <p>Ektara is named after a traditional Indian <a href="https://en.wikipedia.org/wiki/Ektara" target="_blank" rel="noopener">one-stringed folk instrument</a>. Ek means one, taar means string, and it felt right for a player that is one window, a keyboard, and your music.</p>
+        </section>
+
+        <section>
+            <h2>How it works</h2>
+            <ul class="plain-list">
+                <li><strong>Download</strong> a song by name. Ektara searches YouTube, saves the audio as mp3, and plays it from disk from then on.</li>
+                <li><strong>Stream</strong> instead, when you want to hear something once and save nothing.</li>
+                <li><strong>Browse your library</strong>. Everything you have saved and everything you have played is one keystroke away.</li>
+                <li><strong>Queue freely</strong>. Pile up tracks in any order, shuffle or repeat the queue, and add more while the current song is still playing.</li>
+                <li><strong>Discord knows</strong>. The song, its cover art and a running clock show up in your rich presence while you listen.</li>
+                <li><strong>Cover art in the terminal</strong>. Album pictures are rendered in braille characters, two pixels per cell, so the colour survives the plain text.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Keys</h2>
+            <p style="font-size: 0.95rem;">Everything runs from the keyboard. The arrows and <code>j</code>/<code>k</code> move through lists, arrows seek, and the rest is here if you need it:</p>
+            <table class="keys">
+                <tr>
+                    <td>↑ ↓ / j k</td>
+                    <td>move through a list</td>
+                </tr>
+                <tr>
+                    <td>enter</td>
+                    <td>pick it</td>
+                </tr>
+                <tr>
+                    <td>e</td>
+                    <td>add it to the queue without interrupting what is playing</td>
+                </tr>
+                <tr>
+                    <td>p</td>
+                    <td>pause</td>
+                </tr>
+                <tr>
+                    <td>← →</td>
+                    <td>seek five seconds</td>
+                </tr>
+                <tr>
+                    <td>a d</td>
+                    <td>previous and next track</td>
+                </tr>
+                <tr>
+                    <td>s r</td>
+                    <td>shuffle and repeat</td>
+                </tr>
+                <tr>
+                    <td>m + -</td>
+                    <td>mute and volume</td>
+                </tr>
+                <tr>
+                    <td>esc</td>
+                    <td>back</td>
+                </tr>
+                <tr>
+                    <td>ctrl+c</td>
+                    <td>quit, from anywhere</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Getting started</h2>
+            <p>You need Go 1.27+, a C compiler, ffmpeg and libmpv. On Debian or Ubuntu that is <code>libmpv-dev</code>, on Arch just <code>mpv</code>. yt-dlp is fetched automatically the first time you search.</p>
+            <pre><code>git clone https://github.com/korrykatti/ektara
+cd ektara
+./build.sh run</code></pre>
+            <p style="margin-top: 1rem;">A note on where it runs: Ektara is developed and tested on Linux, and that's the honest edge of its support for now. Other systems are possible but nobody has sat down and checked.</p>
+        </section>
+
+        <section>
+            <h2>Source</h2>
+            <div class="cta">
+                <a class="btn" href="https://github.com/korrykatti/ektara" target="_blank">github / korrykatti/ektara</a>
+                <a class="btn" href="/index.html">back home</a>
+            </div>
+        </section>
+
+        <footer>
+            <span>&copy; 2026 korry</span>
+            <span>Ektara plays formats mpv supports, which is to say nearly all of them</span>
+            <!-- the garden animation (both themes) was grown with type-garden -->
+            <a class="credit" href="https://type-garden.vercel.app/" target="_blank">the garden at the top was grown with type-garden</a>
+        </footer>
+    </div>
+
+    <script>
+        // The theme is applied before the first paint, so the page never flashes
+        // the wrong palette on the way in. The garden follows it: two videos
+        // share the slot, the active one plays, the resting one waits.
+        (function () {
+            const btn = document.getElementById('theme-toggle');
+            const KEY = 'preferred-theme';
+            const dark = document.querySelector('.garden-dark');
+            const light = document.querySelector('.garden-light');
+
+            function isDark() {
+                return document.body.classList.contains('dark-mode');
+            }
+
+            function syncGarden() {
+                const active = isDark() ? dark : light;
+                const idle = isDark() ? light : dark;
+                active.play().catch(function () {});
+                idle.pause();
+            }
+
+            function toggle() {
+                apply(!isDark());
+            }
+
+            function apply(isDark) {
+                document.body.classList.toggle('dark-mode', isDark);
+                btn.textContent = isDark ? '☀ light' : '🌙 dark';
+                try { localStorage.setItem(KEY, isDark ? 'dark' : 'light'); } catch (e) {}
+                if (typeof syncGarden === 'function') syncGarden();
+            }
+
+            btn.addEventListener('click', toggle);
+
+            let stored = null;
+            try { stored = localStorage.getItem(KEY); } catch (e) {}
+            const prefersDark = window.matchMedia
+                && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            // apply before paint; syncGarden runs again on 'canplay' below, so
+            // a slow connection never desyncs the pair
+            apply(stored ? stored === 'dark' : prefersDark);
+
+            [dark, light].forEach(function (v) {
+                if (!v) return;
+                v.addEventListener('canplay', syncGarden);
+            });
+
+            // follow the system switch live, unless the user picked one by hand
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                let picked = null;
+                try { picked = localStorage.getItem(KEY); } catch (er) {}
+                if (!picked) apply(e.matches);
+            });
+        })();
+    </script>
+</body>
+
+</html>
