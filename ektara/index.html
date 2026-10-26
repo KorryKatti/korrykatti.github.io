@@ -5,19 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ektara // terminal music player</title>
-    <meta name="description" content="Ektara is a terminal music player for Linux. Play the mp3s you own, stream from YouTube when you don't, and let Discord show what you're listening to.">
+    <meta name="description" content="Ektara is a terminal music player for Linux. Play the mp3s you own, stream from YouTube when you don't, follow the lyrics as they are sung, and let Discord show what you're listening to.">
     <meta name="author" content="korry">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://korrykatti.github.io/ektara/">
     <meta property="og:title" content="ektara // terminal music player">
-    <meta property="og:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, and a Discord rich presence.">
+    <meta property="og:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, lyrics that follow the music, and a Discord rich presence.">
     <meta property="og:image" content="https://korrykatti.github.io/ektara/ektara-dark-poster.webp">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@dunkelkron">
     <meta name="twitter:title" content="ektara // terminal music player">
-    <meta name="twitter:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, and a Discord rich presence.">
+    <meta name="twitter:description" content="A terminal music player for Linux. Local mp3s, YouTube streams, a queue you can keep adding to, lyrics that follow the music, and a Discord rich presence.">
     <meta name="twitter:image" content="https://korrykatti.github.io/ektara/ektara-dark-poster.webp">
 
     <link rel="icon" href="/assets/img/icon.jpeg">
@@ -404,6 +404,7 @@
                 <li><strong>Browse your library</strong>. Everything you have saved and everything you have played is one keystroke away.</li>
                 <li><strong>Queue freely</strong>. Pile up tracks in any order, shuffle or repeat the queue, and add more while the current song is still playing.</li>
                 <li><strong>Discord knows</strong>. The song, its cover art and a running clock show up in your rich presence while you listen.</li>
+                <li><strong>Lyrics that follow the music</strong>. Words come from LRCLIB, timed line by line, and the line being sung is picked out as the song goes. Instrumental tracks say so.</li>
                 <li><strong>Cover art in the terminal</strong>. Album pictures are rendered in braille characters, two pixels per cell, so the colour survives the plain text.</li>
             </ul>
         </section>
@@ -421,6 +422,10 @@
                     <td>pick it</td>
                 </tr>
                 <tr>
+                    <td>tab</td>
+                    <td>in the search box, move to the optional artist</td>
+                </tr>
+                <tr>
                     <td>e</td>
                     <td>add it to the queue without interrupting what is playing</td>
                 </tr>
@@ -430,7 +435,19 @@
                 </tr>
                 <tr>
                     <td>← →</td>
-                    <td>seek five seconds</td>
+                    <td>seek five seconds, or scroll the lyrics while they are open</td>
+                </tr>
+                <tr>
+                    <td>l</td>
+                    <td>lyrics for the track playing, following the music; works from any screen but the search box</td>
+                </tr>
+                <tr>
+                    <td>+ / -</td>
+                    <td>on the lyrics screen, shift the words 0.1s later or earlier instead of changing the volume</td>
+                </tr>
+                <tr>
+                    <td>r</td>
+                    <td>on the lyrics screen, reset that shift; elsewhere, repeat</td>
                 </tr>
                 <tr>
                     <td>a d</td>
