@@ -174,6 +174,28 @@
             padding: 0;
         }
 
+        .install-line {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .install-line pre {
+            display: inline-block;
+            max-width: 100%;
+            margin: 0;
+            padding: 0.7rem 1.1rem;
+            border-color: var(--accent);
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 620px) {
+            .install-line pre {
+                white-space: pre-wrap;
+                overflow-wrap: anywhere;
+            }
+        }
+
         /* the garden sits straight on the page, no border: the dark frame's
            own background is the page's dark colour, the light frame is keyed
            to transparent over white, so either way it reads as part of the page */
@@ -383,6 +405,10 @@
             </video>
         </div>
 
+        <div class="install-line">
+            <pre><code>curl -fsSL https://raw.githubusercontent.com/korrykatti/ektara/main/install.sh | sh</code></pre>
+        </div>
+
         <h1>Ektara</h1>
         <p class="tagline">A music player that lives in your terminal. Play the mp3s you already own, stream anything from YouTube when you don't, and let Discord quietly tell people what's playing.</p>
 
@@ -405,6 +431,7 @@
                 <li><strong>Queue freely</strong>. Pile up tracks in any order, shuffle or repeat the queue, and add more while the current song is still playing.</li>
                 <li><strong>Discord knows</strong>. The song, its cover art and a running clock show up in your rich presence while you listen.</li>
                 <li><strong>Lyrics that follow the music</strong>. Words come from LRCLIB, timed line by line, and the line being sung is picked out as the song goes. Instrumental tracks say so.</li>
+                <li><strong>Genres, when they can be found</strong>. Ektara asks MusicBrainz once for the playing track's song and artist and shows up to three genres under the title. It is best-effort: no match means no genre, not a guess. Answers are remembered and playback never waits for the lookup.</li>
                 <li><strong>Cover art in the terminal</strong>. Album pictures are rendered in braille characters, two pixels per cell, so the colour survives the plain text.</li>
             </ul>
         </section>
@@ -474,10 +501,9 @@
 
         <section>
             <h2>Getting started</h2>
-            <p>You need Go 1.27+, a C compiler, ffmpeg and libmpv. On Debian or Ubuntu that is <code>libmpv-dev</code>, on Arch just <code>mpv</code>. yt-dlp is fetched automatically the first time you search.</p>
-            <pre><code>git clone https://github.com/korrykatti/ektara
-cd ektara
-./build.sh run</code></pre>
+            <p>The one-line installer at the top checks for Go 1.27+, a C compiler and libmpv, fetches the source, builds it, and puts the binary in <code>~/.local/bin</code>. Nothing outside your home directory is written.</p>
+            <p><code>wget -qO-</code> works too, and <code>BINDIR</code> changes where the binary goes. ffmpeg is optional, needed only for downloading; yt-dlp is fetched automatically the first time you search.</p>
+            <p>There are no prebuilt binaries: installing means building from source. Or clone the repository and run <code>./build.sh run</code> if you prefer a checkout.</p>
             <p style="margin-top: 1rem;">A note on where it runs: Ektara is developed and tested on Linux, and that's the honest edge of its support for now. Other systems are possible but nobody has sat down and checked.</p>
         </section>
 
