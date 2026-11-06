@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>franz hermann // think different</title>
+    <meta name="description" content="Franz Hermann is a Formula 1 bot for Fluxer chat. Ask for standings, the last race, or any driver by car number — and it counts down to the next race. Think different.">
+    <meta name="author" content="korry">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://korrykatti.github.io/franz-hermann/">
+    <meta property="og:title" content="franz hermann // think different">
+    <meta property="og:description" content="F1 standings, last race results and driver lookups in chat. Think different.">
+    <meta property="og:image" content="https://korrykatti.github.io/franz-hermann/banner.webp">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@dunkelkron">
+    <meta name="twitter:title" content="franz hermann // think different">
+    <meta name="twitter:description" content="F1 standings, last race results and driver lookups in chat. Think different.">
+    <meta name="twitter:image" content="https://korrykatti.github.io/franz-hermann/banner.webp">
+
+    <link rel="icon" href="/assets/img/icon.jpeg">
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+
+    <style>
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('/assets/fonts/space-grotesk-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+                U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+
+        @font-face {
+            font-family: 'Space Grotesk';
+            font-style: normal;
+            font-weight: 300 700;
+            font-display: swap;
+            src: url('/assets/fonts/space-grotesk-latin-ext.woff2') format('woff2');
+            unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+1E00-1E9F, U+1EF2-1EFF,
+                U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+
+        :root {
+            --bg-deep: #ffffff;
+            --bg-panel: #f5f5f5;
+            --bg-panel-alt: #fafafa;
+            --text-primary: #000000;
+            --text-dim: #555555;
+            --text-faint: #8a8a8a;
+            --accent: #e85d04;
+            --border-color: #000000;
+        }
+
+        .dark-mode {
+            --bg-deep: #0c1116;
+            --bg-panel: #141b22;
+            --bg-panel-alt: #10161c;
+            --text-primary: #e8eef2;
+            --text-dim: #93a3b1;
+            --text-faint: #5f7383;
+            --accent: #ff8c1a;
+            --border-color: #27333f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            line-height: 1.65;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        nav .sep {
+            opacity: 0.3;
+        }
+
+        a {
+            color: var(--text-primary);
+            text-decoration: none;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        h1, h2, h3 {
+            font-family: Georgia, serif;
+            font-weight: 400;
+            line-height: 1.1;
+            text-transform: lowercase;
+            color: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2.4rem, 8vw, 3.8rem);
+            letter-spacing: -1px;
+            margin-bottom: 0.75rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            margin-bottom: 1.25rem;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        code, pre {
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+        }
+
+        code {
+            font-size: 0.85em;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 0.1rem 0.35rem;
+            overflow-wrap: anywhere;
+        }
+
+        pre {
+            font-size: 0.85rem;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            padding: 1rem 1.25rem;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        /* hero: the bot's own banner, with its avatar sitting on it like a
+           chat profile. no video, no stock, just the bot itself. */
+        .hero {
+            position: relative;
+            margin-bottom: 3.5rem;
+        }
+
+        .hero .banner {
+            display: block;
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero .avatar {
+            position: absolute;
+            left: 1.25rem;
+            bottom: -2.25rem;
+            width: 6rem;
+            height: 6rem;
+            border-radius: 50%;
+            border: 3px solid var(--accent);
+            background: var(--bg-deep);
+        }
+
+        .hero .status {
+            position: absolute;
+            right: 1.25rem;
+            bottom: 1rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.78rem;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.55);
+            padding: 0.3rem 0.7rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem 1.25rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            margin-bottom: 3.5rem;
+            align-items: baseline;
+        }
+
+        .tags .invite-pill {
+            display: inline-block;
+            color: #111;
+            border: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: linear-gradient(90deg, #ffb347, #ff8c1a, #e85d04);
+            padding: 0.45rem 1.1rem;
+            transform: rotate(-1.5deg);
+            box-shadow: 0 0 0 0 rgba(255, 140, 26, 0.55);
+            animation: invite-pulse 1.6s ease-out infinite;
+        }
+
+        .tags .invite-pill:hover {
+            color: #000;
+            border: none;
+            transform: rotate(0deg) scale(1.04);
+        }
+
+        @keyframes invite-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 140, 26, 0.55); }
+            70% { box-shadow: 0 0 0 12px rgba(255, 140, 26, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 140, 26, 0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tags .invite-pill {
+                animation: none;
+            }
+        }
+
+        /* secret: looks like a plain tag, plays a hidden video on click.
+           same trick as the main page's bgm player: a 0x0 yt player. */
+        .tags .secret {
+            background: none;
+            border: none;
+            font: inherit;
+            color: inherit;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .tags .secret:hover,
+        .tags .secret.playing {
+            color: var(--accent);
+        }
+
+        section {
+            margin-bottom: 3.5rem;
+        }
+
+        .plain-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .plain-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-dim);
+        }
+
+        .plain-list li::before {
+            content: '::';
+            position: absolute;
+            left: 0;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .keys {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .keys td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.55rem 0.5rem 0.55rem 0;
+            vertical-align: top;
+            color: var(--text-dim);
+        }
+
+        .keys td:first-child {
+            width: 9rem;
+            white-space: nowrap;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .keys tr:last-child td {
+            border-bottom: none;
+        }
+
+        .btn {
+            display: inline-block;
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.2rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            background: var(--bg-panel-alt);
+        }
+
+        .btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .cta {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-faint);
+        }
+
+        #theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+            font-size: 0.75rem;
+            background: var(--bg-panel-alt);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.7rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="theme-toggle" type="button">dark</button>
+
+    <div class="wrap">
+        <nav>
+            <a href="/index.html">home</a>
+            <span class="sep">::</span>
+            <a href="/blog/index.html">blog</a>
+            <span class="sep">::</span>
+            <a href="/apps/index.html">apps</a>
+        </nav>
+
+        <div class="hero">
+            <img class="banner" src="banner.webp" alt="formula 1 cars on a wet track — think different">
+            <img class="avatar" src="avatar.webp" alt="franz hermann, in glasses and a moustache">
+            <span class="status">race day soon</span>
+        </div>
+
+        <h1>Franz Hermann</h1>
+
+        <div class="tags">
+            <button class="secret" id="fans-secret" type="button">for the #3 fans</button>
+            <span>go</span>
+            <span>docker</span>
+            <a class="invite-pill" href="https://fluxer.com/oauth2/authorize?client_id=1566837767571247107&scope=bot&permissions=274878171200" target="_blank">invite to your server</a>
+        </div>
+
+        <section>
+            <h2>What does he do?</h2>
+            <p>Franz sits in your Fluxer chat and knows Formula 1. You ask a question, he replies with the answer — standings, results, or who's in which car. He also quietly counts down to the next race in his status, so you always know when lights out is.</p>
+            <p>All the race info comes from <a href="https://api.openf1.org/" target="_blank" rel="noopener">OpenF1</a> — the free live timing feed for Formula 1. Franz doesn't keep any of it himself; he just asks OpenF1 for you.</p>
+        </section>
+
+        <section>
+            <h2>Talk to him</h2>
+            <p style="font-size: 0.95rem;">Everything starts with <code>&gt;</code>:</p>
+            <table class="keys">
+                <tr>
+                    <td>&gt;ds</td>
+                    <td>who's leading the championship</td>
+                </tr>
+                <tr>
+                    <td>&gt;last</td>
+                    <td>how the last race finished</td>
+                </tr>
+                <tr>
+                    <td>&gt;who 3</td>
+                    <td>who's car #3? name, team, country</td>
+                </tr>
+                <tr>
+                    <td>&gt;help</td>
+                    <td>remind me what you can do</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Why have him around</h2>
+            <ul class="plain-list">
+                <li><strong>Never miss lights out</strong>. His status always shows when the next race is — no calendar-checking needed.</li>
+                <li><strong>Answers in seconds</strong>. Standings, results, driver lookups — type a command, get the answer right there in chat.</li>
+                <li><strong>Knows every car on the grid</strong>. Ask by number and get the driver, their team and their country.</li>
+                <li><strong>Always up to date</strong>. The info comes straight from the live feed, so what he says is what's actually happening.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Source</h2>
+            <div class="cta">
+                <a class="btn" href="https://fluxer.com/oauth2/authorize?client_id=1566837767571247107&scope=bot&permissions=274878171200" target="_blank">invite franz to your server</a>
+                <a class="btn" href="https://github.com/korrykatti/franz-hermann" target="_blank">github / korrykatti/franz-hermann</a>
+                <a class="btn" href="/index.html">back home</a>
+            </div>
+        </section>
+
+        <footer>
+            <span>&copy; 2026 korry</span>
+            <span>fan-made, not affiliated with formula 1</span>
+        </footer>
+    </div>
+
+    <div id="youtube-player" style="display:none;"></div>
+
+    <script>
+        // secret bgm: clicking "for the #3 fans" toggles a hidden youtube
+        // player, same 0x0 iframe_api setup as the main page.
+        (function () {
+            const secret = document.getElementById('fans-secret');
+            const VIDEO_ID = 'SBt9VJ6axB0';
+            let player = null;
+            let isPlaying = false;
+
+            function loadApi() {
+                if (window.YT) return;
+                const tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
+            }
+
+            window.onYouTubeIframeAPIReady = function () {
+                player = new YT.Player('youtube-player', {
+                    height: '0',
+                    width: '0',
+                    videoId: VIDEO_ID,
+                    playerVars: { playsinline: 1, controls: 0, start: 0 }
+                });
+            };
+
+            if (secret) {
+                secret.addEventListener('click', function () {
+                    loadApi();
+                    if (!player) return;
+                    if (isPlaying) {
+                        player.pauseVideo();
+                        secret.classList.remove('playing');
+                        isPlaying = false;
+                    } else {
+                        player.playVideo();
+                        secret.classList.add('playing');
+                        isPlaying = true;
+                    }
+                });
+            }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            const btn = document.getElementById('theme-toggle');
+            const KEY = 'preferred-theme';
+
+            function isDark() {
+                return document.body.classList.contains('dark-mode');
+            }
+
+            function apply(next) {
+                document.body.classList.toggle('dark-mode', next);
+                btn.textContent = next ? 'light' : 'dark';
+                try { localStorage.setItem(KEY, next ? 'dark' : 'light'); } catch (e) {}
+            }
+
+            btn.addEventListener('click', function () { apply(!isDark()); });
+
+            let stored = null;
+            try { stored = localStorage.getItem(KEY); } catch (e) {}
+            const prefersDark = window.matchMedia
+                && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            apply(stored ? stored === 'dark' : prefersDark);
+
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                let picked = null;
+                try { picked = localStorage.getItem(KEY); } catch (er) {}
+                if (!picked) apply(e.matches);
+            });
+        })();
+    </script>
+</body>
+
+</html>
