@@ -5,19 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>franz hermann // think different</title>
-    <meta name="description" content="Franz Hermann is a Formula 1 bot for Fluxer chat. Ask for standings, the last race, or any driver by car number — and it counts down to the next race. Think different.">
+    <meta name="description" content="Franz Hermann is a Formula 1 bot for Fluxer chat. Ask for standings, the last race, or any driver by car number — and it counts down to the next race, plus reminders before lights out. Think different.">
     <meta name="author" content="korry">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://korrykatti.github.io/franz-hermann/">
     <meta property="og:title" content="franz hermann // think different">
-    <meta property="og:description" content="F1 standings, last race results and driver lookups in chat. Think different.">
+    <meta property="og:description" content="F1 standings, last race results, driver lookups and race-day reminders in chat. Think different.">
     <meta property="og:image" content="https://korrykatti.github.io/franz-hermann/banner.webp">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@dunkelkron">
     <meta name="twitter:title" content="franz hermann // think different">
-    <meta name="twitter:description" content="F1 standings, last race results and driver lookups in chat. Think different.">
+    <meta name="twitter:description" content="F1 standings, last race results, driver lookups and race-day reminders in chat. Think different.">
     <meta name="twitter:image" content="https://korrykatti.github.io/franz-hermann/banner.webp">
 
     <link rel="icon" href="/assets/img/icon.jpeg">
@@ -399,8 +399,9 @@
 
         <section>
             <h2>What does he do?</h2>
-            <p>Franz sits in your Fluxer chat and knows Formula 1. You ask a question, he replies with the answer — standings, results, or who's in which car. He also quietly counts down to the next race in his status, so you always know when lights out is.</p>
+            <p>Franz sits in your Fluxer chat and knows Formula 1. You ask a question, he replies with the answer — standings, results, or who's in which car. He also quietly counts down to the next race in his status — rotating between the countdown, the next session, the championship leader and the last race winner — so you always know when lights out is.</p>
             <p>All the race info comes from <a href="https://api.openf1.org/" target="_blank" rel="noopener">OpenF1</a> — the free live timing feed for Formula 1. Franz doesn't keep any of it himself; he just asks OpenF1 for you.</p>
+            <p>Want a heads-up before lights out? Run <code>&gt;follow</code> in the channel and Franz will remind you 30 minutes before every race and sprint. Stuck, or curious about his other bots? <a href="https://fluxer.gg/s1evrala" target="_blank" rel="noopener">the support server</a> has both.</p>
         </section>
 
         <section>
@@ -416,8 +417,24 @@
                     <td>how the last race finished</td>
                 </tr>
                 <tr>
+                    <td>&gt;next</td>
+                    <td>next session — where, which circuit, country, countdown</td>
+                </tr>
+                <tr>
                     <td>&gt;who 3</td>
                     <td>who's car #3? name, team, country</td>
+                </tr>
+                <tr>
+                    <td>&gt;ping</td>
+                    <td>live latency to fluxer + openf1, cpu/memory + uptime checkup</td>
+                </tr>
+                <tr>
+                    <td>&gt;follow</td>
+                    <td>remind this channel 30 minutes before race/sprint</td>
+                </tr>
+                <tr>
+                    <td>&gt;unfollow</td>
+                    <td>stop the reminders for this server</td>
                 </tr>
                 <tr>
                     <td>&gt;help</td>
@@ -429,7 +446,8 @@
         <section>
             <h2>Why have him around</h2>
             <ul class="plain-list">
-                <li><strong>Never miss lights out</strong>. His status always shows when the next race is — no calendar-checking needed.</li>
+                <li><strong>Never miss lights out</strong>. His status rotates between the countdown, the next session, the championship leader and the last race winner — no calendar-checking needed.</li>
+                <li><strong>Reminds you 30 minutes early</strong>. <code>&gt;follow</code> once and Franz pings the channel before every race and sprint.</li>
                 <li><strong>Answers in seconds</strong>. Standings, results, driver lookups — type a command, get the answer right there in chat.</li>
                 <li><strong>Knows every car on the grid</strong>. Ask by number and get the driver, their team and their country.</li>
                 <li><strong>Always up to date</strong>. The info comes straight from the live feed, so what he says is what's actually happening.</li>
@@ -441,6 +459,7 @@
             <div class="cta">
                 <a class="btn" href="https://fluxer.com/oauth2/authorize?client_id=1566837767571247107&scope=bot&permissions=274878171200" target="_blank">invite franz to your server</a>
                 <a class="btn" href="https://github.com/korrykatti/franz-hermann" target="_blank">github / korrykatti/franz-hermann</a>
+                <a class="btn" href="https://fluxer.gg/s1evrala" target="_blank">support server :: more bots</a>
                 <a class="btn" href="/index.html">back home</a>
             </div>
         </section>
