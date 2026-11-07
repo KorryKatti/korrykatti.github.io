@@ -345,52 +345,144 @@ function getUptime() {
     setInterval(update, 1000);
 }
 
-async function getStatus() {
-    try {
-        const response = await fetch('https://duinogame.pythonanywhere.com/statusget');
-        const data = await response.json();
-        const statusContainer = document.getElementById('status-container');
+// Discord presence via Lanyard: WebSocket primary (realtime), REST fallback.
+const DISCORD_USER_ID = '1143929580940443800';
+const LANYARD_REST_URL = `https://api.lanyard.rest/v1/users/${DISCORD_USER_ID}`;
+const LANYARD_WS_URL = 'wss://api.lanyard.rest/socket';
 
-        let statusHTML = '';
-        const currentStatus = data.current_status || {};
-        const status = currentStatus.status || 'offline';
-        
-        let label = status.toUpperCase();
-        let activityContent = '';
+let statusSocket = null;
+let heartbeatTimer = null;
+let reconnectTimer = null;
+let reconnectAttempts = 0;
+let restFallbackTimer = null;
 
-        if (status === 'online' && currentStatus.activities && currentStatus.activities.length > 0) {
-            const activity = currentStatus.activities[0];
-            const isSpotify = activity.activity_type === 'spotify' || activity.name.toLowerCase() === 'spotify';
-            
-            if (isSpotify) {
-                label = 'LISTEN';
-                let track = `${activity.title || ''} - ${activity.artist || ''}`.toLowerCase();
-                if (track.length > 30) track = track.substring(0, 27) + '...';
-                activityContent = track;
-            } else {
-                let name = (activity.name || '').toLowerCase();
-            if (name.length > 25) name = name.substring(0, 22) + '...';
-                activityContent = name;
+function renderStatus(presence) {
+    const statusContainer = document.getElementById('status-container');
+    if (!statusContainer || !presence) return;
+
+    let statusHTML = '';
+    const status = presence.discord_status || 'offline';
+
+    let label = status.toUpperCase();
+    let activityContent = '';
+
+    if (status === 'online') {
+        if (presence.listening_to_spotify && presence.spotify) {
+            label = 'LISTEN';
+            let track = `${presence.spotify.song || ''} - ${presence.spotify.artist || ''}`.toLowerCase();
+            if (track.length > 30) track = track.substring(0, 27) + '...';
+            activityContent = track;
+        } else if (Array.isArray(presence.activities) && presence.activities.length > 0) {
+            // Skip type 4 (Custom Status) -- its name carries no information.
+            const activity = presence.activities.find(a => a && a.type !== 4 && a.name) || null;
+            if (activity) {
+                if (activity.name.toLowerCase() === 'spotify') {
+                    label = 'LISTEN';
+                    let track = `${activity.details || ''} - ${activity.state || ''}`.toLowerCase();
+                    if (track.length > 30) track = track.substring(0, 27) + '...';
+                    activityContent = track;
+                } else {
+                    let name = (activity.name || '').toLowerCase();
+                    if (name.length > 25) name = name.substring(0, 22) + '...';
+                    activityContent = name;
+                }
             }
         }
-
-        const dotColor = status === 'online' ? '#16a34a' : '#dc2626';
-        statusHTML += `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${dotColor}; flex-shrink: 0;"></span>`;
-        statusHTML += `<span style="font-weight: 600; font-size: inherit; letter-spacing: 0.5px; color: ${dotColor};">${label}</span>`;
-
-        if (activityContent) {
-            statusHTML += `<span style="opacity: 0.5; margin: 0 0.5rem;">//</span>`;
-            statusHTML += `<span>${activityContent}</span>`;
-        } else if (status === 'offline') {
-            statusHTML += `<span style="opacity: 0.5; margin-left: 0.5rem; color: #dc2626;">off</span>`;
-        } else {
-            statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">idle</span>`;
-        }
-        
-        statusContainer.innerHTML = statusHTML;
-    } catch (error) {
-        document.getElementById('status-container').innerHTML = '<div style="color: var(--text-dim);">offline</div>';
     }
+
+    const dotColor = status === 'online' ? '#16a34a' : '#dc2626';
+    statusHTML += `<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: ${dotColor}; flex-shrink: 0;"></span>`;
+    statusHTML += `<span style="font-weight: 600; font-size: inherit; letter-spacing: 0.5px; color: ${dotColor};">${label}</span>`;
+
+    if (activityContent) {
+        statusHTML += `<span style="opacity: 0.5; margin: 0 0.5rem;">//</span>`;
+        statusHTML += `<span>${activityContent}</span>`;
+    } else if (status === 'offline') {
+        statusHTML += `<span style="opacity: 0.5; margin-left: 0.5rem; color: #dc2626;">off</span>`;
+    } else {
+        statusHTML += `<span style="opacity: 0.7; margin-left: 0.5rem;">idle</span>`;
+    }
+
+    statusContainer.innerHTML = statusHTML;
+}
+
+function renderStatusOffline() {
+    const statusContainer = document.getElementById('status-container');
+    if (statusContainer) statusContainer.innerHTML = '<div style="color: var(--text-dim);">offline</div>';
+}
+
+async function getStatusViaRest() {
+    const response = await fetch(LANYARD_REST_URL);
+    if (!response.ok) throw new Error(`Lanyard REST ${response.status}`);
+    const payload = await response.json();
+    if (!payload || payload.success !== true || !payload.data) throw new Error('Lanyard REST bad payload');
+    renderStatus(payload.data);
+}
+
+function clearRestPolling() {
+    if (restFallbackTimer) { clearInterval(restFallbackTimer); restFallbackTimer = null; }
+}
+
+function startRestPolling() {
+    if (restFallbackTimer) return;
+    restFallbackTimer = setInterval(() => { getStatusViaRest().catch(() => {}); }, 30000);
+}
+
+function scheduleStatusReconnect() {
+    startRestPolling();
+    if (reconnectTimer) return;
+    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+    reconnectAttempts++;
+    reconnectTimer = setTimeout(() => { reconnectTimer = null; connectDiscordStatus(); }, delay);
+}
+
+function connectDiscordStatus() {
+    if (statusSocket && statusSocket.readyState <= WebSocket.OPEN) return;
+    let ws;
+    try {
+        ws = new WebSocket(LANYARD_WS_URL);
+    } catch (error) {
+        scheduleStatusReconnect();
+        return;
+    }
+    statusSocket = ws;
+
+    ws.onmessage = (event) => {
+        let msg;
+        try { msg = JSON.parse(event.data); } catch (error) { return; }
+        if (msg.op === 1) {
+            // Hello: heartbeat at the server-provided interval, then Initialize.
+            const interval = (msg.d && msg.d.heartbeat_interval) || 30000;
+            clearInterval(heartbeatTimer);
+            heartbeatTimer = setInterval(() => {
+                if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ op: 3 }));
+            }, interval);
+            ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_USER_ID } }));
+        } else if (msg.op === 0 && (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE')) {
+            // subscribe_to_id (singular) returns the presence object directly;
+            // tolerate the id -> presence map form just in case.
+            const presence = (msg.d && msg.d.discord_status) ? msg.d : (msg.d && msg.d[DISCORD_USER_ID]);
+            if (presence) {
+                reconnectAttempts = 0;
+                clearRestPolling();
+                renderStatus(presence);
+            }
+        }
+    };
+    // onclose fires after onerror too, so reconnect logic lives only here.
+    ws.onerror = () => { try { ws.close(); } catch (error) {} };
+    ws.onclose = () => {
+        clearInterval(heartbeatTimer);
+        heartbeatTimer = null;
+        if (statusSocket === ws) statusSocket = null;
+        scheduleStatusReconnect();
+    };
+}
+
+function getStatus() {
+    // REST for instant first paint, WebSocket for realtime updates.
+    getStatusViaRest().catch(renderStatusOffline);
+    connectDiscordStatus();
 }
 
 // BGM / YouTube Player
