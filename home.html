@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>korry // main page</title>
+    <meta name="description" content="if life doesn't kill me , nostalgia will">
+    <meta name="author" content="korry">
+
+    <link rel="preconnect" href="https://api.github.com">
+    <link rel="preconnect" href="https://wakatime.com">
+    <link rel="preconnect" href="https://mayu.due.moe">
+    <link rel="preconnect" href="https://api.lanyard.rest">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://korrykatti.github.io/">
+    <meta property="og:title" content="korry // blog">
+    <meta property="og:description" content="if life doesn't kill me , nostalgia will">
+    <meta property="og:image" content="https://korrykatti.github.io/assets/img/main-image.png">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@dunkelkron">
+    <meta name="twitter:creator" content="@dunkelkron">
+    <meta name="twitter:title" content="korry // blog">
+    <meta name="twitter:description" content="if life doesn't kill me ,nostalgia will">
+    <meta name="twitter:image" content="https://korrykatti.github.io/assets/img/main-image.png">
+
+    <link rel="icon" href="assets/img/icon.jpeg">
+    <link rel="stylesheet" href="style.css?v=4.0">
+    <link rel="alternate" type="application/rss+xml" title="korry // blog" href="https://korrykatti.github.io/rss.xml">
+    <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+</head>
+
+<body>
+    <div id="scroll-progress" style="position: fixed; top: 0; left: 0; width: 0%; height: 2px; background: var(--accent); z-index: 9999; transition: width 0.1s ease;"></div>
+
+    <div class="app-container">
+            <nav style="display: flex; gap: 0.75rem; font-size: 0.9rem; margin-bottom: 3rem; flex-wrap: wrap; align-items: baseline;">
+                <a href="/blog/index.html">blog</a>
+                <span style="opacity: 0.3;">::</span>
+                <a href="/guestbook/">guestbook</a>
+                <span style="opacity: 0.3;">::</span>
+                <a href="https://x.com/dunkelkron">x</a>
+                <span style="opacity: 0.3;">::</span>
+                <a href="https://github.com/korrykatti">github</a>
+                <span style="opacity: 0.3;">::</span>
+                <a href="/rss.xml">rss</a>
+                <span style="opacity: 0.3;">::</span>
+                <a href="#" id="open-modal-btn-inline">chatroom</a>
+            </nav>
+
+        <!-- Search -->
+        <div class="sidebar-module search-container fade-in" style="margin-bottom: 3rem;">
+            <input type="text" id="search-input" placeholder="find something..." style="max-width: 400px; width: 100%; background: var(--bg-panel); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; font-family: inherit; font-size: 0.85rem;">
+            <div id="search-results" style="display: none; margin-top: 1.5rem; flex-direction: column; gap: 1rem;"></div>
+        </div>
+
+        <!-- Hero: Intro + Blog -->
+        <section class="section fade-in" style="margin-bottom: 5rem;">
+            <p style="margin-bottom: 0.5rem;">hello, korry here. currently in college, learning, and building.</p>
+            <p style="font-size: 0.85rem; opacity: 0.4; margin-bottom: 1.25rem;">this site is a collection of my work and stuff i think are cool. forever a work in progress.</p>
+            <div id="quote-display" style="margin: 0 0 2.5rem 0; font-style: italic; opacity: 0.7;"></div>
+
+            <h2>recent posts.</h2>
+            <ul id="blog-mini-stream" class="log-list">
+                <li class="log-item" style="opacity: 0.5;">receiving signal...</li>
+            </ul>
+            <div style="margin-top: 2rem;">
+                <a href="/blog/index.html" class="serif-text" style="font-size: 1.1rem;">archive →</a>
+            </div>
+        </section>
+
+        <!-- Links -->
+        <section class="section fade-in" style="margin-bottom: 4rem;">
+            <h2>links.</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 1rem;">
+                <div>
+                    <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">social</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="https://x.com/dunkelkron" target="_blank">x / dunkelkron</a></li>
+                        <li><a href="https://github.com/korrykatti" target="_blank">github / korrykatti</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">content</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="/blog/index.html">blog</a></li>
+                        <li><a href="/rss.xml">rss</a></li>
+                        <li><a href="/guestbook/">guestbook</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 style="font-size: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">creations</h3>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="https://korrykatti.pythonanywhere.com/" target="_blank">image board</a></li>
+                        <li><a href="/apps/index.html">small apps</a></li>
+                        <li><a href="#" id="open-modal-btn-inline">chatroom</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="section fade-in" style="margin-bottom: 4rem;">
+            <h2>projects.</h2>
+            <ul class="project-list plain-list" style="margin-top: 1rem;">
+                <li class="project-row">
+                    <a href="/projects/ektara/" class="project-title">ektara</a>
+                    <span class="project-desc">— terminal music player. mp3 library, youtube streams, discord presence</span>
+                    <span class="project-meta">go</span>
+                </li>
+                <li class="project-row">
+                    <a href="/projects/franz-hermann/" class="project-title">franz hermann</a>
+                    <span class="project-desc">— f1 bot for fluxer. standings, last race results, driver lookups</span>
+                    <span class="project-meta">go · docker</span>
+                </li>
+                <li class="project-row">
+                    <a href="https://github.com/korrykatti/precious" target="_blank" class="project-title">precious</a>
+                    <span class="project-desc">— custom programming language for learning, written in c++</span>
+                    <span class="project-meta">c++</span>
+                </li>
+                <li class="project-row">
+                    <a href="https://github.com/korrykatti/Thunder" target="_blank" class="project-title">thunder</a>
+                    <span class="project-desc">— python apps installer + launcher</span>
+                    <span class="project-meta">javascript · ★ 2</span>
+                </li>
+                <li class="project-row">
+                    <a href="https://github.com/korrykatti/minimal_blog" target="_blank" class="project-title">minimal_blog</a>
+                    <span class="project-desc">— backend for this blog, written in go</span>
+                    <span class="project-meta">go</span>
+                </li>
+                <li class="project-row">
+                    <a href="https://github.com/korrykatti/game" target="_blank" class="project-title">game</a>
+                    <span class="project-desc">— multiplayer game in c++ with sockets</span>
+                    <span class="project-meta">c++</span>
+                </li>
+            </ul>
+            <div style="margin-top: 2rem;">
+                <a href="https://github.com/korrykatti?tab=repositories" target="_blank" class="serif-text" style="font-size: 1rem;">all repos →</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="margin-top: 8rem; padding-bottom: 4rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 4rem;">
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; font-size: 0.85rem; margin-bottom: 2rem; opacity: 0.6;">
+                <div id="status-container">fetching status...</div>
+                <span style="opacity: 0.3;">::</span>
+                <div id="wakatime-display">telemetry_off</div>
+                <span style="opacity: 0.3;">::</span>
+                <div id="github-display">signal_lost</div>
+                <span style="opacity: 0.3;">::</span>
+                <div id="last-updated">...</div>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <img src="https://mayu.due.moe/get/@korrykatti?theme=lain&padding=6" alt="visitor counter"
+                    style="border: 1px solid var(--border-color); padding: 5px; background: var(--bg-panel-alt); max-width: 200px;">
+            </div>
+            <p style="font-size: 1rem; opacity: 0.7; color: var(--text-dim);">&copy; 2026 korry. all rights reserved.</p>
+            <p id="uptime-display" style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem; font-family: monospace; color: var(--text-dim);"></p>
+            <p id="load-time" style="font-size: 0.75rem; opacity: 0.4; margin-top: 0.5rem; font-family: monospace;"></p>
+        </footer>
+    </div>
+
+    <!-- Fixed Controls -->
+    <div class="fixed-controls">
+        <div id="music-control">
+            <span id="play-btn" class="control-btn">▶ play</span>
+        </div>
+        <button id="theme-toggle-btn" class="control-btn">🌙 dark</button>
+        <button id="scroll-top-btn" class="control-btn" style="display: none;">↑ top</button>
+    </div>
+
+    <div id="youtube-player" style="display:none;"></div>
+
+    <!-- Direct Line Modal -->
+    <div id="chatbox-modal" class="modal">
+        <div class="modal-content">
+            <h3>direct_line</h3>
+            <p style="margin-bottom: 2rem; color: var(--text-secondary);">leave a message after the beep.</p>
+            <iframe src="https://www5.cbox.ws/box/?boxid=952319&boxtag=ZWCF6N" width="100%" height="300" frameBorder="0"
+                style="border: 1px solid var(--border-color); margin-bottom: 2rem;"></iframe>
+            <button id="close-modal-btn" class="control-btn" style="width: 100%;">
+                terminate connection
+            </button>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Modal -->
+    <div id="shortcuts-modal" class="modal">
+        <div class="modal-content">
+            <h3>keyboard shortcuts</h3>
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);">focus search</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">/</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);">go to guestbook</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">g</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);">go to blog</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">b</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);">go home</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">h</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);">show shortcuts</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">?</kbd>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
+                    <span style="color: var(--text-dim);">close modal</span>
+                    <kbd style="background: var(--bg-panel-alt); border: 1px solid var(--border-color); padding: 0.25rem 0.6rem; font-family: monospace; font-size: 0.85rem; color: var(--text-primary);">Esc</kbd>
+                </div>
+            </div>
+            <button id="close-shortcuts-btn" class="control-btn" style="width: 100%; margin-top: 2rem;">
+                close
+            </button>
+        </div>
+    </div>
+
+    <!-- Hidden Modal -->
+    <div id="hidden-modal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <iframe id="hidden-video" width="100%" height="400" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="margin-bottom: 1.5rem;"></iframe>
+            <button id="close-hidden-btn" class="control-btn" style="width: 100%;">
+                close
+            </button>
+        </div>
+    </div>
+
+    <script src="assets/js/prefetch.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

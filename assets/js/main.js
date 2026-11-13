@@ -1190,14 +1190,17 @@ const Settings = (function () {
     // Preset 1 reproduces the shipped defaults exactly, so installing an
     // accent changes nothing until the visitor actually picks one.
     const ACCENTS = [
-        { name: 'rust', light: '#c45d3e', dark: '#d4c5b9' },
-        { name: 'moss', light: '#4f7a5c', dark: '#9fc7a8' },
-        { name: 'wine', light: '#7d2f3f', dark: '#d59aa6' },
-        { name: 'slate', light: '#3f5a7d', dark: '#9db8d6' },
-        { name: 'ash', light: '#555555', dark: '#b8b0a8' }
+        { name: 'dutch', light: '#FF6600', dark: '#FF7A1A', altLight: '#CC5200', altDark: '#FF9B4D' },
+        { name: 'amber', light: '#E65100', dark: '#FF9100', altLight: '#BF360C', altDark: '#FFAB40' },
+        { name: 'tangerine', light: '#FF7F00', dark: '#FFA040', altLight: '#CC6600', altDark: '#FFB366' },
+        { name: 'rust', light: '#D94E1F', dark: '#FF6A2A', altLight: '#B33F19', altDark: '#FF8A55' },
+        { name: 'ash', light: '#555555', dark: '#b8b0a8', altLight: '#333333', altDark: '#d4cfc9' }
     ];
 
-    let accentName = 'rust';
+    let accentName = 'dutch';
+    const savedAccent = localStorage.getItem(ACCENT_KEY);
+    if (ACCENTS.some(function (a) { return a.name === savedAccent; })) accentName = savedAccent;
+    else if (savedAccent) accentName = 'dutch';
     let cursorOn = true;
 
     function isDark() { return document.body.classList.contains('dark-mode'); }
@@ -1205,8 +1208,11 @@ const Settings = (function () {
     function applyAccent() {
         const p = ACCENTS.filter(function (a) { return a.name === accentName; })[0] || ACCENTS[0];
         const value = isDark() ? p.dark : p.light;
+        const alt = isDark() ? (p.altDark || value) : (p.altLight || value);
         document.body.style.setProperty('--accent', value);
-        document.body.style.setProperty('--accent-alt', value);
+        document.body.style.setProperty('--accent-alt', alt);
+        document.body.style.setProperty('--color-orange', value);
+        document.body.style.setProperty('--bg-wine', value);
     }
 
     function row(labelText, control) {
@@ -1401,7 +1407,7 @@ const KEYMAP = [
     },
     {
         group: 'navigation', keys: ['g'], label: 'go to guestbook', noRepeat: true,
-        run: function () { window.location.href = '/guestbook.html'; }
+        run: function () { window.location.href = '/guestbook/'; }
     },
     {
         group: 'navigation', keys: ['h'], label: 'go home', noRepeat: true,

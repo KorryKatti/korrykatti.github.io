@@ -3,31 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Page Not Found</title>
-  <!-- Add your CSS styling here -->
+  <title>404 - Page Not Found</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 50px;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      line-height: 1.6;
+      color: #111;
     }
-    h1 {
-      font-size: 36px;
-      margin-bottom: 20px;
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    .notice {
+      background: #fff8e6;
+      border: 1px solid #e0c36a;
+      padding: 12px 16px;
+      margin: 16px 0 24px;
     }
-    p {
-      font-size: 18px;
-      margin-bottom: 20px;
-    }
-    a {
-      color: #007bff;
-    }
+    .sitemap h2 { margin-top: 1.5rem; font-size: 1.1rem; }
+    ul { margin: 0.5rem 0 0 1.2rem; padding: 0; }
+    li { margin: 0.25rem 0; }
+    a { color: #007bff; }
   </style>
-<script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
+  <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 <body>
   <h1>404 - Page Not Found</h1>
   <p>Oops! The page you're looking for couldn't be found.</p>
-  <a href="/">Go to Homepage</a>
+
+  <p class="notice"><strong>This site was recently reorganized.</strong> If you’re lost, use the sitemap below (or the <a href="/sitemap.html">full sitemap</a>) to find what you need.</p>
+
+  <nav class="sitemap" aria-label="Sitemap">
+    <h2>Pages</h2>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/index.html">Blog</a></li>
+      <li><a href="/guestbook/">Guestbook</a></li>
+      <li><a href="/apps/index.html">Apps</a></li>
+      <li><a href="/quotes/">Quotes</a></li>
+      <li><a href="/colophon/">Colophon</a></li>
+      <li><a href="/logs/">Logs</a></li>
+      <li><a href="/projects/ektara/">Ektara</a></li>
+      <li><a href="/projects/franz-hermann/">Franz Hermann</a></li>
+      <li><a href="/sitemap.html">Full sitemap</a></li>
+      <li><a href="/rss.xml">RSS feed</a></li>
+    </ul>
+  </nav>
+
+  <p><a href="/">Go to Homepage</a></p>
 </body>
 </html>

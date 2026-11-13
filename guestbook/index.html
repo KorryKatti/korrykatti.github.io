@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guestbook</title>
-    <link rel="stylesheet" href="guestbook.css">
+    <link rel="stylesheet" href="style.css?v=4.0">
 <script defer src="/assets/js/umami.js" data-host-url="https://cloud.umami.is" data-website-id="ed2f6a6a-1a9a-4f71-a203-c633f8833e5c"></script>
 </head>
 
 <body>
     <div id="random-image-container"></div>
     <div class="nav">
-        <a href="index.html">home</a> :: <a href="blog/index.html">blog</a>
+        <a href="../home.html" target="main-frame">home</a> :: <a href="../blog/index.html">blog</a>
     </div>
     <h1>Guestbook</h1>
     <form id="guestbookForm">
@@ -27,7 +27,7 @@
     </form>
     <div id="entryCount"></div>
     <div id="entries"></div>
-    <script src="assets/js/prefetch.js"></script>
+    <script src="../assets/js/prefetch.js"></script>
     <script>
         async function loadEntries() {
             try {
@@ -141,19 +141,19 @@
             });
 
             const images = [
-                'preview.png',
-                'preview(1).png',
-                'preview(2).png',
-                'preview(3).png',
-                'preview(4).png',
-                'preview(5).png',
-                'preview(6).png',
-                'preview(7).png'
+                'preview-01.png',
+                'preview-02.png',
+                'preview-03.png',
+                'preview-04.png',
+                'preview-05.png',
+                'preview-06.png',
+                'preview-07.png',
+                'preview-08.png'
             ];
             const randomImg = images[Math.floor(Math.random() * images.length)];
             const container = document.getElementById('random-image-container');
             if (container) {
-                container.innerHTML = `<img src="assets/img/guestbook/${randomImg}" alt="random guestbook image">`;
+                container.innerHTML = `<img src="media/${randomImg}" alt="random guestbook image">`;
             }
         });
         document.getElementById('guestbookForm').addEventListener('submit', submitMessage);

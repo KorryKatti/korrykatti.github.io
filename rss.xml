@@ -10,80 +10,72 @@
 
     <item>
       <title>tiramisu and other things</title>
-      <link>https://korrykatti.github.io/blog/posts/15092026.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/15092026.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2026-09-15-tiramisu-and-other-things.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2026-09-15-tiramisu-and-other-things.html</guid>
       <pubDate>Tue, 15 Sep 2026 00:00:00 GMT</pubDate>
       <description>first time trying tiramisu and not liking it, watching the secret life of walter mitty and rush, and then crying for 2 hours over maquia: when the promised flower blooms</description>
     </item>
 
     <item>
       <title>writing a text editor in zig</title>
-      <link>https://korrykatti.github.io/blog/posts/15062026.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/15062026.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2026-06-15-writing-a-text-editor-in-zig.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2026-06-15-writing-a-text-editor-in-zig.html</guid>
       <pubDate>Mon, 15 Jun 2026 00:00:00 GMT</pubDate>
       <description>a personal log of building a text editor in Zig, the frustrations, the learning, and why I never want to do this again</description>
     </item>
 
     <item>
       <title>something personal with llms</title>
-      <link>https://korrykatti.github.io/blog/posts/06042026.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/06042026.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2026-04-06-something-personal-with-llms.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2026-04-06-something-personal-with-llms.html</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>while there are many technical and other usecases for a large language mode, there is one thing i want to do with it , which is probably just a personal thing.</description>
     </item>
 
     <item>
       <title>my 2025 end of year analysis</title>
-      <link>https://korrykatti.github.io/blog/posts/30122025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/30122025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-12-30-my-2025-end-of-year-analysis.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-12-30-my-2025-end-of-year-analysis.html</guid>
       <pubDate>Tue, 30 Dec 2025 00:00:00 GMT</pubDate>
       <description>analyzing my year and some thought sharing</description>
     </item>
 
     <item>
-      <title>making a strategy game in one file - with cpp</title>
-      <link>https://korrykatti.github.io/blog/posts/25062025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/25062025.html</guid>
-      <pubDate>Wed, 25 Jun 2025 00:00:00 GMT</pubDate>
-      <description>devlog of me making a map game, in cpp - progress, fails, lessons, all while building a strategy game in one C++ file.</description>
-    </item>
-
-    <item>
       <title>Donuts, LiFi, and Time Travel</title>
-      <link>https://korrykatti.github.io/blog/posts/03052025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/03052025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-05-03-donuts-lifi-and-time-travel.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-05-03-donuts-lifi-and-time-travel.html</guid>
       <pubDate>Sat, 03 May 2025 00:00:00 GMT</pubDate>
       <description>donuts, lifi, and time travel</description>
     </item>
 
     <item>
       <title>how not to debug a mouse</title>
-      <link>https://korrykatti.github.io/blog/posts/06032025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/06032025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-03-06-how-not-to-debug-a-mouse.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-03-06-how-not-to-debug-a-mouse.html</guid>
       <pubDate>Thu, 06 Mar 2025 00:00:00 GMT</pubDate>
       <description>My mouse stopped working and I tried fixing it. Here is how it went.</description>
     </item>
 
     <item>
       <title>can ai think at the speed of light? a dumb idea that might actually work</title>
-      <link>https://korrykatti.github.io/blog/posts/14032025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/14032025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-03-14-can-ai-think-at-the-speed-of-light.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-03-14-can-ai-think-at-the-speed-of-light.html</guid>
       <pubDate>Fri, 14 Feb 2025 00:00:00 GMT</pubDate>
       <description>a dumb idea about thinking at the speed of light</description>
     </item>
 
     <item>
       <title>My Second Hackathon Experience</title>
-      <link>https://korrykatti.github.io/blog/posts/22012025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/22012025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-01-22-my-second-hackathon-experience.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-01-22-my-second-hackathon-experience.html</guid>
       <pubDate>Wed, 22 Jan 2025 00:00:00 GMT</pubDate>
       <description>coming soon</description>
     </item>
 
     <item>
       <title>Hello world</title>
-      <link>https://korrykatti.github.io/blog/posts/03012025.html</link>
-      <guid>https://korrykatti.github.io/blog/posts/03012025.html</guid>
+      <link>https://korrykatti.github.io/blog/posts/2025-01-03-hello-world.html</link>
+      <guid>https://korrykatti.github.io/blog/posts/2025-01-03-hello-world.html</guid>
       <pubDate>Fri, 03 Jan 2025 00:00:00 GMT</pubDate>
       <description>Testing out the blog functionality. First post to verify everything is working correctly.</description>
     </item>

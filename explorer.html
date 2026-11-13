@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>explorer</title>
+  <link rel="stylesheet" href="style.css?v=4.0">
+</head>
+<body class="explorer-frame">
+
+        <aside class="file-explorer" aria-label="Site explorer">
+            <div class="file-explorer-title">explorer</div>
+            <ul class="tree">
+                <li>
+                    <details open>
+                        <summary><span class="tree-folder">pages</span></summary>
+                        <ul>
+                            <li><a href="/home.html">home</a></li>
+                            <li><a href="/quotes/">quotes</a></li>
+                            <li><a href="/logs/">logs</a></li>
+                            <li><a href="/colophon/">colophon</a></li>
+                            <li><a href="/sitemap.html">sitemap</a></li>
+                            <li><a href="/404.html">404</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details open>
+                        <summary><span class="tree-folder">blog</span></summary>
+                        <ul>
+                            <li><a href="/blog/index.html">index</a></li>
+                            <li>
+                                <details>
+                                    <summary><span class="tree-folder">posts</span></summary>
+                                    <ul>
+                                        <li><a href="/blog/posts/2026-09-15-tiramisu-and-other-things.html">2026-09-15 tiramisu and other things</a></li>
+                                        <li><a href="/blog/posts/2026-06-15-writing-a-text-editor-in-zig.html">2026-06-15 writing a text editor in zig</a></li>
+                                        <li><a href="/blog/posts/2026-04-06-something-personal-with-llms.html">2026-04-06 something personal with llms</a></li>
+                                        <li><a href="/blog/posts/2025-12-30-my-2025-end-of-year-analysis.html">2025-12-30 my 2025 end of year analysis</a></li>
+                                        <li><a href="/blog/posts/2025-05-03-donuts-lifi-and-time-travel.html">2025-05-03 Donuts, LiFi, and Time Travel</a></li>
+                                        <li><a href="/blog/posts/2025-03-14-can-ai-think-at-the-speed-of-light.html">2025-03-14 can ai think at the speed of light?</a></li>
+                                        <li><a href="/blog/posts/2025-03-06-how-not-to-debug-a-mouse.html">2025-03-06 how not to debug a mouse</a></li>
+                                        <li><a href="/blog/posts/2025-01-22-my-second-hackathon-experience.html">2025-01-22 My Second Hackathon Experience</a></li>
+                                        <li><a href="/blog/posts/2025-01-03-hello-world.html">2025-01-03 Hello world</a></li>
+                                    </ul>
+                                </details>
+                            </li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details open>
+                        <summary><span class="tree-folder">projects</span></summary>
+                        <ul>
+                            <li><a href="/projects/ektara/">ektara</a></li>
+                            <li><a href="/projects/franz-hermann/">franz hermann</a></li>
+                        </ul>
+                    </details>
+                </li>
+                <li>
+                    <details open>
+                        <summary><span class="tree-folder">apps</span></summary>
+                        <ul>
+                            <li><a href="/apps/index.html">index</a></li>
+                            <li><a href="/apps/file-upload/index.html">file-upload</a></li>
+                            <li><a href="/apps/langspinner/index.html">langspinner</a></li>
+                            <li><a href="/apps/loca-llm/index.html">loca-llm</a></li>
+                            <li><a href="/apps/mnist/index.html">mnist</a></li>
+                            <li><a href="/apps/ollam-ui/index.html">ollam-ui</a></li>
+                            <li><a href="/apps/rl-chess/index.html">rl-chess</a></li>
+                            <li><a href="/apps/sucher/index.html">sucher</a></li>
+                        </ul>
+                    </details>
+                </li>
+            </ul>
+        </aside>
+  <script>
+    // open links in main frame
+    document.querySelectorAll('a[href]').forEach(a => {
+      if (!a.getAttribute('target')) a.setAttribute('target', 'main-frame');
+    });
+
+    // sync theme with main site (stored in localStorage)
+    function applyTheme(theme) {
+      document.body.classList.toggle('dark-mode', theme === 'dark');
+    }
+    applyTheme(localStorage.getItem('theme'));
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') applyTheme(e.newValue);
+    });
+  </script>
+</body>
+</html>

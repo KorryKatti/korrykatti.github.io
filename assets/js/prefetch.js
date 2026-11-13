@@ -104,9 +104,9 @@
     // touch visitors get the same head start.
     const IDLE_ROUTES = [
         '/blog/index.html',
-        '/guestbook.html',
+        '/guestbook/',
         '/apps/index.html',
-        '/colophon.html'
+        '/colophon/'
     ];
 
     function idlePrefetch() {
